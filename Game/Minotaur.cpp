@@ -70,8 +70,8 @@ void Minotaur::Update()
 void Minotaur::Move()
 {
 	//XZ平面の移動速度はパッドの入力から引っ張ってくる。
-	float lStick_x = g_pad[0].GetLStickXF();
-	float lStick_y = g_pad[0].GetLStickYF();
+	m_lStickX = g_pad[0].GetLStickXF();
+	m_lStickY = g_pad[0].GetLStickYF();
 	//パッドの入力を使ってカメラを回す。
 	m_rStickX = g_pad[0].GetRStickXF();
 	m_rStickY = g_pad[0].GetRStickYF();
@@ -87,8 +87,8 @@ void Minotaur::Move()
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
 	m_moveSpeed.y -= 980.0f *( 1.0f / 60.0f);
-	m_moveSpeed += cameraForward * lStick_y * 200.0f;	//奥方向への移動速度を加算。
-	m_moveSpeed += cameraRight * lStick_x * 200.0f;		//右方向への移動速度を加算。
+	m_moveSpeed += cameraForward * m_lStickY * 200.0f;		//奥方向への移動速度を加算。
+	m_moveSpeed += cameraRight   * m_lStickX * 200.0f;		//右方向への移動速度を加算。
 	if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0) {
 		if (m_charaCon.IsOnGround() == true)
 			m_state = enState_Idle;
@@ -121,7 +121,10 @@ void Minotaur::Move()
 		m_forward.y = rotMatrix.m[2][1];
 		m_forward.z = rotMatrix.m[2][2];
 		m_forward.Normalize();
-
+		m_right.x = rotMatrix.m[0][0];
+		m_right.y = rotMatrix.m[0][1];
+		m_right.z = rotMatrix.m[0][2];
+		m_right.Normalize();
 }
 
 void Minotaur::Turn()
@@ -153,13 +156,14 @@ void Minotaur::Turn()
 	else
 	{
 		SetCameraType(EnCameraType::enType_TPS);
-		//m_rotation.SetRotation(CVector3::AxisY(), atan2f(m_cameraDirection.x, m_cameraDirection.z));
-		
+
 		//向きも変える。
-		if (fabsf(m_moveSpeed.x) > 0.1f || fabsf(m_moveSpeed.z) > 0.1f)
-		{
-			m_rotation.SetRotation(CVector3::AxisY(), atan2f(m_moveSpeed.x, m_moveSpeed.z));
-		}
+		m_rotation.SetRotation(CVector3::AxisY(), atan2f(m_cameraDirection.x, m_cameraDirection.z));
+		
+		//if (fabsf(m_moveSpeed.x) > 0.1f || fabsf(m_moveSpeed.z) > 0.1f)
+		//{
+		//	m_rotation.SetRotation(CVector3::AxisY(), atan2f(m_moveSpeed.x, m_moveSpeed.z));
+		//}
 	}
 }
 void Minotaur::Draw()

@@ -25,6 +25,10 @@ public:
 	{
 		return m_forward;
 	}
+	CVector3 GetRight()
+	{
+		return m_right;
+	}
 	float GetRStickX()
 	{
 		return m_rStickX;
@@ -32,6 +36,14 @@ public:
 	float GetRStickY()
 	{
 		return m_rStickY;
+	}
+	float GetLStickX()
+	{
+		return m_lStickX;
+	}
+	float GetLStickY()
+	{
+		return m_lStickY;
 	}
 	void SetCameraDirection(CVector3 direction)
 	{
@@ -76,10 +88,13 @@ private:
 	CVector3 m_moveSpeed = CVector3::Zero();			//移動速度。
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転。
 	CVector3 m_forward;									//キャラクターの前方向
+	CVector3 m_right;
 	CharacterController m_charaCon;						//キャラクターコントローラー
 	EnState m_state = enState_Idle;						//状態
 	bool m_cameratype = EnCameraType::enType_TPS;		//カメラ
 	float m_rStickX;									//右スティックのX
 	float m_rStickY;									//右スティックのY
+	float m_lStickX;									//左スティックのX
+	float m_lStickY;									//左スティックのY
 	CVector3 m_cameraDirection;							//カメラの前方向
 };

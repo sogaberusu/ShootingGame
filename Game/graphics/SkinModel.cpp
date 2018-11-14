@@ -153,5 +153,5 @@ void SkinModel::InitDirectionLight()
 {
 	m_light.directionLight.direction = { 0.0f,-1.0f,0.0f, 0.0f };
 	m_light.directionLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	m_light.specPow = 10.0f;
+	m_light.specPow = 5.0f;
 }
