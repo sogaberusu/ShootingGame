@@ -36,10 +36,10 @@ void StoneManager::Update()
 	}
 
 }
-void StoneManager::Draw()
+void StoneManager::Draw(Camera& camera)
 {
 	for (auto& Stone : m_stones) {
-		Stone->Draw();
+		Stone->Draw(camera);
 	}
 
 }

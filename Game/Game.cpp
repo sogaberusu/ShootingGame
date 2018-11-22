@@ -19,8 +19,24 @@ Game::Game()
 	m_stoneManager.SetInstance(&m_minotaur, &m_goblin, &m_orc);
 
 
-	m_gameCamera.SetPlayer(&m_minotaur);
+	m_gameCamera[0].InitViewport(640, 360, 0, 0);
+	m_gameCamera[0].SetPlayer(&m_minotaur);
+	m_gameCamera[0].Seti(0);
+
+	m_gameCamera[1].InitViewport(640, 360, 640, 0);
+	m_gameCamera[1].SetPlayer(&m_minotaur);
+	m_gameCamera[1].Seti(1);
+
+
+	m_gameCamera[2].InitViewport(640, 360, 0, 360);
+	m_gameCamera[2].SetPlayer(&m_minotaur);
+	m_gameCamera[2].Seti(2);
+
 	
+	m_gameCamera[3].InitViewport(640, 360, 640, 360);
+	m_gameCamera[3].SetPlayer(&m_minotaur);
+	m_gameCamera[3].Seti(3);
+
 }
 
 
@@ -35,21 +51,26 @@ void Game::Update()
 	m_minotaur.Update();
 	m_goblin.Update();
 	m_orc.Update();
-	m_gameCamera.Update();
+	for (int i = 0; i < 4; i++)
+	{
+		m_gameCamera[i].Update();
+	}
 	m_stoneManager.Update();
 }
 
 void Game::Draw()
 {
-	//ƒvƒŒƒCƒ„[‚Ì•`‰æB
-	if (m_dorwflag == true)
-	{
-		m_minotaur.Draw();
+	for (int i = 0; i < 4; i++) {
+		m_gameCamera[i].StartRender();
+		//ƒvƒŒƒCƒ„[‚Ì•`‰æB
+		if (m_dorwflag == true)
+		{
+			m_minotaur.Draw(g_camera3D[i]);
+		}
+		m_goblin.Draw(g_camera3D[i]);
+		m_orc.Draw(g_camera3D[i]);
+		//”wŒi‚Ì•`‰æ
+		m_bg.Draw(g_camera3D[i]);
+		m_stoneManager.Draw(g_camera3D[i]);
 	}
-	
-	m_goblin.Draw();
-	m_orc.Draw();
-	//”wŒi‚Ì•`‰æ
-	m_bg.Draw();
-	m_stoneManager.Draw();
 }

@@ -53,13 +53,14 @@ public:
 private:
 	Minotaur m_minotaur;				//プレイヤー
 	Level m_level;						//レベルを初期化。
-	GameCamera m_gameCamera;
+	GameCamera m_gameCamera[4];
 	Background m_bg;
 	Goblin m_goblin;
 	Orc m_orc;
 	StoneManager m_stoneManager;
 	EnCameraType m_cameratype = enCamera_FPS;
 	bool m_dorwflag = true;
+	int i = 0;
 };
 
 //グローバルなアクセスポイントをグローバル変数として提供する。

@@ -177,13 +177,13 @@ float4 PSMain( PSInput In ) : SV_Target0
 		//float3 R = reflect(toEyeDir, In.Normal);
 		//③ ２で求めた反射ベクトルとディレクションライトの方向との内積を取って、スペキュラの強さを計算する。
 		float t = max(0.0f, dot(-directionLight.direction, reflectEyeDir));
-		/*float spec = max(0.0f, dot(-R, directionLight.direction));
-		return float4 (spec, spec, spec, 1.0f);*/
+		//float spec = max(0.0f, dot(-R, directionLight.direction));
 
 		//④ pow関数を使って、スペキュラを絞る。絞りの強さは定数バッファで渡されている。
 		//	 LightCbを参照するように。
 		float3 specLig = pow(t, specPow) * directionLight.color.xyz;
-
+		//float3 specLig = pow(spec,specPow);
+		//specLig *= directionLight.color.xyz;
 		//⑤ スペキュラ反射が求まったら、ligに加算する。
 		//鏡面反射を反射光に加算する。
 		lig += specLig;

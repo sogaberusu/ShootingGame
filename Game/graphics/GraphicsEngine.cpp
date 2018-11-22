@@ -142,13 +142,27 @@ void GraphicsEngine::Init(HWND hWnd)
 	//ラスタライザとビューポートを初期化。
 	m_pd3dDevice->CreateRasterizerState(&desc, &m_rasterizerState);
 
-	D3D11_VIEWPORT viewport;
+	/*D3D11_VIEWPORT viewport;
 	viewport.Width = FRAME_BUFFER_W;
 	viewport.Height = FRAME_BUFFER_H;
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
-	m_pd3dDeviceContext->RSSetViewports(1, &viewport);
+	m_pd3dDeviceContext->RSSetViewports(1, &viewport);*/
 	m_pd3dDeviceContext->RSSetState(m_rasterizerState);
+}
+
+void GraphicsEngine::SetViewport(float Width, float Height, float TopLeftX, float TopLeftY)
+{
+	//D3D11_VIEWPORT viewport;
+	m_viewport.Width = Width;
+	m_viewport.Height = Height;
+	m_viewport.TopLeftX = TopLeftX;
+	m_viewport.TopLeftY = TopLeftY;
+	m_viewport.MinDepth = 0.0f;
+	m_viewport.MaxDepth = 1.0f;
+	m_pd3dDeviceContext->RSSetViewports(1, &m_viewport);
+	//m_pd3dDeviceContext->RSSetState(m_rasterizerState);
+
 }

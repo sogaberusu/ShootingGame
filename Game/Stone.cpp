@@ -45,7 +45,7 @@ void Stone::Update()
 	m_model.UpdateWorldMatrix(m_pos, CQuaternion::Identity(), CVector3::One());
 
 }
-void Stone::Draw()
+void Stone::Draw(Camera& camera)
 {
-	m_model.Draw(g_camera3D.GetViewMatrix(), g_camera3D.GetProjectionMatrix());
+	m_model.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 }

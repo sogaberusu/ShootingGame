@@ -5,7 +5,7 @@ public:
 	Stone();
 	~Stone();
 	void Update();
-	void Draw();
+	void Draw(Camera& camera);
 	void SetPosition(CVector3 pos)
 	{
 		m_pos = pos;

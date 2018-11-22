@@ -78,10 +78,10 @@ void Orc::Move()
 	}
 
 }
-void Orc::Draw()
+void Orc::Draw(Camera& camera)
 {
 	m_model.Draw(
-		g_camera3D.GetViewMatrix(),
-		g_camera3D.GetProjectionMatrix()
+		camera.GetViewMatrix(),
+		camera.GetProjectionMatrix()
 	);
 }

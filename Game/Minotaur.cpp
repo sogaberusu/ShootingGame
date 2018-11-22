@@ -76,8 +76,8 @@ void Minotaur::Move()
 	m_rStickX = g_pad[0].GetRStickXF();
 	m_rStickY = g_pad[0].GetRStickYF();
 	//カメラの前方方向と右方向を取得。
-	CVector3 cameraForward = g_camera3D.GetForward();
-	CVector3 cameraRight = g_camera3D.GetRight();
+	CVector3 cameraForward = g_camera3D[0].GetForward();
+	CVector3 cameraRight = g_camera3D[0].GetRight();
 	//XZ平面での前方方向、右方向に変換する。
 	cameraForward.y = 0.0f;
 	cameraForward.Normalize();
@@ -108,7 +108,7 @@ void Minotaur::Move()
 	if (g_pad[0].IsTrigger(enButtonRB2) == true)
 	{
 		Stone* stone = g_game->GetStoneManager().NewStone();
-		CVector3 target = g_camera3D.GetTarget() - g_camera3D.GetPosition();
+		CVector3 target = g_camera3D[0].GetTarget() - g_camera3D[0].GetPosition();
 		target.Normalize();
 		stone->SetMoveSpeed(target * 10);
 		stone->SetPosition(m_position += {0.0, 50.0, 0.0});
@@ -166,10 +166,10 @@ void Minotaur::Turn()
 		//}
 	}
 }
-void Minotaur::Draw()
+void Minotaur::Draw(Camera& camera)
 {
 	m_model.Draw(
-		g_camera3D.GetViewMatrix(),
-		g_camera3D.GetProjectionMatrix()
+		camera.GetViewMatrix(),
+		camera.GetProjectionMatrix()
 	);
 }

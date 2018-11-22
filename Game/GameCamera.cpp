@@ -6,14 +6,15 @@
 GameCamera::GameCamera()
 {
 	//カメラを初期化。
-	g_camera3D.SetPosition({0.0f, 150.0f, 250.0f });
-	g_camera3D.SetTarget({ 0.0f, 150.0f, 50.0f });
-	g_camera3D.SetNear(1.0f);
-	g_camera3D.SetFar(10000.0f);
+	g_camera3D[i].SetPosition({0.0f, 150.0f, 250.0f });
+	g_camera3D[i].SetTarget({ 0.0f, 150.0f, 50.0f });
+	g_camera3D[i].SetNear(1.0f);
+	g_camera3D[i].SetFar(10000.0f);
 	//注視点から視点までのベクトルを設定。
-	m_toCameraPos.Set(g_camera3D.GetTarget() - g_camera3D.GetPosition());
+	m_toCameraPos.Set(g_camera3D[i].GetTarget() - g_camera3D[i].GetPosition());
 	//視点から注視点までのベクトルを設定。
-	m_toCameraTarget.Set(g_camera3D.GetPosition() - g_camera3D.GetTarget());
+	m_toCameraTarget.Set(g_camera3D[i].GetPosition() - g_camera3D[i].GetTarget());
+
 }
 
 
@@ -22,6 +23,7 @@ GameCamera::~GameCamera()
 }
 void GameCamera::Update()
 {
+
 	//パッドの入力を使ってカメラを回す。
 	m_rStickX = m_minotaur->GetRStickX();
 	m_rStickY = m_minotaur->GetRStickY();	
@@ -119,16 +121,22 @@ void GameCamera::Update()
 	{
 		g_game->DrowSetFalse();
 		m_minotaur->SetCameraDirection(newFPSTarget);
-		g_camera3D.SetTarget(newFPSTarget);
-		g_camera3D.SetPosition(minopos);
-		g_camera3D.Update();
+		g_camera3D[i].SetTarget(newFPSTarget);
+		g_camera3D[i].SetPosition(minopos);
+		g_camera3D[i].Update();
 	}
 	else
 	{
 		g_game->DrowSetTrue();
 		m_minotaur->SetCameraDirection(direction);
-		g_camera3D.SetTarget(newTPSTarget);
-		g_camera3D.SetPosition(newPosition);
-		g_camera3D.Update();
+		g_camera3D[i].SetTarget(newTPSTarget);
+		g_camera3D[i].SetPosition(newPosition);
+		g_camera3D[i].Update();
 	}
+}
+
+void GameCamera::StartRender()
+{
+	g_graphicsEngine->SetViewport(m_width, m_height, m_topLeftX, m_topLeftY);
+
 }

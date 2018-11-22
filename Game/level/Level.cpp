@@ -47,9 +47,9 @@ void Level::Init(const wchar_t* levelDataFilePath, Level::HookWhenBuildObjectFun
 		}
 	}
 }
-void Level::Draw()
+void Level::Draw(Camera& camera)
 {
 	for (auto& mapChip : m_mapChipArray) {
-		mapChip->Draw();
+		mapChip->Draw(camera);
 	}
 }

@@ -93,10 +93,10 @@ void Goblin::Move()
 	}
 
 }
-void Goblin::Draw()
+void Goblin::Draw(Camera& camera)
 {
 	m_model.Draw(
-		g_camera3D.GetViewMatrix(),
-		g_camera3D.GetProjectionMatrix()
+		camera.GetViewMatrix(),
+		camera.GetProjectionMatrix()
 	);
 }

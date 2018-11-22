@@ -7,7 +7,7 @@ public:
 	Minotaur();
 	~Minotaur();
 	void Update();
-	void Draw();
+	void Draw(Camera& camera);
 	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;

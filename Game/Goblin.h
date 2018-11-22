@@ -8,7 +8,7 @@ public:
 	Goblin();
 	~Goblin();
 	void Update();
-	void Draw();
+	void Draw(Camera& camera);
 	CVector3 GetPosition()
 	{
 		return m_position;

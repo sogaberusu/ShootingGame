@@ -5,7 +5,7 @@ class Background
 public:
 	Background();
 	~Background();
-	void Draw();
+	void Draw(Camera& camera);
 private:
 	SkinModel m_model;
 	SkinModel m_model1;

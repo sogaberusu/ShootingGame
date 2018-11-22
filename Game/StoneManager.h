@@ -14,7 +14,7 @@ public:
 	~StoneManager();
 	Stone* NewStone();
 	void Update();
-	void Draw();
+	void Draw(Camera& camera);
 	void HitCheck();
 	void SetInstance(Minotaur *minotaur, Goblin *goblin, Orc *orc)
 	{
