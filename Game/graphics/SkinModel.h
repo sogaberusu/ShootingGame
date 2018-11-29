@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Skeleton.h"
+#include "Camera.h"
+#include "SkinModelEffect.h"
 
 /*!
 *@brief	FBXの上方向。
@@ -52,7 +54,7 @@ public:
 	*@param[in]	projMatrix		プロジェクション行列。
 	*  カメラ座標系の3Dモデルをスクリーン座標系に変換する行列です。
 	*/
-	void Draw( CMatrix viewMatrix, CMatrix projMatrix );
+	void Draw( CMatrix viewMatrix, CMatrix projMatrix,Camera& camera, int renderMode);
 	/*!
 	*@brief	スケルトンの取得。
 	*/
@@ -131,8 +133,8 @@ private:
 	};
 	//ディレクションライト。
 	struct SDirectionLight {
-	CVector4 direction;		//ライトの方向。
-	CVector4 color;			//ライトのカラー。
+		CVector4 direction;		//ライトの方向。
+		CVector4 color;			//ライトのカラー。
 	};
 	//ライト構造体。
 	struct SLight {

@@ -1,7 +1,7 @@
 /*!
  * @brief	モデルシェーダー。
  */
-
+ 
 
 /////////////////////////////////////////////////////////////
 // Shader Resource View
@@ -10,7 +10,10 @@
 Texture2D<float4> albedoTexture : register(t0);	
 //ボーン行列
 StructuredBuffer<float4x4> boneMatrix : register(t1);
-
+/*!
+ *@brief	空用のピクセルシェーダー。
+ */
+TextureCube<float4> skyCubeMap : register(t2);	//スカイキューブマップ。
 /////////////////////////////////////////////////////////////
 // SamplerState
 /////////////////////////////////////////////////////////////
@@ -38,7 +41,7 @@ struct SDirectionLight {
 	 float3				eyePos;				//カメラの視点。
 	 float				specPow;			//スペキュラライトの絞り。
  };
-
+ 
 /////////////////////////////////////////////////////////////
 //各種構造体
 /////////////////////////////////////////////////////////////
@@ -155,6 +158,15 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 	psInput.Position = pos;
 	psInput.TexCoord = In.TexCoord;
     return psInput;
+}
+
+/*!
+ *@brief	空用のシェーダー。
+ */
+float4 PSMain_SkyCube(PSInput In) : SV_Target0
+{
+	float4 color = skyCubeMap.Sample(Sampler, In.Normal);
+	return color;
 }
 //--------------------------------------------------------------------------------------
 // ピクセルシェーダーのエントリ関数。

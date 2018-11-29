@@ -12,15 +12,18 @@ protected:
 	Shader* m_pPSShader = nullptr;
 	Shader m_vsShader;
 	Shader m_psShader;
+	Shader m_psSkyShader;
 	bool isSkining;
 	ID3D11ShaderResourceView* m_albedoTex = nullptr;
-
+	ID3D11ShaderResourceView* m_skyTex = nullptr;
+	int m_renderMode = 0;
 public:
 	ModelEffect()
 	{
 		m_psShader.Load("Assets/shader/model.fx", "PSMain", Shader::EnType::PS);
-		
 		m_pPSShader = &m_psShader;
+		m_psSkyShader.Load("Assets/shader/model.fx", "PSMain_SkyCube", Shader::EnType::PS);
+		InitSkyTexture();
 	}
 	virtual ~ModelEffect()
 	{
@@ -48,7 +51,17 @@ public:
 	{
 		return wcscmp(name, m_materialName.c_str()) == 0;
 	}
-	
+	void SetRenderMode(int renderMode)
+	{
+		m_renderMode = renderMode;
+	}
+	void InitSkyTexture()
+	{
+		HRESULT hr = DirectX::CreateDDSTextureFromFileEx(
+			g_graphicsEngine->GetD3DDevice(), L"Assets/modelData/skyCubeMap.dds", 0,
+			D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+			false, nullptr, &m_skyTex);
+	}
 };
 /*!
 *@brief

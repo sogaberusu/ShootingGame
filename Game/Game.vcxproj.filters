@@ -116,6 +116,7 @@
     <ClCompile Include="Stone.cpp" />
     <ClCompile Include="StoneManager.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="Sky.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -210,6 +211,7 @@
     <ClInclude Include="Stone.h" />
     <ClInclude Include="StoneManager.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="Sky.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -228,6 +230,9 @@
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\Stone.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\sky.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
   </ItemGroup>

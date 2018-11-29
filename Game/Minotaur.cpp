@@ -11,9 +11,7 @@ Minotaur::Minotaur()
 
 	InitAnimation();
 
-	m_position.y =100.00f;
 	m_charaCon.Init(10.0f, 50.0f, m_position);
-
 	
 }
 
@@ -42,13 +40,13 @@ Minotaur::~Minotaur()
 {
 }
 
-void Minotaur::Update()
+void Minotaur::Update(Camera& camera,int i)
 {
 	//移動処理
-	Move();
+	Move(camera, i);
 
 	//回転処理
-	Turn();
+	Turn(i);
 
 	switch (m_state)
 	{
@@ -67,17 +65,18 @@ void Minotaur::Update()
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	m_animation.Update(1.0f / 30.0f);
 }
-void Minotaur::Move()
+void Minotaur::Move(Camera& camera, int i)
 {
+	
 	//XZ平面の移動速度はパッドの入力から引っ張ってくる。
-	m_lStickX = g_pad[0].GetLStickXF();
-	m_lStickY = g_pad[0].GetLStickYF();
+	m_lStickX = g_pad[i].GetLStickXF();
+	m_lStickY = g_pad[i].GetLStickYF();
 	//パッドの入力を使ってカメラを回す。
-	m_rStickX = g_pad[0].GetRStickXF();
-	m_rStickY = g_pad[0].GetRStickYF();
+	m_rStickX = g_pad[i].GetRStickXF();
+	m_rStickY = g_pad[i].GetRStickYF();
 	//カメラの前方方向と右方向を取得。
-	CVector3 cameraForward = g_camera3D[0].GetForward();
-	CVector3 cameraRight = g_camera3D[0].GetRight();
+	CVector3 cameraForward = camera.GetForward();
+	CVector3 cameraRight = camera.GetRight();
 	//XZ平面での前方方向、右方向に変換する。
 	cameraForward.y = 0.0f;
 	cameraForward.Normalize();
@@ -98,17 +97,17 @@ void Minotaur::Move()
 			m_state = enState_walk;
 	}
 
-	if (g_pad[0].IsTrigger(enButtonA) == true
+	if (g_pad[i].IsTrigger(enButtonA) == true
 		&& m_charaCon.IsOnGround() == true
 		) {
 		m_moveSpeed.y += 500.0f;
 		m_state = enState_Jump;
 	}
 	
-	if (g_pad[0].IsTrigger(enButtonRB2) == true)
+	if (g_pad[i].IsTrigger(enButtonRB2) == true)
 	{
 		Stone* stone = g_game->GetStoneManager().NewStone();
-		CVector3 target = g_camera3D[0].GetTarget() - g_camera3D[0].GetPosition();
+		CVector3 target = camera.GetTarget() - camera.GetPosition();
 		target.Normalize();
 		stone->SetMoveSpeed(target * 10);
 		stone->SetPosition(m_position += {0.0, 50.0, 0.0});
@@ -127,30 +126,12 @@ void Minotaur::Move()
 		m_right.Normalize();
 }
 
-void Minotaur::Turn()
+void Minotaur::Turn(int i)
 {
-	if (g_pad[0].IsPress(enButtonLB2) == true)
+	if (g_pad[i].IsPress(enButtonLB2) == true)
 	{
 		SetCameraType(EnCameraType::enType_FPS);
-		////ワールド座標系での前方向
-		//CVector3 front = CVector3::Front();
-		////回転させるための軸
-		//CVector3 axisY;
-		////かめらの前方向
-		//CVector3 cameraDir = m_cameraDirection;
-		////角度を保存する変数
-		//float radY = 0.0f;
-		////カメラの前方向を正規化
-		//cameraDir.Normalize();
-		////カメラの前方向とfrontの内積をとる(この時に正規化していなければacosで非数が返ってくる
-		//float angle = cameraDir.Dot(front);
-		////カメラの前方向とfrontの外積をとる
-		//axisY.Cross(cameraDir,front);
-		////外積をとった後正規化する。(quaternionに使う軸は正規化されたベクトルでなければいけない
-		//axisY.Normalize();
-		////内積の結果からでた三角関数の値をラジアン(角度に直す、使う関数はacos
-		//radY = acosf(angle);
-		////m_rotation.SetRotation(axisY,radY);
+		
 		m_rotation.SetRotation(CVector3::AxisY(), atan2f(m_cameraDirection.x, m_cameraDirection.z));
 	}
 	else
@@ -159,17 +140,18 @@ void Minotaur::Turn()
 
 		//向きも変える。
 		m_rotation.SetRotation(CVector3::AxisY(), atan2f(m_cameraDirection.x, m_cameraDirection.z));
-		
-		//if (fabsf(m_moveSpeed.x) > 0.1f || fabsf(m_moveSpeed.z) > 0.1f)
-		//{
-		//	m_rotation.SetRotation(CVector3::AxisY(), atan2f(m_moveSpeed.x, m_moveSpeed.z));
-		//}
+
 	}
 }
-void Minotaur::Draw(Camera& camera)
+void Minotaur::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
 {
-	m_model.Draw(
-		camera.GetViewMatrix(),
-		camera.GetProjectionMatrix()
-	);
+	if (m_drawflag == true ||ViewportNumber !=PlayerNumber)
+	{
+		m_model.Draw(
+			camera.GetViewMatrix(),
+			camera.GetProjectionMatrix(),
+			camera,
+			0
+		);
+	}
 }

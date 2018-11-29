@@ -16,11 +16,11 @@ public:
 	void Update();
 	void Draw(Camera& camera);
 	void HitCheck();
-	void SetInstance(Minotaur *minotaur, Goblin *goblin, Orc *orc)
+	void SetInstance(Minotaur *minotaur/*, Goblin *goblin, Orc *orc*/)
 	{
 		m_minotaur = minotaur;
-		m_goblin = goblin;
-		m_orc = orc;
+		/*m_goblin = goblin;
+		m_orc = orc;*/
 	}
 private:
 	std::vector<Stone*> m_stones;	//’eŠÛ‚Ì‰Â•Ï’·”z—ñB

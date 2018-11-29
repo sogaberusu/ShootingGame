@@ -115,7 +115,7 @@ void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVect
 	//スケルトンの更新。
 	m_skeleton.Update(m_worldMatrix);
 }
-void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix)
+void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix,Camera& camera, int renderMode)
 {
 	DirectX::CommonStates state(g_graphicsEngine->GetD3DDevice());
 
@@ -128,7 +128,7 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix)
 	vsCb.mView = viewMatrix;
 	d3dDeviceContext->UpdateSubresource(m_cb, 0, nullptr, &vsCb, 0, 0);
 	//視点を設定。
-	m_light.eyePos = g_camera3D[0].GetPosition();
+	m_light.eyePos = camera.GetPosition();
 	//ライト用の定数バッファを更新。
 	d3dDeviceContext->UpdateSubresource(m_lightCb, 0, nullptr, &m_light, 0, 0);
 	//定数バッファをGPUに転送。
@@ -138,7 +138,11 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix)
 	d3dDeviceContext->PSSetSamplers(0, 1, &m_samplerState);
 	//ボーン行列をGPUに転送。
 	m_skeleton.SendBoneMatrixArrayToGPU();
-
+	//シェーダーにクエリを行う
+	m_modelDx->UpdateEffects([&](DirectX::IEffect* material) {
+		auto modelMaterial = reinterpret_cast<SkinModelEffect*>(material);
+		modelMaterial->SetRenderMode(renderMode);
+	});
 	//描画。
 	m_modelDx->Draw(
 		d3dDeviceContext,

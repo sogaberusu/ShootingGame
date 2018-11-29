@@ -46,22 +46,22 @@ void StoneManager::Draw(Camera& camera)
 
 void StoneManager::HitCheck()
 {
-	for (auto& Stone : m_stones)
-	{
-		auto vDiff = m_goblin->GetPosition() - Stone->GetPosition();
-		auto len = vDiff.Length();
-		if (len < 60.0f) {
-			//死亡フラグを立てる。
-			Stone->SetStoneDead();
-		}
-	}
-	for (auto& Stone : m_stones)
-	{
-		auto vDiff = m_orc->GetPosition() - Stone->GetPosition();
-			auto len = vDiff.Length();
-			if (len < 80.0f) {
-				//死亡フラグを立てる。
-				Stone->SetStoneDead();
-			}
-	}
+	//for (auto& Stone : m_stones)
+	//{
+	//	auto vDiff = m_goblin->GetPosition() - Stone->GetPosition();
+	//	auto len = vDiff.Length();
+	//	if (len < 60.0f) {
+	//		//死亡フラグを立てる。
+	//		Stone->SetStoneDead();
+	//	}
+	//}
+	//for (auto& Stone : m_stones)
+	//{
+	//	auto vDiff = m_orc->GetPosition() - Stone->GetPosition();
+	//		auto len = vDiff.Length();
+	//		if (len < 80.0f) {
+	//			//死亡フラグを立てる。
+	//			Stone->SetStoneDead();
+	//		}
+	//}
 }

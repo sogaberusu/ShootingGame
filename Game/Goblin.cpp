@@ -97,6 +97,8 @@ void Goblin::Draw(Camera& camera)
 {
 	m_model.Draw(
 		camera.GetViewMatrix(),
-		camera.GetProjectionMatrix()
+		camera.GetProjectionMatrix(),
+		camera,
+		0
 	);
 }

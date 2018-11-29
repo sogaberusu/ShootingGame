@@ -66,23 +66,6 @@ void GameCamera::Update()
 ///////////////////////////////////////////////////////////////////////////////////////
 //	TPS視点の計算
 ///////////////////////////////////////////////////////////////////////////////////////
-		
-	////新しい視点を求める。
-	//auto newPosition = m_minotaur->GetPosition();
-	////Y方向にちょっと上げる。
-	//newPosition.y += 50.0f;
-	////X方向にちょっとずらす
-	//newPosition.z -= 150.0f;
-	//newPosition.x += 50.0f;
-	////新しい注視点を求める。
-	//auto newTPSTarget = m_minotaur->GetPosition();
-	////Y方向にちょっと上げる。
-	//newTPSTarget.y += 50.0f;
-	//newTPSTarget.x += 50.0f;
-	//auto direction = newTPSTarget - newPosition;
-	//direction.Normalize();
-
-	
 	
 	//新しい注視点を求める。
 	auto newTPSTarget = m_minotaur->GetPosition();
@@ -119,7 +102,7 @@ void GameCamera::Update()
 
 	if (m_minotaur->GetCameraType() == EnCameraType::enType_FPS)
 	{
-		g_game->DrowSetFalse();
+		m_minotaur->DrawSetFalse();
 		m_minotaur->SetCameraDirection(newFPSTarget);
 		g_camera3D[i].SetTarget(newFPSTarget);
 		g_camera3D[i].SetPosition(minopos);
@@ -127,7 +110,7 @@ void GameCamera::Update()
 	}
 	else
 	{
-		g_game->DrowSetTrue();
+		m_minotaur->DrawSetTrue();
 		m_minotaur->SetCameraDirection(direction);
 		g_camera3D[i].SetTarget(newTPSTarget);
 		g_camera3D[i].SetPosition(newPosition);

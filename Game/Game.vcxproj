@@ -129,6 +129,7 @@
     <ClCompile Include="physics\RigidBody.cpp" />
     <ClCompile Include="physics\CapsuleCollider.cpp" />
     <ClCompile Include="physics\PhysicsStaticObject.cpp" />
+    <ClCompile Include="Sky.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -172,6 +173,7 @@
     <ClInclude Include="physics\CapsuleCollider.h" />
     <ClInclude Include="physics\CollisionAttr.h" />
     <ClInclude Include="physics\PhysicsStaticObject.h" />
+    <ClInclude Include="Sky.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Stone.h" />
     <ClInclude Include="StoneManager.h" />
@@ -183,6 +185,7 @@
     <MeshContentTask Include="Assets\modelData\Goblin.fbx" />
     <MeshContentTask Include="Assets\modelData\Minotaur.fbx" />
     <MeshContentTask Include="Assets\modelData\Orc.fbx" />
+    <MeshContentTask Include="Assets\modelData\sky.fbx" />
     <MeshContentTask Include="Assets\modelData\Stone.fbx" />
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\modelData\%(Filename).cmo</ContentOutput>

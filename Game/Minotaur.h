@@ -1,13 +1,14 @@
 #pragma once
 #include "character/CharacterController.h"
 class GameCamera;
+
 class Minotaur
 {
 public:
 	Minotaur();
 	~Minotaur();
-	void Update();
-	void Draw(Camera& camera);
+	void Update(Camera& camera,int i);
+	void Draw(Camera& camera,int ViewportNumber,int PlayerNumber);
 	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
@@ -49,6 +50,14 @@ public:
 	{
 		m_cameraDirection = direction;
 	}
+	void DrawSetFalse()
+	{
+		m_drawflag = false;
+	}
+	void DrawSetTrue()
+	{
+		m_drawflag = true;
+	}
 private:
 	enum EnCameraType {
 		enType_TPS,
@@ -65,8 +74,8 @@ public:
 	}
 private:
 	void InitAnimation();								//アニメーションの初期化
-	void Move();										//移動処理
-	void Turn();										//回転処理
+	void Move(Camera& camera,int i);					//移動処理
+	void Turn(int i);										//回転処理
 	enum EnAnimation {
 		enAnimation_Idle,
 		enAnimation_walk,
@@ -97,4 +106,5 @@ private:
 	float m_lStickX;									//左スティックのX
 	float m_lStickY;									//左スティックのY
 	CVector3 m_cameraDirection;							//カメラの前方向
+	bool m_drawflag = true;
 };

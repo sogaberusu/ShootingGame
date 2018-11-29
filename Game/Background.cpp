@@ -18,5 +18,5 @@ Background::~Background()
 void Background::Draw(Camera& camera)
 {
 	m_model.UpdateWorldMatrix(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
-	m_model.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	m_model.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(),camera,0);
 }
