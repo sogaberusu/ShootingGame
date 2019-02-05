@@ -9,7 +9,10 @@
 #include "Orc.h"
 #include "StoneManager.h"
 #include "Sky.h"
-
+#include "graphics/RenderTarget.h"
+#include "graphics/SkinModel.h"
+#include "graphics/ShadowMap.h"
+#include "Player.h"
 //ゲームクラス。
 class Game : public IScene
 {
@@ -35,6 +38,8 @@ public:
 	*/
 	void Draw()override;
 
+	void DrawShadowMap(int i);
+
 	StoneManager& GetStoneManager()
 	{
 		return m_stoneManager;
@@ -44,7 +49,8 @@ public:
 		m_cameratype = type;
 	}
 private:
-	Minotaur m_minotaur[4];				//プレイヤー
+	//Minotaur m_minotaur[4];				//プレイヤー
+	Player m_player[4];
 	Level m_level;						//レベルを初期化。
 	GameCamera m_gameCamera[4];
 	Background m_bg;

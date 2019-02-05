@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SkinModel.h"
 #include "SkinModelDataManager.h"
+#include "ShadowMap.h"
 
 SkinModel::~SkinModel()
 {
@@ -75,9 +76,14 @@ void SkinModel::InitConstantBuffer()
 	//作成。
 	g_graphicsEngine->GetD3DDevice()->CreateBuffer(&bufferDesc, NULL, &m_cb);
 
+	////続いて、ライト用の定数バッファを作成。
+	////作成するバッファのサイズを変更するだけ。
+	//bufferDesc.ByteWidth = Raundup16(sizeof(SLight));
+	//g_graphicsEngine->GetD3DDevice()->CreateBuffer(&bufferDesc, NULL, &m_lightCb);
+
 	//続いて、ライト用の定数バッファを作成。
 	//作成するバッファのサイズを変更するだけ。
-	bufferDesc.ByteWidth = Raundup16(sizeof(SLight));
+	bufferDesc.ByteWidth = sizeof(SDirectionLight);				//SDirectionLightは16byteの倍数になっているので、切り上げはやらない。
 	g_graphicsEngine->GetD3DDevice()->CreateBuffer(&bufferDesc, NULL, &m_lightCb);
 }
 void SkinModel::InitSamplerState()
@@ -115,7 +121,7 @@ void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVect
 	//スケルトンの更新。
 	m_skeleton.Update(m_worldMatrix);
 }
-void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix,Camera& camera, int renderMode)
+void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, int renderMode)
 {
 	DirectX::CommonStates state(g_graphicsEngine->GetD3DDevice());
 
@@ -126,14 +132,24 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix,Camera& camera, int 
 	vsCb.mWorld = m_worldMatrix;
 	vsCb.mProj = projMatrix;
 	vsCb.mView = viewMatrix;
+	//todo ライトカメラのビュー、プロジェクション行列を送る。
+	vsCb.mLightProj = g_shadowMap.GetLightProjMatrix();
+	vsCb.mLightView = g_shadowMap.GetLightViewMatrix();
+	if (m_isShadowReciever == true) {
+		vsCb.isShadowReciever = 1;
+	}
+	else {
+		vsCb.isShadowReciever = 0;
+	}
 	d3dDeviceContext->UpdateSubresource(m_cb, 0, nullptr, &vsCb, 0, 0);
 	//視点を設定。
-	m_light.eyePos = camera.GetPosition();
+	//m_light.eyePos = camera.GetPosition();
 	//ライト用の定数バッファを更新。
-	d3dDeviceContext->UpdateSubresource(m_lightCb, 0, nullptr, &m_light, 0, 0);
+	d3dDeviceContext->UpdateSubresource(m_lightCb, 0, nullptr, &m_dirLight, 0, 0);
 	//定数バッファをGPUに転送。
 	d3dDeviceContext->VSSetConstantBuffers(0, 1, &m_cb);
-	d3dDeviceContext->PSSetConstantBuffers(0, 1, &m_lightCb);
+	d3dDeviceContext->PSSetConstantBuffers(0, 1, &m_cb);
+	d3dDeviceContext->PSSetConstantBuffers(1, 1, &m_lightCb);
 	//サンプラステートを設定。
 	d3dDeviceContext->PSSetSamplers(0, 1, &m_samplerState);
 	//ボーン行列をGPUに転送。
@@ -155,7 +171,19 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix,Camera& camera, int 
 
 void SkinModel::InitDirectionLight()
 {
-	m_light.directionLight.direction = { 0.0f,-1.0f,0.0f, 0.0f };
+	/*m_light.directionLight.direction = { 0.0f,-1.0f,0.0f, 0.0f };
 	m_light.directionLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	m_light.specPow = 5.0f;
+	m_light.specPow = 5.0f;*/
+
+	m_dirLight.direction[0] = { 1.0f, 0.0f, 0.0f, 0.0f };
+	m_dirLight.color[0] = { 0.7f, 0.7f, 0.7f, 1.0f };
+
+	m_dirLight.direction[1] = { -0.707f, -0.707f, 0.0f, 0.0f };
+	m_dirLight.color[1] = { 0.4f, 0.4f, 0.4f, 1.0f };
+
+	m_dirLight.direction[2] = { 0.0f, -0.707f, 0.707f, 0.0f };
+	m_dirLight.color[2] = { 0.4f, 0.4f, 0.4f, 1.0f };
+
+	m_dirLight.direction[3] = { 1.0f, 0.0f, -1.0f, 0.0f };
+	m_dirLight.color[3] = { 0.4f, 0.4f, 0.4f, 1.0f };
 }

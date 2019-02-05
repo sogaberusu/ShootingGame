@@ -1,7 +1,8 @@
 #pragma once
 
-class Minotaur;
-class Goblin;
+//class Minotaur;
+//class Goblin;
+class Player;
 
 
 class GameCamera
@@ -9,13 +10,17 @@ class GameCamera
 public:
 	GameCamera();
 	~GameCamera();
-	void SetPlayer(Minotaur* minotaur)
+	/*void SetPlayer(Minotaur* minotaur)
 	{
 		m_minotaur = minotaur;
 	}
 	void SetPlayer(Goblin* goblin)
 	{
 		m_goblin = goblin;
+	}*/
+	void SetPlayer(Player* player)
+	{
+		m_player = player;
 	}
 	void Update();
 	void InitViewport(float Width, float Height, float TopLeftX, float TopLeftY)
@@ -31,8 +36,9 @@ public:
 	}
 	void StartRender();
 private:	
-	Minotaur * m_minotaur = nullptr;				//プレイヤー。
-	Goblin * m_goblin = nullptr;					//プレイヤー。
+	//Minotaur * m_minotaur = nullptr;				//プレイヤー。
+	//Goblin * m_goblin = nullptr;					//プレイヤー。
+	Player *m_player = nullptr;
 	CVector3 m_toCameraPos;							//カメラのポジション
 	CVector3 m_toCameraTarget;						//カメラのターゲット
 	enum EnCameraType {								//カメラの状態

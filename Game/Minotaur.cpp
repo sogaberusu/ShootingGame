@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "Stone.h"
 
+
 Minotaur::Minotaur()
 {
 	//cmoファイルの読み込み。
@@ -12,7 +13,6 @@ Minotaur::Minotaur()
 	InitAnimation();
 
 	m_charaCon.Init(10.0f, 50.0f, m_position);
-	
 }
 
 void Minotaur::InitAnimation()
@@ -21,11 +21,14 @@ void Minotaur::InitAnimation()
 	m_animationClips[enAnimation_Idle].Load(L"Assets/animData/Minotaur_Idle.tka");
 	m_animationClips[enAnimation_Idle].SetLoopFlag(true);
 
-	m_animationClips[enAnimation_walk].Load(L"Assets/animData/Minotaur_Walk.tka");
-	m_animationClips[enAnimation_walk].SetLoopFlag(true);
+	m_animationClips[enAnimation_Walk].Load(L"Assets/animData/Minotaur_Walk.tka");
+	m_animationClips[enAnimation_Walk].SetLoopFlag(true);
 
 	m_animationClips[enAnimation_Jump].Load(L"Assets/animData/Minotaur_Jump.tka");
 	m_animationClips[enAnimation_Jump].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Down].Load(L"Assets/animData/Minotaur_Down.tka");
+	m_animationClips[enAnimation_Down].SetLoopFlag(false);
 
 	//アニメーションの初期化。
 	m_animation.Init(
@@ -40,7 +43,7 @@ Minotaur::~Minotaur()
 {
 }
 
-void Minotaur::Update(Camera& camera,int i)
+void Minotaur::Update(Camera& camera, int i)
 {
 	//移動処理
 	Move(camera, i);
@@ -53,17 +56,22 @@ void Minotaur::Update(Camera& camera,int i)
 	case Minotaur::enState_Idle:
 		m_animation.Play(enAnimation_Idle, 0.3);
 		break;
-	case Minotaur::enState_walk:
-		m_animation.Play(enAnimation_walk, 0.3);
+	case Minotaur::enState_Walk:
+		m_animation.Play(enAnimation_Walk, 0.3);
 		break;
 	case Minotaur::enState_Jump:
 		m_animation.Play(enAnimation_Jump, 0.3);
 		break;
+	case Minotaur::enState_Down:
+		m_animation.Play(enAnimation_Down, 0.3);
+		break;
 	}
-	
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	m_animation.Update(1.0f / 30.0f);
+
+	//シャドウキャスターを登録。
+	g_shadowMap.RegistShadowCaster(&m_model);
 }
 void Minotaur::Move(Camera& camera, int i)
 {
@@ -88,25 +96,27 @@ void Minotaur::Move(Camera& camera, int i)
 	m_moveSpeed.y -= 980.0f *( 1.0f / 60.0f);
 	m_moveSpeed += cameraForward * m_lStickY * 200.0f;		//奥方向への移動速度を加算。
 	m_moveSpeed += cameraRight   * m_lStickX * 200.0f;		//右方向への移動速度を加算。
-	if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0) {
-		if (m_charaCon.IsOnGround() == true)
-			m_state = enState_Idle;
+	if (m_state != enState_Down)
+	{
+		if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0) {
+			if (m_charaCon.IsOnGround() == true)
+				m_state = enState_Idle;
+		}
+		else {
+			if (m_charaCon.IsOnGround() == true)
+				m_state = enState_Walk;
+		}
 	}
-	else {
-		if (m_charaCon.IsOnGround() == true)
-			m_state = enState_walk;
-	}
-
 	if (g_pad[i].IsTrigger(enButtonA) == true
 		&& m_charaCon.IsOnGround() == true
 		) {
-		m_moveSpeed.y += 500.0f;
+		m_moveSpeed.y += 200.0f;
 		m_state = enState_Jump;
 	}
 	
 	if (g_pad[i].IsTrigger(enButtonRB2) == true)
 	{
-		Stone* stone = g_game->GetStoneManager().NewStone();
+		Stone* stone = g_game->GetStoneManager().NewStone(i);
 		CVector3 target = camera.GetTarget() - camera.GetPosition();
 		target.Normalize();
 		stone->SetMoveSpeed(target * 10);
@@ -150,7 +160,7 @@ void Minotaur::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
 		m_model.Draw(
 			camera.GetViewMatrix(),
 			camera.GetProjectionMatrix(),
-			camera,
+			//camera,
 			0
 		);
 	}

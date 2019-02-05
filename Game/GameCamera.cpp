@@ -2,6 +2,7 @@
 #include "GameCamera.h"
 #include "Minotaur.h"
 #include "Game.h"
+#include "Player.h"
 
 GameCamera::GameCamera()
 {
@@ -25,20 +26,20 @@ void GameCamera::Update()
 {
 
 	//パッドの入力を使ってカメラを回す。
-	m_rStickX = m_minotaur->GetRStickX();
-	m_rStickY = m_minotaur->GetRStickY();	
+	m_rStickX = m_player->GetRStickX();
+	m_rStickY = m_player->GetRStickY();
 	//キャラクターの移動に合わせてカメラを回す。
-	m_lStickX = m_minotaur->GetLStickX();
-	m_lStickY = m_minotaur->GetLStickY();
+	m_lStickX = m_player->GetLStickX();
+	m_lStickY = m_player->GetLStickY();
 //////////////////////////////////////////////////////////////////////////////////
 //	FPS視点の計算
 //////////////////////////////////////////////////////////////////////////////////
-	CVector3 minoforward = m_minotaur->GetForward();
+	CVector3 minoforward = m_player->GetForward();
 		
-	CVector3 minopos = m_minotaur->GetPosition();
-	minopos.y += 100.0f;
+	CVector3 playerpos = m_player->GetPosition();
+	playerpos.y += 85.0f;
 
-	CVector3 target = minopos + minoforward;
+	CVector3 target = playerpos + minoforward;
 		
 	CVector3 toCameraTargetOld = m_toCameraTarget;
 	//Y軸周りの回転
@@ -68,7 +69,7 @@ void GameCamera::Update()
 ///////////////////////////////////////////////////////////////////////////////////////
 	
 	//新しい注視点を求める。
-	auto newTPSTarget = m_minotaur->GetPosition();
+	auto newTPSTarget = m_player->GetPosition();
 	//Y方向にちょっと上げる。
 	newTPSTarget.y += 100.0f;
 	CVector3 toCameraPosOld = m_toCameraPos;
@@ -100,18 +101,18 @@ void GameCamera::Update()
 	direction.Normalize();
 
 
-	if (m_minotaur->GetCameraType() == EnCameraType::enType_FPS)
+	if (m_player->GetCameraType() == EnCameraType::enType_FPS)
 	{
-		m_minotaur->DrawSetFalse();
-		m_minotaur->SetCameraDirection(newFPSTarget);
+		m_player->DrawSetFalse();
+		m_player->SetCameraDirection(newFPSTarget);
 		g_camera3D[i].SetTarget(newFPSTarget);
-		g_camera3D[i].SetPosition(minopos);
+		g_camera3D[i].SetPosition(playerpos);
 		g_camera3D[i].Update();
 	}
 	else
 	{
-		m_minotaur->DrawSetTrue();
-		m_minotaur->SetCameraDirection(direction);
+		m_player->DrawSetTrue();
+		m_player->SetCameraDirection(direction);
 		g_camera3D[i].SetTarget(newTPSTarget);
 		g_camera3D[i].SetPosition(newPosition);
 		g_camera3D[i].Update();
@@ -121,5 +122,4 @@ void GameCamera::Update()
 void GameCamera::StartRender()
 {
 	g_graphicsEngine->SetViewport(m_width, m_height, m_topLeftX, m_topLeftY);
-
 }

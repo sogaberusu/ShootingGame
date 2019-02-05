@@ -1,5 +1,7 @@
 #pragma once
 #include "character/CharacterController.h"
+#include "graphics/ShadowMap.h"
+
 class GameCamera;
 
 class Minotaur
@@ -72,20 +74,30 @@ public:
 	{
 		m_cameratype = type;
 	}
+	void Hit()
+	{
+		m_state = enState_Down;
+	}
+	SkinModel GetSkinModel()
+	{
+		return m_model;
+	}
 private:
 	void InitAnimation();								//アニメーションの初期化
 	void Move(Camera& camera,int i);					//移動処理
-	void Turn(int i);										//回転処理
+	void Turn(int i);									//回転処理
 	enum EnAnimation {
 		enAnimation_Idle,
-		enAnimation_walk,
+		enAnimation_Walk,
 		enAnimation_Jump,
+		enAnimation_Down,
 		enAnimation_Num
 	};
 	enum EnState {
 		enState_Idle,
-		enState_walk,
+		enState_Walk,
 		enState_Jump,
+		enState_Down,
 		enState_Num
 	};
 	

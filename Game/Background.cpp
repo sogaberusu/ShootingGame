@@ -8,6 +8,8 @@ Background::Background()
 
 	m_phyStaticObject.CreateMeshObject(m_model, CVector3::Zero(), CQuaternion::Identity());
 
+	//地面をシャドウレシーバーにする。
+	m_model.SetShadowReciever(true);
 }
 
 
@@ -15,8 +17,14 @@ Background::~Background()
 {
 }
 
+void Background::Update()
+{
+	//シャドウキャスターを登録。
+	g_shadowMap.RegistShadowCaster(&m_model);
+}
+
 void Background::Draw(Camera& camera)
 {
 	m_model.UpdateWorldMatrix(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
-	m_model.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(),camera,0);
+	m_model.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(),0);
 }

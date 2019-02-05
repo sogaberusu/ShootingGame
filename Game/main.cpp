@@ -2,7 +2,6 @@
 #include "system/system.h"
 #include "Title.h"
 #include <algorithm>
-#include "graphics/Camera.h"
 
 IScene* g_currentScene = nullptr;
 
@@ -28,6 +27,7 @@ void RenderGame()
 
 	//•`‰æI—¹B
 	g_graphicsEngine->EndRender();
+	
 }
 
 void TermnateGame()
