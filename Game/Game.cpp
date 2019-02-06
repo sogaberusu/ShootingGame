@@ -72,10 +72,10 @@ void Game::Update()
 
 void Game::Draw()
 {
-	
+	DrawShadowMap();
 	for (int i = 0; i < 4; i++) {
 		m_gameCamera[i].StartRender();
-		DrawShadowMap(i);
+		
 		for (int j = 0; j < 4; j++)
 		{
 			m_player[j].Draw(g_camera3D[i], i, j);
@@ -89,7 +89,7 @@ void Game::Draw()
 	}
 }
 
-void Game::DrawShadowMap(int i)
+void Game::DrawShadowMap()
 {
 	///////////////////////////////////////////////
 	//シャドウマップにレンダリング

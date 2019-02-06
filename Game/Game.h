@@ -38,7 +38,7 @@ public:
 	*/
 	void Draw()override;
 
-	void DrawShadowMap(int i);
+	void DrawShadowMap();
 
 	StoneManager& GetStoneManager()
 	{
