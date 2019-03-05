@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RenderTarget.h"
 
+RenderTarget g_mainRenderTarget;
 
 RenderTarget::RenderTarget()
 {

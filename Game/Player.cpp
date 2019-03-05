@@ -10,6 +10,8 @@ Player::Player()
 	//cmoファイルの読み込み。
 	m_model.Init(L"Assets/modelData/Player.cmo");
 
+	m_model.SetShadowReciever(true);
+
 	InitAnimation();
 
 	m_charaCon.Init(10.0f, 50.0f, m_position);
@@ -47,6 +49,15 @@ void Player::InitAnimation()
 
 	m_animationClips[enAnimation_Shoot].Load(L"Assets/animData/Player_Shoot.tka");
 	m_animationClips[enAnimation_Shoot].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Jump_Start].Load(L"Assets/animData/Player_Jump_Start.tka");
+	m_animationClips[enAnimation_Jump_Start].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Jump_Air].Load(L"Assets/animData/Player_Jump_Air.tka");
+	m_animationClips[enAnimation_Jump_Air].SetLoopFlag(true);
+
+	m_animationClips[enAnimation_Jump_Land].Load(L"Assets/animData/Player_Jump_Land.tka");
+	m_animationClips[enAnimation_Jump_Land].SetLoopFlag(false);
 
 	//アニメーションの初期化。
 	m_animation.Init(
@@ -105,6 +116,15 @@ void Player::Update(Camera& camera, int i)
 	case Player::enState_Shoot:
 		m_animation.Play(enAnimation_Shoot, 0.3);
 		break;
+	case Player::enState_Jump_Start:
+		m_animation.Play(enAnimation_Jump_Start, 0.3);
+		break;
+	case Player::enState_Jump_Air:
+		m_animation.Play(enAnimation_Jump_Air, 0.3);
+		break;
+	case Player::enState_Jump_Land:
+		m_animation.Play(enAnimation_Jump_Land, 0.3);
+		break;
 	}
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
@@ -139,7 +159,10 @@ void Player::Move(Camera& camera, int i)
 	if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0) {
 		if (m_state != enState_Crouch_Idle && m_state != enState_Crouch_Walk)
 		{
-			if (m_state != enState_Reload&&m_state != enState_Crouch_Reload)
+			if (m_state != enState_Reload &&
+				m_state != enState_Crouch_Reload &&
+				m_state != enState_Jump_Air &&
+				m_state != enState_Jump_Start)
 			{
 				m_state = enState_Idle;
 			}
@@ -150,14 +173,50 @@ void Player::Move(Camera& camera, int i)
 		{
 			m_state = enState_Crouch_Walk;
 		}
-		else if(m_charaCon.IsOnGround() == true && m_state != enState_Crouch_Walk)
+		else if(m_charaCon.IsOnGround() == true 
+			&& m_state != enState_Crouch_Walk
+			&& m_state != enState_Run)
 		{
-			m_state = enState_Walk_Forward;
+			if (m_lStickY > 0.8)
+			{
+				m_state = enState_Walk_Forward;
+			}
+			if (m_lStickY < -0.8)
+			{
+				m_state = enState_Walk_Back;
+			}
+			if (m_lStickX > 0.8 && m_lStickY < 0.8)
+			{
+				m_state = enState_Walk_Left;
+			}
+			if (m_lStickX < -0.8 && m_lStickY > -0.8)
+			{
+				m_state = enState_Walk_Right;
+			}
 		}
 	}
+	if (g_pad[i].IsPress(enButtonLB3) == true)
+	{
+		m_state = enState_Run;
+	}
+	if (g_pad[i].IsTrigger(enButtonA) == true
+		&& m_charaCon.IsOnGround() == true
+		) {
+		m_moveSpeed.y += 300.0f;
+		m_state = enState_Jump_Start;
+	}
+	if (m_charaCon.IsOnGround() == false)
+	{
+		m_state = enState_Jump_Air;
+	}
+	if (m_state == enState_Jump_Air && m_charaCon.IsOnGround() == true)
+	{
+		m_state = enState_Jump_Land;
+	}
+	
 	if (g_pad[i].IsTrigger(enButtonB) == true)
 	{
-		if (m_state == enState_Crouch_Idle)
+		if (m_state == enState_Crouch_Idle || m_state == enState_Crouch_Walk)
 		{
 			m_state = enState_Idle;
 		}
@@ -186,7 +245,11 @@ void Player::Move(Camera& camera, int i)
 		stone->SetMoveSpeed(target * 10);
 		stone->SetPosition(m_position += {0.0, 50.0, 0.0});
 	}
-
+	
+	if (m_state == enState_Run)
+	{
+		m_moveSpeed.Add(m_moveSpeed);
+	}
 	m_position = m_charaCon.Execute(1.0f / 60.0f, m_moveSpeed);
 
 	CMatrix rotMatrix = m_model.GetRotationMatrix();

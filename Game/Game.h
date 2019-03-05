@@ -13,6 +13,8 @@
 #include "graphics/SkinModel.h"
 #include "graphics/ShadowMap.h"
 #include "Player.h"
+#include "graphics/Sprite.h"
+#include "graphics/PostEffect.h"
 //ゲームクラス。
 class Game : public IScene
 {
@@ -61,6 +63,12 @@ private:
 	bool m_dorwflag;
 	int i = 0;
 	Sky m_sky;	//空。
+	//RenderTarget m_mainRenderTarget;		//メインレンダリングターゲット。
+	Sprite m_copyMainRtToFrameBufferSprite;			//メインレンダリングターゲットに描かれた絵をフレームバッファにコピーするためのスプライト。
+	ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー。
+	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー。
+	PostEffect m_postEffect;				//ポストエフェクト。
+	D3D11_VIEWPORT m_frameBufferViewports;			//フレームバッファのビューポート。
 };
 
 //グローバルなアクセスポイントをグローバル変数として提供する。

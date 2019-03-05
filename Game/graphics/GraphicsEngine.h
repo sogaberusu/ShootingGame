@@ -1,4 +1,7 @@
 #pragma once
+
+class RenderTarget;
+
 /*!
  *@brief	グラフィックスエンジン。
  */
@@ -39,6 +42,13 @@ public:
 	 */
 	void EndRender();
 	void SetViewport(float Width,float Height,float TopLeftX,float TopLeftY);
+	/// <summary>
+	/// レンダリングターゲットの切り替え。
+	/// </summary>
+	/// <param name="renderTarget">レンダリングターゲット</param>
+	/// <param name="viewport">ビューポート</param>
+	void ChangeRenderTarget(RenderTarget* renderTarget, D3D11_VIEWPORT* viewport);
+	void ChangeRenderTarget(ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport);
 private:
 	D3D_FEATURE_LEVEL		m_featureLevel;				//Direct3D デバイスのターゲットとなる機能セット。
 	ID3D11Device*			m_pd3dDevice = NULL;		//D3D11デバイス。

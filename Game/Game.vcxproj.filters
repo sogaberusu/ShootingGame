@@ -120,6 +120,9 @@
     <ClCompile Include="graphics\RenderTarget.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Minotaur.cpp" />
+    <ClCompile Include="graphics\Bloom.cpp" />
+    <ClCompile Include="graphics\PostEffect.cpp" />
+    <ClCompile Include="graphics\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -218,6 +221,9 @@
     <ClInclude Include="graphics\RenderTarget.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Minotaur.h" />
+    <ClInclude Include="graphics\Bloom.h" />
+    <ClInclude Include="graphics\PostEffect.h" />
+    <ClInclude Include="graphics\Sprite.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -242,6 +248,7 @@
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\Player.FBX" />
+    <MeshContentTask Include="Assets\modelData\Player_NoHead.FBX" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\animData\Minotaur_Down.tka" />

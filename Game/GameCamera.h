@@ -4,6 +4,7 @@
 //class Goblin;
 class Player;
 
+#include "character/CharacterController.h"
 
 class GameCamera
 {
