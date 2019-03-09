@@ -8,6 +8,7 @@
 #include "Goblin.h"
 #include "Orc.h"
 #include "StoneManager.h"
+#include "BulletManager.h"
 #include "Sky.h"
 #include "graphics/RenderTarget.h"
 #include "graphics/SkinModel.h"
@@ -46,10 +47,15 @@ public:
 	{
 		return m_stoneManager;
 	}
+	BulletManager& GetBulletManager()
+	{
+		return m_bulletManager;
+	}
 	void SetCameraType(EnCameraType type)
 	{
 		m_cameratype = type;
 	}
+	
 private:
 	//Minotaur m_minotaur[4];				//ÉvÉåÉCÉÑÅ[
 	Player m_player[4];
@@ -59,6 +65,7 @@ private:
 	//Goblin m_goblin;
 	//Orc m_orc;
 	StoneManager m_stoneManager;
+	BulletManager m_bulletManager;
 	EnCameraType m_cameratype = enCamera_FPS;
 	bool m_dorwflag;
 	int i = 0;

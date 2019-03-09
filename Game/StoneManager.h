@@ -28,7 +28,7 @@ public:
 private:
 	std::vector<Stone*> m_stones[4];	//’eŠÛ‚Ì‰Â•Ï’·”z—ñB
 	Player *m_player[4];
-	Background m_background;
+	//Background m_background;
 	/*Minotaur *m_minotaur[4];
 	Goblin *m_goblin = nullptr;
 	Orc *m_orc = nullptr;*/

@@ -9,10 +9,6 @@ public:
 	~Background();
 	void Draw(Camera& camera);
 	void Update();
-	SkinModel GetSkinModel()
-	{
-		return m_model;
-	}
 private:
 	SkinModel m_model;
 	PhysicsStaticObject m_phyStaticObject;

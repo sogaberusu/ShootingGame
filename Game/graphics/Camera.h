@@ -159,5 +159,5 @@ private:
 	EnUpdateProjMatrixFunc m_updateProjMatrixFunc = enUpdateProjMatrixFunc_Perspective;	//射影行列の作成方法。
 };
 
-extern Camera g_camera3D[4];							//!<3Dカメラ。
-extern Camera g_camera2D;		//!<2Dカメラ。
+extern Camera g_camera3D[4];						//!<3Dカメラ。
+extern Camera g_camera2D;							//!<2Dカメラ。

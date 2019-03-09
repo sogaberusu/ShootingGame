@@ -323,7 +323,7 @@ float4 PSMain( PSInput In ) : SV_Target0
 			//シャドウマップに書き込まれている深度値を取得。
 			float zInShadowMap = g_shadowMap.Sample(Sampler, shadowMapUV);
 
-			if (zInLVP > zInShadowMap + 0.01f/*0.005f*/) {
+			if (zInLVP > zInShadowMap + /*0.01f*/0.0005f) {
 				//影が落ちているので、光を弱くする
 				lig *= 0.5f;
 			}

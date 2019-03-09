@@ -18,7 +18,8 @@ Game::Game()
 	
 	for (int i = 0; i < 4; i++)
 	{
-		m_stoneManager.SetInstance(&m_player[i],i/*&m_minotaur[i],i &m_goblin, &m_orc*/);
+		//m_stoneManager.SetInstance(&m_player[i], i/*&m_minotaur[i],i &m_goblin, &m_orc*/);
+		m_bulletManager.SetInstance(&m_player[i],i);
 	}
 
 	m_gameCamera[0].InitViewport(640, 360, 0, 0);
@@ -97,7 +98,8 @@ void Game::Update()
 		m_gameCamera[i].Update();	
 	}
 	m_bg.Update();
-	m_stoneManager.Update();
+	//m_stoneManager.Update();
+	m_bulletManager.Update();
 	
 	//ポストエフェクトの更新。
 	m_postEffect.Update();
@@ -122,7 +124,8 @@ void Game::Draw()
 		m_orc.Draw(g_camera3D[i]);*/
 		//背景の描画
 		m_bg.Draw(g_camera3D[i]);
-		m_stoneManager.Draw(g_camera3D[i]);
+		//m_stoneManager.Draw(g_camera3D[i]);
+		m_bulletManager.Draw(g_camera3D[i]);
 		m_sky.Draw(g_camera3D[i]);
 	}
 }

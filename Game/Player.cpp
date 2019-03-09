@@ -3,6 +3,7 @@
 #include "GameCamera.h"
 #include "Game.h"
 #include "Stone.h"
+#include "Bullet.h"
 
 
 Player::Player()
@@ -14,7 +15,7 @@ Player::Player()
 
 	InitAnimation();
 
-	m_charaCon.Init(10.0f, 50.0f, m_position);
+	m_charaCon.Init(20.0f, 50.0f, m_position);
 }
 
 void Player::InitAnimation()
@@ -162,7 +163,8 @@ void Player::Move(Camera& camera, int i)
 			if (m_state != enState_Reload &&
 				m_state != enState_Crouch_Reload &&
 				m_state != enState_Jump_Air &&
-				m_state != enState_Jump_Start)
+				m_state != enState_Jump_Start &&
+				m_state != enState_Jump_Land)
 			{
 				m_state = enState_Idle;
 			}
@@ -203,7 +205,7 @@ void Player::Move(Camera& camera, int i)
 		&& m_charaCon.IsOnGround() == true
 		) {
 		m_moveSpeed.y += 300.0f;
-		m_state = enState_Jump_Start;
+		m_state = enState_Jump_Start;	
 	}
 	if (m_charaCon.IsOnGround() == false)
 	{
@@ -236,14 +238,17 @@ void Player::Move(Camera& camera, int i)
 			m_state = enState_Reload;
 		}
 	}
-	if (g_pad[i].IsTrigger(enButtonRB2) == true)
+	if (g_pad[i].IsTrigger(enButtonY) == true)
 	{
 		m_state = enState_Shoot;
-		Stone* stone = g_game->GetStoneManager().NewStone(i);
+		//Stone* stone = g_game->GetStoneManager().NewStone(i);
+		Bullet* bullet = g_game->GetBulletManager().NewBullet(i);
 		CVector3 target = camera.GetTarget() - camera.GetPosition();
 		target.Normalize();
-		stone->SetMoveSpeed(target * 10);
-		stone->SetPosition(m_position += {0.0, 50.0, 0.0});
+		//stone->SetMoveSpeed(target * 100);
+		bullet->SetMoveSpeed(target * 100);
+		//stone->SetPosition(m_position += {0.0, 50.0, 0.0});
+		bullet->SetPosition(m_position += {0.0, 50.0, 0.0});
 	}
 	
 	if (m_state == enState_Run)
