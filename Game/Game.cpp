@@ -27,6 +27,7 @@ Game::Game()
 	m_gameCamera[0].Seti(0);
 	m_player[0].SetPosition({ 250.0f,0.0f,0.0f });
 
+
 	m_gameCamera[1].InitViewport(640, 360, 640, 0);
 	m_gameCamera[1].SetPlayer(&m_player[1]);
 	m_gameCamera[1].Seti(1);

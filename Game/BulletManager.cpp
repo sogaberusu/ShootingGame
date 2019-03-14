@@ -26,7 +26,7 @@ BulletManager::~BulletManager()
 
 Bullet* BulletManager::NewBullet(int i)
 {
-	Bullet* newBullet = new Bullet;
+	Bullet* newBullet = new Bullet(m_player[i]->GetHandPos());
 	m_bullet[i].push_back(newBullet);
 	return newBullet;
 }

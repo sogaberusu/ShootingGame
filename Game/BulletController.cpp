@@ -20,8 +20,7 @@ namespace {
 			if (convexResult.m_hitCollisionObject == me ||
 				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Bullet
 				) {
-				//©•ª‚ÉÕ“Ë‚µ‚½Bor ’n–Ê‚ÉÕ“Ë‚µ‚½B
-			
+
 				return 0.0f;
 			}
 			isHit = true;

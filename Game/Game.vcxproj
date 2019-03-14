@@ -100,6 +100,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="Benelli_M4.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletController.cpp" />
     <ClCompile Include="BulletManager.cpp" />
@@ -124,6 +125,8 @@
     <ClCompile Include="HID\Pad.cpp" />
     <ClCompile Include="level\Level.cpp" />
     <ClCompile Include="level\MapChip.cpp" />
+    <ClCompile Include="M110.cpp" />
+    <ClCompile Include="M4A1.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\kMath.cpp" />
     <ClCompile Include="math\Matrix.cpp" />
@@ -139,6 +142,7 @@
     <ClCompile Include="graphics\PostEffect.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="graphics\Sprite.cpp" />
+    <ClCompile Include="SMAW.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -150,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h" />
+    <ClInclude Include="Benelli_M4.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletController.h" />
     <ClInclude Include="BulletManager.h" />
@@ -176,6 +181,8 @@
     <ClInclude Include="IScene.h" />
     <ClInclude Include="level\Level.h" />
     <ClInclude Include="level\MapChip.h" />
+    <ClInclude Include="M110.h" />
+    <ClInclude Include="M4A1.h" />
     <ClInclude Include="math\kMath.h" />
     <ClInclude Include="math\Matrix.h" />
     <ClInclude Include="math\Vector.h" />
@@ -192,6 +199,7 @@
     <ClInclude Include="graphics\PostEffect.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="graphics\Sprite.h" />
+    <ClInclude Include="SMAW.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Stone.h" />
     <ClInclude Include="StoneManager.h" />
@@ -200,11 +208,18 @@
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\Background.FBX" />
+    <MeshContentTask Include="Assets\modelData\Benelli M4.FBX" />
+    <MeshContentTask Include="Assets\modelData\Bullet.FBX" />
     <MeshContentTask Include="Assets\modelData\Goblin.fbx" />
+    <MeshContentTask Include="Assets\modelData\M110.FBX" />
+    <MeshContentTask Include="Assets\modelData\M4A1.FBX" />
     <MeshContentTask Include="Assets\modelData\Minotaur.fbx" />
+    <MeshContentTask Include="Assets\modelData\MP5.FBX" />
     <MeshContentTask Include="Assets\modelData\Orc.fbx" />
     <MeshContentTask Include="Assets\modelData\Player.FBX" />
+    <MeshContentTask Include="Assets\modelData\Player_.FBX" />
     <MeshContentTask Include="Assets\modelData\Player_NoHead.FBX" />
+    <MeshContentTask Include="Assets\modelData\Player_Test.fbx" />
     <MeshContentTask Include="Assets\modelData\sky.fbx" />
     <MeshContentTask Include="Assets\modelData\Stone.fbx" />
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">

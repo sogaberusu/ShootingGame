@@ -15,7 +15,7 @@ Player::Player()
 
 	InitAnimation();
 
-	m_charaCon.Init(20.0f, 50.0f, m_position);
+	m_charaCon.Init(20.0f, 100.0f, m_position);
 }
 
 void Player::InitAnimation()
@@ -50,6 +50,9 @@ void Player::InitAnimation()
 
 	m_animationClips[enAnimation_Shoot].Load(L"Assets/animData/Player_Shoot.tka");
 	m_animationClips[enAnimation_Shoot].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Crouch_Shoot].Load(L"Assets/animData/Player_Crouch_Shoot.tka");
+	m_animationClips[enAnimation_Crouch_Shoot].SetLoopFlag(false);
 
 	m_animationClips[enAnimation_Jump_Start].Load(L"Assets/animData/Player_Jump_Start.tka");
 	m_animationClips[enAnimation_Jump_Start].SetLoopFlag(false);
@@ -127,6 +130,11 @@ void Player::Update(Camera& camera, int i)
 		m_animation.Play(enAnimation_Jump_Land, 0.3);
 		break;
 	}
+	Bone* m_righthandBoneMat = m_model.FindBone(L"Bip001 R Hand");
+	CMatrix hand = m_righthandBoneMat->GetWorldMatrix();
+	m_handPos.x = hand.m[3][0];
+	m_handPos.y = hand.m[3][1];
+	m_handPos.z = hand.m[3][2];
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	m_animation.Update(1.0f / 30.0f);
@@ -158,17 +166,18 @@ void Player::Move(Camera& camera, int i)
 	m_moveSpeed += cameraForward * m_lStickY * 200.0f;		//奥方向への移動速度を加算。
 	m_moveSpeed += cameraRight * m_lStickX * 200.0f;		//右方向への移動速度を加算。
 	if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0) {
-		if (m_state != enState_Crouch_Idle && m_state != enState_Crouch_Walk)
-		{
-			if (m_state != enState_Reload &&
+		
+			if (m_state != enState_Crouch_Walk&&
+				m_state != enState_Crouch_Idle &&
 				m_state != enState_Crouch_Reload &&
+				m_state != enState_Crouch_Shoot&&
 				m_state != enState_Jump_Air &&
 				m_state != enState_Jump_Start &&
-				m_state != enState_Jump_Land)
+				m_state != enState_Jump_Land
+				)
 			{
 				m_state = enState_Idle;
 			}
-		}
 	}
 	else{
 		if (m_state == enState_Crouch_Idle)
@@ -218,7 +227,9 @@ void Player::Move(Camera& camera, int i)
 	
 	if (g_pad[i].IsTrigger(enButtonB) == true)
 	{
-		if (m_state == enState_Crouch_Idle || m_state == enState_Crouch_Walk)
+		if (m_state == enState_Crouch_Idle ||
+			m_state == enState_Crouch_Walk ||
+			m_state == enState_Crouch_Shoot)
 		{
 			m_state = enState_Idle;
 		}
@@ -238,17 +249,27 @@ void Player::Move(Camera& camera, int i)
 			m_state = enState_Reload;
 		}
 	}
-	if (g_pad[i].IsTrigger(enButtonY) == true)
+	if (g_pad[i].IsPress(enButtonRB2) == true)
 	{
-		m_state = enState_Shoot;
-		//Stone* stone = g_game->GetStoneManager().NewStone(i);
-		Bullet* bullet = g_game->GetBulletManager().NewBullet(i);
-		CVector3 target = camera.GetTarget() - camera.GetPosition();
-		target.Normalize();
-		//stone->SetMoveSpeed(target * 100);
-		bullet->SetMoveSpeed(target * 100);
-		//stone->SetPosition(m_position += {0.0, 50.0, 0.0});
-		bullet->SetPosition(m_position += {0.0, 50.0, 0.0});
+		if (m_state != enState_Crouch_Idle&&m_state != enState_Crouch_Shoot)
+		{
+			m_state = enState_Shoot;
+			//Stone* stone = g_game->GetStoneManager().NewStone(i);
+			Bullet* bullet = g_game->GetBulletManager().NewBullet(i);
+			CVector3 target = camera.GetTarget() - camera.GetPosition();
+			target.Normalize();
+			//stone->SetMoveSpeed(target * 100);
+			bullet->SetMoveSpeed(target * 100);
+			//stone->SetPosition(m_position += {0.0, 50.0, 0.0});
+			//bullet->SetPosition(m_position += {0.0, 50.0, 0.0});
+		}
+		else {
+			m_state = enState_Crouch_Shoot;
+			Bullet* bullet = g_game->GetBulletManager().NewBullet(i);
+			CVector3 target = camera.GetTarget() - camera.GetPosition();
+			target.Normalize();
+			bullet->SetMoveSpeed(target * 100);
+		}
 	}
 	
 	if (m_state == enState_Run)

@@ -5,14 +5,13 @@ class Bullet
 {
 public:
 	Bullet();
+	Bullet(CVector3 pos);
 	~Bullet();
 	void Update();
 	void Draw(Camera& camera);
 	void SetPosition(CVector3 pos)
 	{
 		m_pos = pos;
-		m_bulletController.Init(10.0f, 10.0f, m_pos);
-
 	}
 	CVector3 GetPosition()
 	{

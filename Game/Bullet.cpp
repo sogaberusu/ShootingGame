@@ -5,10 +5,14 @@
 
 Bullet::Bullet()
 {
-	m_model.Init(L"Assets/modelData/Stone.cmo");
-	
 }
 
+Bullet::Bullet(CVector3 pos)
+{
+	m_model.Init(L"Assets/modelData/Bullet.cmo");
+
+	m_bulletController.Init(1.0f, 1.0f, pos);
+}
 
 Bullet::~Bullet()
 {

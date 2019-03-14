@@ -126,6 +126,10 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="BulletController.cpp" />
+    <ClCompile Include="M4A1.cpp" />
+    <ClCompile Include="Benelli_M4.cpp" />
+    <ClCompile Include="M110.cpp" />
+    <ClCompile Include="SMAW.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -230,6 +234,10 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="BulletController.h" />
+    <ClInclude Include="M4A1.h" />
+    <ClInclude Include="Benelli_M4.h" />
+    <ClInclude Include="M110.h" />
+    <ClInclude Include="SMAW.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -255,6 +263,13 @@
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\Player.FBX" />
     <MeshContentTask Include="Assets\modelData\Player_NoHead.FBX" />
+    <MeshContentTask Include="Assets\modelData\Player_Test.fbx" />
+    <MeshContentTask Include="Assets\modelData\Bullet.FBX" />
+    <MeshContentTask Include="Assets\modelData\Benelli M4.FBX" />
+    <MeshContentTask Include="Assets\modelData\M4A1.FBX" />
+    <MeshContentTask Include="Assets\modelData\M110.FBX" />
+    <MeshContentTask Include="Assets\modelData\MP5.FBX" />
+    <MeshContentTask Include="Assets\modelData\Player_.FBX" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\animData\Minotaur_Down.tka" />

@@ -48,6 +48,10 @@ public:
 	{
 		return m_lStickY;
 	}
+	CVector3 GetHandPos()
+	{
+		return m_handPos;
+	}
 	void SetCameraDirection(CVector3 direction)
 	{
 		m_cameraDirection = direction;
@@ -95,6 +99,7 @@ private:
 		enAnimation_Crouch_Idle,
 		enAnimation_Crouch_Walk,
 		enAnimation_Crouch_Reload,
+		enAnimation_Crouch_Shoot,
 		enAnimation_Reload,
 		enAnimation_Shoot,
 		enAnimation_Num
@@ -112,6 +117,7 @@ private:
 		enState_Crouch_Idle,
 		enState_Crouch_Walk,
 		enState_Crouch_Reload,
+		enState_Crouch_Shoot,
 		enState_Reload,
 		enState_Shoot,
 		enState_Num
@@ -135,4 +141,5 @@ private:
 	float m_lStickY;									//左スティックのY
 	CVector3 m_cameraDirection;							//カメラの前方向
 	bool m_drawflag = true;
+	CVector3 m_handPos;
 };

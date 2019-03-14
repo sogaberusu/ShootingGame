@@ -34,12 +34,12 @@ void GameCamera::Update()
 //////////////////////////////////////////////////////////////////////////////////
 //	FPSŽ‹“_‚ÌŒvŽZ
 //////////////////////////////////////////////////////////////////////////////////
-	CVector3 minoforward = m_player->GetForward();
+	CVector3 playerforward = m_player->GetForward();
 		
 	CVector3 playerpos = m_player->GetPosition();
 	playerpos.y += 85.0f;
 
-	CVector3 target = playerpos + minoforward;
+	CVector3 target = playerpos + playerforward;
 		
 	CVector3 toCameraTargetOld = m_toCameraTarget;
 	//YŽ²Žü‚è‚Ì‰ñ“]
@@ -109,7 +109,7 @@ void GameCamera::Update()
 		g_camera3D[i].SetPosition(playerpos);
 		g_camera3D[i].Update();
 	}
-	else
+	else											//TPS
 	{
 		m_player->DrawSetTrue();
 		m_player->SetCameraDirection(direction);
