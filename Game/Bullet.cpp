@@ -7,11 +7,11 @@ Bullet::Bullet()
 {
 }
 
-Bullet::Bullet(CVector3 pos)
+Bullet::Bullet(CVector3 pos,int tag)
 {
 	m_model.Init(L"Assets/modelData/Bullet.cmo");
 
-	m_bulletController.Init(1.0f, 1.0f, pos);
+	m_bulletController.Init(1.0f, 1.0f, pos, tag);
 }
 
 Bullet::~Bullet()
@@ -43,12 +43,12 @@ void Bullet::Update()
 	//	m_isDead = true;
 	//}
 	m_isDead = m_bulletController.GetIsDead();
-	/*if (m_pos.x > 10000 || m_pos.x < -10000 ||
-		m_pos.y > 1000 || m_pos.y < -1000 ||
+	if (m_pos.x > 10000 || m_pos.x < -10000 ||
+		m_pos.y > 500 || m_pos.y < -500 ||
 		m_pos.z > 10000 || m_pos.z < -10000)
 	{
 		m_isDead = true;
-	}*/
+	}
 	
 	m_model.UpdateWorldMatrix(m_pos, CQuaternion::Identity(), CVector3::One());
 	

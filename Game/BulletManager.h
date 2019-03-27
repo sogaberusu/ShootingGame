@@ -11,12 +11,16 @@ class BulletManager
 public:
 	BulletManager();
 	~BulletManager();
-	Bullet* NewBullet(int i);
+	Bullet* NewBullet(int PlayerNumber);
 	void Update();
 	void Draw(Camera& camera);
-	void SetInstance(Player *player, int i)
+	void SetInstance(Player *player, int PlayerNumber)
 	{
-		m_player[i] = player;
+		m_player[PlayerNumber] = player;
+	}
+	Player* GetPlayer(int PlayerNumber)
+	{
+		return m_player[PlayerNumber];
 	}
 	///*!
 	//	* @brief	‰Šú‰»B

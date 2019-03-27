@@ -16,6 +16,7 @@ struct RigidBodyInfo {
 //剛体クラス。
 class RigidBody
 {
+	btRaycastVehicle*		raycastVehicle = nullptr;
 	btRigidBody*			rigidBody = nullptr;		//剛体。
 	btDefaultMotionState*	myMotionState = nullptr;	//モーションステート。
 public:
@@ -26,6 +27,10 @@ public:
 	btRigidBody* GetBody()
 	{
 		return rigidBody;
+	}
+	btRaycastVehicle* GetVehicle()
+	{
+		return raycastVehicle;
 	}
 };
 

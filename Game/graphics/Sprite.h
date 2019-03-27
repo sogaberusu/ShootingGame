@@ -64,7 +64,14 @@ public:
 			m_alpha = 0.0f;
 		}
 	}
-
+	/*!
+		 * @brief	テクスチャを設定。
+		 *@param[in]	tex		テクスチャ。
+		 */
+	void SetTexture(ID3D11ShaderResourceView& tex)
+	{
+		m_texture = &tex;
+	}
 private:
 	/// <summary>
 	/// 初期化の共通処理。

@@ -55,11 +55,10 @@ public:
 	{
 		m_cameratype = type;
 	}
-	
 private:
 	//Minotaur m_minotaur[4];				//プレイヤー
 	Player m_player[4];
-	Level m_level;						//レベルを初期化。
+	//Level m_level;						//レベルを初期化。
 	GameCamera m_gameCamera[4];
 	Background m_bg;
 	//Goblin m_goblin;

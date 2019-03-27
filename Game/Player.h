@@ -1,16 +1,29 @@
 #pragma once
 #include "character/CharacterController.h"
 #include "graphics/ShadowMap.h"
+#include "Benelli_M4.h"
+#include "M4A1.h"
+#include "M110.h"
+#include "SMAW.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 
 class GameCamera;
-
+struct PlayerStatus
+{
+	int HitPoint = 100;				//体力
+	int Kills = 0;					//キル数
+	int Attack = 30;				//攻撃力
+};
 class Player
 {
 public:
+	
 	Player();
 	~Player();
-	void Update(Camera& camera, int i);
+	void Update(Camera& camera, int PlayerNumber);
 	void Draw(Camera& camera, int ViewportNumber, int PlayerNumber);
+	void WeaponDraw(Camera& camera);
 	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
@@ -52,6 +65,14 @@ public:
 	{
 		return m_handPos;
 	}
+	PlayerStatus GetStatus()
+	{
+		return m_status;
+	}
+	void SetHitPoint(int hp)
+	{
+		m_status.HitPoint = hp;
+	}
 	void SetCameraDirection(CVector3 direction)
 	{
 		m_cameraDirection = direction;
@@ -64,6 +85,7 @@ public:
 	{
 		m_drawflag = true;
 	}
+	
 private:
 	enum EnCameraType {
 		enType_TPS,
@@ -83,9 +105,12 @@ public:
 		return m_model;
 	}
 private:
+	/// Effekseerの初期化。
+	/// </summary>
+	void InitEffekseer();
 	void InitAnimation();								//アニメーションの初期化
-	void Move(Camera& camera, int i);					//移動処理
-	void Turn(int i);									//回転処理
+	void Move(Camera& camera, int PlayerNumber);					//移動処理
+	void Turn(int PlayerNumber);									//回転処理
 	enum EnAnimation {
 		enAnimation_Idle,
 		enAnimation_Walk_Forward,
@@ -102,6 +127,8 @@ private:
 		enAnimation_Crouch_Shoot,
 		enAnimation_Reload,
 		enAnimation_Shoot,
+		enAnimation_Damage,
+		enAnimation_Death,
 		enAnimation_Num
 	};
 	enum EnState {
@@ -120,7 +147,15 @@ private:
 		enState_Crouch_Shoot,
 		enState_Reload,
 		enState_Shoot,
+		enState_Damage,
+		enState_Death,
 		enState_Num
+	};
+	enum EnWeapon {
+		enM4A1,
+		enM110,
+		enBenelli_M4,
+		enSMAW
 	};
 
 	SkinModel m_model;									//スキンモデル。
@@ -131,7 +166,7 @@ private:
 	CVector3 m_moveSpeed = CVector3::Zero();			//移動速度。
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転。
 	CVector3 m_forward;									//キャラクターの前方向
-	CVector3 m_right;
+	CVector3 m_right;									//キャラクターの右方向
 	CharacterController m_charaCon;						//キャラクターコントローラー
 	EnState m_state = enState_Idle;						//状態
 	bool m_cameratype = EnCameraType::enType_TPS;		//カメラ
@@ -142,4 +177,13 @@ private:
 	CVector3 m_cameraDirection;							//カメラの前方向
 	bool m_drawflag = true;
 	CVector3 m_handPos;
+	RigidBody* m_rigidBody;
+	EnWeapon m_weapon = enM4A1;
+	M4A1 m_m4a1;
+	M110 m_m110;
+	SMAW m_smaw;
+	Benelli_M4 m_benelli_m4;
+	PlayerStatus m_status;
+	CSoundEngine m_soundEngine;				//サウンドエンジン。
+	CSoundSource m_M4A1_Shot;						//SE。
 };

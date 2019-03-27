@@ -2,6 +2,7 @@
 #include "BulletController.h"
 #include "Physics/CollisionAttr.h"
 #include "Bullet.h"
+#include "Game.h"
 
 
 BulletController::BulletController()
@@ -15,20 +16,59 @@ namespace {
 		bool isHit = false;						//衝突フラグ。
 		btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
 												//衝突したときに呼ばれるコールバック関数。
+	
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-			if (convexResult.m_hitCollisionObject == me ||
-				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Bullet
+			int bulletTag = me->getUserIndex();
+			/*if (convexResult.m_hitCollisionObject == me ||
+				convexResult.m_hitCollisionObject->getUserIndex() == bulletTag
 				) {
-
+				
 				return 0.0f;
 			}
-			isHit = true;
+			isHit = true;*/
+			bool isHitPlayer = false;
+			//プレイヤーと弾丸の当たり判定
+			//自分自身の弾丸に当たらないようにタグで判定する
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1 &&
+				bulletTag != enCollisionAttr_Player1_Bullet)
+			{
+				isHitPlayer = true;
+			}
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2 &&
+				bulletTag != enCollisionAttr_Player2_Bullet)
+			{
+				isHitPlayer = true;
+			}
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3 &&
+				bulletTag != enCollisionAttr_Player3_Bullet)
+			{
+				isHitPlayer = true;
+			}
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4 &&
+				bulletTag != enCollisionAttr_Player4_Bullet)
+			{
+				isHitPlayer = true;
+			}
+			if (isHitPlayer) {
+				//弾丸が当たったプレイヤーの番号と、弾丸を打ったプレイヤーの番号を求める。
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint -
+					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetStatus().Attack);
+		
+				isHit = true;
+			}
+			//プレイヤー以外のものに当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Default)
+			{
+				isHit = true;
+			}
 			return 0.0f;
 		}
 	};
 }
-void BulletController::Init(float radius, float height, const CVector3& position)
+void BulletController::Init(float radius, float height, const CVector3& position,int tag)
 {
 	m_position = position;
 	//コリジョン作成。
@@ -40,12 +80,12 @@ void BulletController::Init(float radius, float height, const CVector3& position
 	rbInfo.collider = &m_collider;
 	rbInfo.mass = 0.0f;
 	m_rigidBody.Create(rbInfo);
-	m_rigidBody.GetBody()->setUserIndex(enCollisionAttr_Bullet);
+	//m_rigidBody.GetBody()->setUserIndex(enCollisionAttr_Player1_Bullet);
 	btTransform& trans = m_rigidBody.GetBody()->getWorldTransform();
 	//剛体の位置を更新。
 	trans.setOrigin(btVector3(position.x, position.y, position.z));
 	//@todo 未対応。trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
-	//m_rigidBody.GetBody()->setUserIndex(enCollisionAttr_User);
+	m_rigidBody.GetBody()->setUserIndex(enCollisionAttr_Player1_Bullet + tag);
 	m_rigidBody.GetBody()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 	g_physics.AddRigidBody(m_rigidBody);
 }

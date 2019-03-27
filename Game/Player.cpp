@@ -6,8 +6,13 @@
 #include "Bullet.h"
 
 
+
 Player::Player()
 {
+	//サウンドエンジンを初期化。
+	m_soundEngine.Init();
+	//ワンショット再生のSE
+	m_M4A1_Shot.Init(L"Assets/sound/M4A1_Shot.wav");
 	//cmoファイルの読み込み。
 	m_model.Init(L"Assets/modelData/Player.cmo");
 
@@ -15,7 +20,7 @@ Player::Player()
 
 	InitAnimation();
 
-	m_charaCon.Init(20.0f, 100.0f, m_position);
+	m_charaCon.Init(10.0f, 150.0f, m_position);
 }
 
 void Player::InitAnimation()
@@ -63,6 +68,11 @@ void Player::InitAnimation()
 	m_animationClips[enAnimation_Jump_Land].Load(L"Assets/animData/Player_Jump_Land.tka");
 	m_animationClips[enAnimation_Jump_Land].SetLoopFlag(false);
 
+	m_animationClips[enAnimation_Damage].Load(L"Assets/animData/Player_Damage.tka");
+	m_animationClips[enAnimation_Damage].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Death].Load(L"Assets/animData/Player_Death.tka");
+	m_animationClips[enAnimation_Death].SetLoopFlag(false);
 	//アニメーションの初期化。
 	m_animation.Init(
 		m_model,			//アニメーションを流すスキンモデル。
@@ -74,15 +84,25 @@ void Player::InitAnimation()
 
 Player::~Player()
 {
+	
 }
 
-void Player::Update(Camera& camera, int i)
+void Player::Update(Camera& camera, int PlayerNumber)
 {
-	//移動処理
-	Move(camera, i);
-
+	if (m_state != enState_Death)
+	{
+		//移動処理
+		Move(camera, PlayerNumber);
+	}
+	if (g_pad[PlayerNumber].IsTrigger(enButtonX) == true &&
+		m_state == enState_Death && 
+		m_animation.IsPlaying() == false )
+	{
+		m_state = enState_Idle;
+		m_status.HitPoint = 100;
+	}
 	//回転処理
-	Turn(i);
+	Turn(PlayerNumber);
 
 	switch (m_state)
 	{
@@ -129,28 +149,30 @@ void Player::Update(Camera& camera, int i)
 	case Player::enState_Jump_Land:
 		m_animation.Play(enAnimation_Jump_Land, 0.3);
 		break;
+	case Player::enState_Death:
+		m_animation.Play(enAnimation_Death, 0.3);
+		break;
 	}
 	Bone* m_righthandBoneMat = m_model.FindBone(L"Bip001 R Hand");
 	CMatrix hand = m_righthandBoneMat->GetWorldMatrix();
 	m_handPos.x = hand.m[3][0];
 	m_handPos.y = hand.m[3][1];
 	m_handPos.z = hand.m[3][2];
+	WeaponDraw(camera);
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	m_animation.Update(1.0f / 30.0f);
-
 	//シャドウキャスターを登録。
 	g_shadowMap.RegistShadowCaster(&m_model);
 }
-void Player::Move(Camera& camera, int i)
+void Player::Move(Camera& camera, int PlayerNumber)
 {
-
 	//XZ平面の移動速度はパッドの入力から引っ張ってくる。
-	m_lStickX = g_pad[i].GetLStickXF();
-	m_lStickY = g_pad[i].GetLStickYF();
+	m_lStickX = g_pad[PlayerNumber].GetLStickXF();
+	m_lStickY = g_pad[PlayerNumber].GetLStickYF();
 	//パッドの入力を使ってカメラを回す。
-	m_rStickX = g_pad[i].GetRStickXF();
-	m_rStickY = g_pad[i].GetRStickYF();
+	m_rStickX = g_pad[PlayerNumber].GetRStickXF();
+	m_rStickY = g_pad[PlayerNumber].GetRStickYF();
 	//カメラの前方方向と右方向を取得。
 	CVector3 cameraForward = camera.GetForward();
 	CVector3 cameraRight = camera.GetRight();
@@ -173,7 +195,8 @@ void Player::Move(Camera& camera, int i)
 				m_state != enState_Crouch_Shoot&&
 				m_state != enState_Jump_Air &&
 				m_state != enState_Jump_Start &&
-				m_state != enState_Jump_Land
+				m_state != enState_Jump_Land &&
+				m_state != enState_Reload
 				)
 			{
 				m_state = enState_Idle;
@@ -206,11 +229,11 @@ void Player::Move(Camera& camera, int i)
 			}
 		}
 	}
-	if (g_pad[i].IsPress(enButtonLB3) == true)
+	if (g_pad[PlayerNumber].IsPress(enButtonLB3) == true)
 	{
 		m_state = enState_Run;
 	}
-	if (g_pad[i].IsTrigger(enButtonA) == true
+	if (g_pad[PlayerNumber].IsTrigger(enButtonA) == true
 		&& m_charaCon.IsOnGround() == true
 		) {
 		m_moveSpeed.y += 300.0f;
@@ -225,7 +248,7 @@ void Player::Move(Camera& camera, int i)
 		m_state = enState_Jump_Land;
 	}
 	
-	if (g_pad[i].IsTrigger(enButtonB) == true)
+	if (g_pad[PlayerNumber].IsTrigger(enButtonB) == true)
 	{
 		if (m_state == enState_Crouch_Idle ||
 			m_state == enState_Crouch_Walk ||
@@ -238,7 +261,7 @@ void Player::Move(Camera& camera, int i)
 			m_state = enState_Crouch_Idle;
 		}
 	}
-	if (g_pad[i].IsTrigger(enButtonX) == true)
+	if (g_pad[PlayerNumber].IsTrigger(enButtonX) == true)
 	{
 		if (m_state == enState_Crouch_Idle)
 		{
@@ -249,26 +272,27 @@ void Player::Move(Camera& camera, int i)
 			m_state = enState_Reload;
 		}
 	}
-	if (g_pad[i].IsPress(enButtonRB2) == true)
+	if (g_pad[PlayerNumber].IsPress(enButtonRB2) == true)
 	{
+		if (m_M4A1_Shot.IsPlaying())
+		{
+			m_M4A1_Shot.Stop();
+		}
+		m_M4A1_Shot.Play(false);
 		if (m_state != enState_Crouch_Idle&&m_state != enState_Crouch_Shoot)
 		{
 			m_state = enState_Shoot;
-			//Stone* stone = g_game->GetStoneManager().NewStone(i);
-			Bullet* bullet = g_game->GetBulletManager().NewBullet(i);
+			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
-			//stone->SetMoveSpeed(target * 100);
-			bullet->SetMoveSpeed(target * 100);
-			//stone->SetPosition(m_position += {0.0, 50.0, 0.0});
-			//bullet->SetPosition(m_position += {0.0, 50.0, 0.0});
+			bullet->SetMoveSpeed(target * 1000);
 		}
 		else {
 			m_state = enState_Crouch_Shoot;
-			Bullet* bullet = g_game->GetBulletManager().NewBullet(i);
+			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
-			bullet->SetMoveSpeed(target * 100);
+			bullet->SetMoveSpeed(target * 1000);
 		}
 	}
 	
@@ -276,6 +300,29 @@ void Player::Move(Camera& camera, int i)
 	{
 		m_moveSpeed.Add(m_moveSpeed);
 	}
+
+	if (g_pad[PlayerNumber].IsTrigger(enButtonUp) == true)
+	{
+		m_weapon = enM4A1;
+	}
+	if (g_pad[PlayerNumber].IsTrigger(enButtonRight) == true)
+	{
+		m_weapon = enBenelli_M4;
+	}
+	if (g_pad[PlayerNumber].IsTrigger(enButtonDown) == true)
+	{
+		m_weapon = enSMAW;
+	}
+	if (g_pad[PlayerNumber].IsTrigger(enButtonLeft) == true)
+	{
+		m_weapon = enM110;
+	}
+
+	if (m_status.HitPoint <= 0)
+	{
+		m_state = enState_Death;
+	}
+	m_charaCon.GetRigidBody()->GetBody()->setUserIndex(PlayerNumber);
 	m_position = m_charaCon.Execute(1.0f / 60.0f, m_moveSpeed);
 
 	CMatrix rotMatrix = m_model.GetRotationMatrix();
@@ -289,9 +336,9 @@ void Player::Move(Camera& camera, int i)
 	m_right.Normalize();
 }
 
-void Player::Turn(int i)
+void Player::Turn(int PlayerNumber)
 {
-	if (g_pad[i].IsPress(enButtonLB2) == true)
+	if (g_pad[PlayerNumber].IsPress(enButtonLB2) == true)
 	{
 		SetCameraType(EnCameraType::enType_FPS);
 
@@ -313,8 +360,28 @@ void Player::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
 		m_model.Draw(
 			camera.GetViewMatrix(),
 			camera.GetProjectionMatrix(),
-			//camera,
 			0
 		);
+	}
+	
+}
+
+void Player::WeaponDraw(Camera& camera)
+{
+	if (m_weapon == enM4A1)
+	{
+		m_m4a1.Draw(camera);
+	}
+	if (m_weapon == enSMAW)
+	{
+		m_smaw.Draw(camera);
+	}
+	if (m_weapon == enBenelli_M4)
+	{
+		m_benelli_m4.Draw(camera);
+	}
+	if (m_weapon == enM110)
+	{
+		m_m110.Draw(camera);
 	}
 }

@@ -13,9 +13,8 @@ Game* g_game = nullptr;
 
 Game::Game()
 {
-
 	g_game = this;
-	
+
 	for (int i = 0; i < 4; i++)
 	{
 		//m_stoneManager.SetInstance(&m_player[i], i/*&m_minotaur[i],i &m_goblin, &m_orc*/);
@@ -45,12 +44,7 @@ Game::Game()
 	m_gameCamera[3].Seti(3);
 	m_player[3].SetPosition({ 0.0f,0.0f,-250.0f });
 
-	g_camera2D.SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
-	g_camera2D.SetWidth(FRAME_BUFFER_W);
-	g_camera2D.SetHeight(FRAME_BUFFER_H);
-	g_camera2D.SetPosition({ 0.0f, 0.0f, -10.0f });
-	g_camera2D.SetTarget(CVector3::Zero());
-	g_camera2D.Update();
+
 
 	g_shadowMap.InitShadowMap();
 
@@ -69,7 +63,6 @@ Game::Game()
 		FRAME_BUFFER_H
 	);
 }
-
 
 Game::~Game()
 {
@@ -164,6 +157,7 @@ void Game::DrawShadowMap()
 	//メインレンダリングターゲットをクリアする。
 	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	g_mainRenderTarget.ClearRenderTarget(clearColor);
+	
 
 	//ポストエフェクトの描画。
 	m_postEffect.Draw();

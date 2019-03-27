@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IScene.h"
+#include "graphics/Sprite.h"
 
 class Title : public IScene
 {
@@ -15,5 +16,9 @@ public:
 	//void Drow() override;
 	void Draw() override;
 private:
+	Sprite m_sprite;
+	CVector3	m_position;		//ç¿ïWÅB
+	CQuaternion m_rotation;	//âÒì]ÅB
+	ID3D11ShaderResourceView* m_mikyan = nullptr;
 };
 

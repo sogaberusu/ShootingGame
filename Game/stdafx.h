@@ -12,7 +12,9 @@
 #include <map>
 #include <functional>
 #include <algorithm>
-
+#include <xaudio2.h>
+#include <x3daudio.h>
+#include <xaudio2fx.h>
 
 //Effekseerのヘッダーファイルをインクルード。
 #include "Effekseer.h"

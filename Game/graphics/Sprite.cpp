@@ -173,7 +173,6 @@ void Sprite::InitCommon(float w, float h)
 
 	//定数バッファを初期化。
 	InitConstantBuffer();
-
 }
 void Sprite::Init(const wchar_t* texFilePath, float w, float h)
 {
@@ -260,4 +259,5 @@ void Sprite::Draw()
 		0,				//開始インデックス番号。0でいい。
 		0				//開始頂点番号。0でいい。
 	);
+
 }

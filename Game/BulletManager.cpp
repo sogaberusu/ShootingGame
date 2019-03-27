@@ -24,10 +24,10 @@ BulletManager::~BulletManager()
 	}
 }
 
-Bullet* BulletManager::NewBullet(int i)
+Bullet* BulletManager::NewBullet(int PlayerNumber)
 {
-	Bullet* newBullet = new Bullet(m_player[i]->GetHandPos());
-	m_bullet[i].push_back(newBullet);
+	Bullet* newBullet = new Bullet(m_player[PlayerNumber]->GetHandPos(), PlayerNumber);
+	m_bullet[PlayerNumber].push_back(newBullet);
 	return newBullet;
 }
 

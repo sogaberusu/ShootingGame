@@ -5,7 +5,7 @@ class Bullet
 {
 public:
 	Bullet();
-	Bullet(CVector3 pos);
+	Bullet(CVector3 pos,int tag);
 	~Bullet();
 	void Update();
 	void Draw(Camera& camera);
