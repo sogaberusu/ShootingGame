@@ -75,6 +75,7 @@ private:
 	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー。
 	PostEffect m_postEffect;				//ポストエフェクト。
 	D3D11_VIEWPORT m_frameBufferViewports;			//フレームバッファのビューポート。
+	Level m_level;
 };
 
 //グローバルなアクセスポイントをグローバル変数として提供する。

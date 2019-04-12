@@ -15,7 +15,7 @@ GameCamera::GameCamera()
 	m_toCameraPos.Set(g_camera3D[i].GetTarget() - g_camera3D[i].GetPosition());
 	//視点から注視点までのベクトルを設定。
 	m_toCameraTarget.Set(g_camera3D[i].GetPosition() - g_camera3D[i].GetTarget());
-
+	hoge = (m_player[i].GetPosition() - g_camera3D[i].GetPosition());
 }
 
 

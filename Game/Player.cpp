@@ -20,7 +20,7 @@ Player::Player()
 
 	InitAnimation();
 
-	m_charaCon.Init(10.0f, 150.0f, m_position);
+	m_charaCon.Init(15.0f, 110.0f, m_position);
 }
 
 void Player::InitAnimation()
@@ -58,6 +58,15 @@ void Player::InitAnimation()
 
 	m_animationClips[enAnimation_Crouch_Shoot].Load(L"Assets/animData/Player_Crouch_Shoot.tka");
 	m_animationClips[enAnimation_Crouch_Shoot].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Crouch_Walk_Shoot].Load(L"Assets/animData/Player_Crouch_Walk_Shoot.tka");
+	m_animationClips[enAnimation_Crouch_Walk_Shoot].SetLoopFlag(true);
+
+	m_animationClips[enAnimation_Walk_Shoot].Load(L"Assets/animData/Player_Walk_Shoot.tka");
+	m_animationClips[enAnimation_Walk_Shoot].SetLoopFlag(true);
+
+	m_animationClips[enAnimation_Crouch_Walk_Forward].Load(L"Assets/animData/Player_Crouch_Walk_Forward.tka");
+	m_animationClips[enAnimation_Crouch_Walk_Forward].SetLoopFlag(true);
 
 	m_animationClips[enAnimation_Jump_Start].Load(L"Assets/animData/Player_Jump_Start.tka");
 	m_animationClips[enAnimation_Jump_Start].SetLoopFlag(false);
@@ -127,9 +136,14 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	case Player::enState_Crouch_Idle:
 		m_animation.Play(enAnimation_Crouch_Idle, 0.3);
 		break;
-	case Player::enState_Crouch_Walk:
-		m_animation.Play(enAnimation_Walk_Forward);
-		m_animation.Play(enAnimation_Crouch_Idle);
+	case Player::enState_Crouch_Walk_Shoot:
+		m_animation.Play(enAnimation_Crouch_Walk_Shoot,0.3);
+		break;
+	case Player::enState_Walk_Shoot:
+		m_animation.Play(enAnimation_Walk_Shoot, 0.3);
+		break;
+	case Player::enState_Crouch_Walk_Forward:
+		m_animation.Play(enAnimation_Crouch_Walk_Forward,0.3);
 		break;
 	case Player::enState_Crouch_Reload:
 		m_animation.Play(enAnimation_Crouch_Reload, 0.3);
@@ -158,6 +172,7 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	m_handPos.x = hand.m[3][0];
 	m_handPos.y = hand.m[3][1];
 	m_handPos.z = hand.m[3][2];
+
 	WeaponDraw(camera);
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
@@ -188,8 +203,12 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	m_moveSpeed += cameraForward * m_lStickY * 200.0f;		//奥方向への移動速度を加算。
 	m_moveSpeed += cameraRight * m_lStickX * 200.0f;		//右方向への移動速度を加算。
 	if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0) {
-		
-			if (m_state != enState_Crouch_Walk&&
+		if (m_state == enState_Crouch_Walk_Forward ||
+			m_state == enState_Crouch_Walk_Shoot)
+		{
+			m_state = enState_Crouch_Idle;
+		}
+		else if (
 				m_state != enState_Crouch_Idle &&
 				m_state != enState_Crouch_Reload &&
 				m_state != enState_Crouch_Shoot&&
@@ -205,10 +224,10 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	else{
 		if (m_state == enState_Crouch_Idle)
 		{
-			m_state = enState_Crouch_Walk;
+			m_state = enState_Crouch_Walk_Forward;
 		}
 		else if(m_charaCon.IsOnGround() == true 
-			&& m_state != enState_Crouch_Walk
+			&& m_state != enState_Crouch_Walk_Forward
 			&& m_state != enState_Run)
 		{
 			if (m_lStickY > 0.8)
@@ -251,8 +270,9 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	if (g_pad[PlayerNumber].IsTrigger(enButtonB) == true)
 	{
 		if (m_state == enState_Crouch_Idle ||
-			m_state == enState_Crouch_Walk ||
-			m_state == enState_Crouch_Shoot)
+			m_state == enState_Crouch_Walk_Forward ||
+			m_state == enState_Crouch_Shoot ||
+			m_state == enState_Crouch_Walk_Shoot)
 		{
 			m_state = enState_Idle;
 		}
@@ -279,16 +299,33 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			m_M4A1_Shot.Stop();
 		}
 		m_M4A1_Shot.Play(false);
-		if (m_state != enState_Crouch_Idle&&m_state != enState_Crouch_Shoot)
+		if (m_state == enState_Crouch_Idle ||
+			m_state == enState_Crouch_Shoot ||
+			m_state == enState_Crouch_Walk_Forward ||
+			m_state == enState_Crouch_Walk_Shoot)
 		{
-			m_state = enState_Shoot;
+			if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0)
+			{
+				m_state = enState_Crouch_Shoot;
+			}
+			else {
+				m_state = enState_Crouch_Walk_Shoot;
+			}
+
 			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
 			bullet->SetMoveSpeed(target * 1000);
 		}
 		else {
-			m_state = enState_Crouch_Shoot;
+			if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0)
+			{
+				m_state = enState_Shoot;
+			}
+			else {
+				m_state = enState_Walk_Shoot;
+			}
+			
 			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();

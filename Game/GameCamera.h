@@ -57,4 +57,6 @@ private:
 	float m_topLeftY = 0;
 
 	int i = 0;
+	
+	CVector3 hoge;
 };

@@ -192,12 +192,24 @@ void GraphicsEngine::Init(HWND hWnd)
 	viewport.MaxDepth = 1.0f;
 	m_pd3dDeviceContext->RSSetViewports(1, &viewport);
 	m_pd3dDeviceContext->RSSetState(m_rasterizerState);
+
 	g_camera2D.SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
 	g_camera2D.SetWidth(FRAME_BUFFER_W);
 	g_camera2D.SetHeight(FRAME_BUFFER_H);
 	g_camera2D.SetPosition({ 0.0f, 0.0f, -10.0f });
 	g_camera2D.SetTarget(CVector3::Zero());
 	g_camera2D.Update();
+
+	g_camera3D[0].SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Perspective);
+	g_camera3D[0].SetWidth(FRAME_BUFFER_W);
+	g_camera3D[0].SetHeight(FRAME_BUFFER_H);
+	g_camera3D[0].SetPosition({ 0.0f, 25.0f, 100.0f });
+	g_camera3D[0].SetTarget(CVector3::Zero());
+	g_camera3D[0].Update();
+
+	//フォント用のデータの初期化。
+	m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_pd3dDeviceContext);
+	m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_pd3dDevice, L"Assets/font/myfile.spritefont");
 }
 
 void GraphicsEngine::SetViewport(float Width, float Height, float TopLeftX, float TopLeftY)

@@ -43,9 +43,9 @@ void Bullet::Update()
 	//	m_isDead = true;
 	//}
 	m_isDead = m_bulletController.GetIsDead();
-	if (m_pos.x > 10000 || m_pos.x < -10000 ||
+	if (m_pos.x > 2000 || m_pos.x < -2000 ||
 		m_pos.y > 500 || m_pos.y < -500 ||
-		m_pos.z > 10000 || m_pos.z < -10000)
+		m_pos.z > 2000 || m_pos.z < -2000)
 	{
 		m_isDead = true;
 	}

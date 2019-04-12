@@ -29,6 +29,10 @@ public:
 		m_position = pos;
 		m_charaCon.SetPosition(m_position);
 	}
+	void SetRotation(CQuaternion rot)
+	{
+		m_rotation = rot;
+	}
 	CVector3 GetPosition()
 	{
 		return m_position;
@@ -105,9 +109,6 @@ public:
 		return m_model;
 	}
 private:
-	/// Effekseerの初期化。
-	/// </summary>
-	void InitEffekseer();
 	void InitAnimation();								//アニメーションの初期化
 	void Move(Camera& camera, int PlayerNumber);					//移動処理
 	void Turn(int PlayerNumber);									//回転処理
@@ -117,13 +118,15 @@ private:
 		enAnimation_Walk_Back,
 		enAnimation_Walk_Right,
 		enAnimation_Walk_Left,
+		enAnimation_Walk_Shoot,
 		enAnimation_Run,
 		enAnimation_Jump_Start,
 		enAnimation_Jump_Air,
 		enAnimation_Jump_Land,
 		enAnimation_Crouch_Idle,
-		enAnimation_Crouch_Walk,
 		enAnimation_Crouch_Reload,
+		enAnimation_Crouch_Walk_Shoot,
+		enAnimation_Crouch_Walk_Forward,
 		enAnimation_Crouch_Shoot,
 		enAnimation_Reload,
 		enAnimation_Shoot,
@@ -137,14 +140,16 @@ private:
 		enState_Walk_Back,
 		enState_Walk_Right,
 		enState_Walk_Left,
+		enState_Walk_Shoot,
 		enState_Run,
 		enState_Jump_Start,
 		enState_Jump_Air,
 		enState_Jump_Land,
 		enState_Crouch_Idle,
-		enState_Crouch_Walk,
 		enState_Crouch_Reload,
 		enState_Crouch_Shoot,
+		enState_Crouch_Walk_Shoot,
+		enState_Crouch_Walk_Forward,
 		enState_Reload,
 		enState_Shoot,
 		enState_Damage,
@@ -160,7 +165,7 @@ private:
 
 	SkinModel m_model;									//スキンモデル。
 	Animation m_animation;								//アニメーション。
-	AnimationClip m_animationClips[enAnimation_Num];	//アニメーションクリップ。									//スキンモデル。
+	AnimationClip m_animationClips[enAnimation_Num];	//アニメーションクリップ。
 	CVector3 m_position = CVector3::Zero();				//座標
 	CVector3 m_scale = CVector3::One();					//拡大率。
 	CVector3 m_moveSpeed = CVector3::Zero();			//移動速度。

@@ -104,6 +104,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletController.cpp" />
     <ClCompile Include="BulletManager.cpp" />
+    <ClCompile Include="graphics\Font.cpp" />
     <ClCompile Include="graphics\Bloom.cpp" />
     <ClCompile Include="character\CharacterController.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletController.h" />
     <ClInclude Include="BulletManager.h" />
+    <ClInclude Include="graphics\Font.h" />
     <ClInclude Include="graphics\Bloom.h" />
     <ClInclude Include="character\CharacterController.h" />
     <ClInclude Include="Game.h" />
@@ -242,6 +244,18 @@
     <None Include="Assets\animData\Minotaur_Down.tka" />
     <None Include="Assets\animData\Player_Damage.tka" />
     <None Include="Assets\animData\Player_Death.tka" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\box.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Assets/sprite/%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)/Assets/sprite/%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+    <ImageContentTask Include="Assets\sprite\mikyan.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\Title.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
