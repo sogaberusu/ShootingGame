@@ -20,10 +20,8 @@ Font::Font()
 Font::~Font()
 {
 }
-void Font::Begin()
+void Font::BeginDraw()
 {
-	ID3D11Device* d3dDevice = g_graphicsEngine->GetD3DDevice();
-	//ƒuƒŒƒ“ƒhÝ’è
 	D3D11_BLEND_DESC BLEND_DETE;
 	BLEND_DETE.AlphaToCoverageEnable = false;
 	BLEND_DETE.IndependentBlendEnable = false;
@@ -36,7 +34,10 @@ void Font::Begin()
 	BLEND_DETE.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	BLEND_DETE.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 	ID3D11BlendState* BlendState;
+	ID3D11DeviceContext* d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
+	ID3D11Device* d3dDevice = g_graphicsEngine->GetD3DDevice();
 	d3dDevice->CreateBlendState(&BLEND_DETE, &BlendState);
+	d3dDeviceContext->OMSetBlendState(BlendState, nullptr, 0xFFFFFFFF);
 	m_spriteBatch->Begin(
 		DirectX::SpriteSortMode_Deferred,
 		BlendState,
@@ -47,7 +48,7 @@ void Font::Begin()
 		m_scaleMat
 	);
 }
-void Font::End()
+void Font::EndDraw()
 {
 	ID3D11DeviceContext* d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
 	ID3D11Device* d3dDevice = g_graphicsEngine->GetD3DDevice();

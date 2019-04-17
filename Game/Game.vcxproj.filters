@@ -136,7 +136,7 @@
     <ClCompile Include="sound\WaveFile.cpp" />
     <ClCompile Include="sound\WaveFileBank.cpp" />
     <ClCompile Include="graphics\Font.cpp" />
-    <ClCompile Include="TimerHUD.cpp" />
+    <ClCompile Include="HUD.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -251,7 +251,7 @@
     <ClInclude Include="sound\WaveFile.h" />
     <ClInclude Include="sound\WaveFileBank.h" />
     <ClInclude Include="graphics\Font.h" />
-    <ClInclude Include="TimerHUD.h" />
+    <ClInclude Include="HUD.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">

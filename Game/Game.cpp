@@ -131,6 +131,7 @@ Game::~Game()
 
 void Game::Update()
 {
+	m_restTimer = max(0.0f, m_restTimer - 1.0f / 30.0f);
 	//シャドウマップを更新。
 	g_shadowMap.UpdateFromLightTarget(
 		{1000.0f,1000.0f,0.0f},
@@ -154,6 +155,7 @@ void Game::Update()
 
 void Game::Draw()
 {
+	
 	DrawShadowMap();
 	auto deviceContext = g_graphicsEngine->GetD3DDeviceContext();
 	auto smSRV = g_shadowMap.GetShadowMapSRV();
@@ -174,6 +176,7 @@ void Game::Draw()
 		//m_stoneManager.Draw(g_camera3D[i]);
 		m_bulletManager.Draw(g_camera3D[i]);
 		m_sky.Draw(g_camera3D[i]);
+		m_timer.Draw();
 	}
 }
 

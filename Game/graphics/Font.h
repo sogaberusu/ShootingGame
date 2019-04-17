@@ -19,11 +19,11 @@ public:
 	/*!
 	 * @brief	描画開始。
 	 */
-	void Begin();
+	void BeginDraw();
 	/*!
 	 * @brief	描画終了。
 	 */
-	void End();
+	void EndDraw();
 	/*!
 	 * @brief	描画。
 	 *@param[in]	text		表示したいテキスト。

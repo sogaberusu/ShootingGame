@@ -16,6 +16,7 @@
 #include "Player.h"
 #include "graphics/Sprite.h"
 #include "graphics/PostEffect.h"
+#include "HUD.h"
 //ゲームクラス。
 class Game : public IScene
 {
@@ -79,6 +80,14 @@ public:
 		*/
 		return m_respawn[random];
 	}
+	/// <summary>
+	/// ゲームの残り時間を取得を取得。
+	/// </summary>
+	/// <returns></returns>
+	float GetRestTime() const
+	{
+		return m_restTimer;
+	}
 private:
 	//Minotaur m_minotaur[4];				//プレイヤー
 	Player m_player[4];
@@ -102,6 +111,8 @@ private:
 	Level m_level;
 	SRespawn m_respawn[4];
 	SViewport m_viewport[4];
+	float m_restTimer = 90.0f;									//ゲームの残り時間。単位：秒。
+	HUD m_timer;
 };
 
 //グローバルなアクセスポイントをグローバル変数として提供する。

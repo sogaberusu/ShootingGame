@@ -3,24 +3,23 @@
 class Game;
 
 /// <summary>
-/// タイマーHUD
+/// HUD
 /// </summary>
-class TimerHUD
+class HUD
 {
 public:
 	/// <summary>
 	/// コンストラクタ。
 	/// </summary>
-	TimerHUD();
+	HUD();
 	/// <summary>
 	/// デストラクタ。
 	/// </summary>
-	~TimerHUD();
+	~HUD();
 	/// <summary>
 	/// あっぷでーと
 	/// </summary>
-	//void Update();
+	void Draw();
 private:
-	Font* m_fontRender = nullptr;	//フォント。
-	Game* m_game = nullptr;
+	Font* m_font = nullptr;	//フォント。
 };
