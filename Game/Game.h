@@ -24,6 +24,19 @@ public:
 		enCamera_TPS,
 		enCamera_FPS
 	};
+	struct SRespawn
+	{
+		CVector3 PlayerPosition;
+		CQuaternion PlayerRotation;
+		CVector3 CameraPosition;
+	};
+	struct SViewport
+	{
+		float Width;
+		float Height;
+		float TopLeftX;
+		float TopLeftY;
+	};
 	/*!
 	* @brief	コンストラクタ。
 	*/
@@ -55,12 +68,23 @@ public:
 	{
 		m_cameratype = type;
 	}
+	SRespawn GetPlayerRespawn(int playerNo,int random)
+	{
+		m_gameCamera[playerNo]->Respawn(playerNo, m_respawn[random].CameraPosition);
+		/*delete m_gameCamera[playerNo];
+		m_gameCamera[playerNo] = new GameCamera(m_respawn[random].CameraPosition);
+		m_gameCamera[playerNo]->InitViewport(m_viewport->Width, m_viewport->Height, m_viewport->TopLeftX, m_viewport->TopLeftY);
+		m_gameCamera[playerNo]->SetPlayer(&m_player[playerNo]);
+		m_gameCamera[playerNo]->Seti(playerNo);
+		*/
+		return m_respawn[random];
+	}
 private:
 	//Minotaur m_minotaur[4];				//プレイヤー
 	Player m_player[4];
 	//Level m_level;						//レベルを初期化。
-	GameCamera m_gameCamera[4];
-	Background m_bg;
+	GameCamera* m_gameCamera[4];
+	Background* m_bg;
 	//Goblin m_goblin;
 	//Orc m_orc;
 	StoneManager m_stoneManager;
@@ -76,6 +100,8 @@ private:
 	PostEffect m_postEffect;				//ポストエフェクト。
 	D3D11_VIEWPORT m_frameBufferViewports;			//フレームバッファのビューポート。
 	Level m_level;
+	SRespawn m_respawn[4];
+	SViewport m_viewport[4];
 };
 
 //グローバルなアクセスポイントをグローバル変数として提供する。

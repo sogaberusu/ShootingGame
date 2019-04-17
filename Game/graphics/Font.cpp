@@ -11,8 +11,8 @@ Font::Font()
 	m_spriteFont = g_graphicsEngine->GetSpriteFont();
 	m_scaleMat.MakeScaling(
 		{
-			g_graphicsEngine->GetFrameBufferWidth() / static_cast<float>(g_graphicsEngine->Get2DSpaceScreenWidth()),
-			g_graphicsEngine->GetFrameBufferHeight() / static_cast<float>(g_graphicsEngine->Get2DSpaceScreenHeight()),
+			FRAME_BUFFER_W / static_cast<float>(FRAME_BUFFER_W),
+			FRAME_BUFFER_H / static_cast<float>(FRAME_BUFFER_H),
 			1.0f
 		}
 	);
@@ -22,6 +22,8 @@ Font::~Font()
 }
 void Font::Begin()
 {
+	ID3D11Device* d3dDevice = g_graphicsEngine->GetD3DDevice();
+	//ƒuƒŒƒ“ƒhÝ’è
 	D3D11_BLEND_DESC BLEND_DETE;
 	BLEND_DETE.AlphaToCoverageEnable = false;
 	BLEND_DETE.IndependentBlendEnable = false;
@@ -34,11 +36,7 @@ void Font::Begin()
 	BLEND_DETE.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	BLEND_DETE.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 	ID3D11BlendState* BlendState;
-	ID3D11DeviceContext* d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
-	ID3D11Device* d3dDevice = g_graphicsEngine->GetD3DDevice();
 	d3dDevice->CreateBlendState(&BLEND_DETE, &BlendState);
-	d3dDeviceContext->OMSetBlendState(BlendState, nullptr, 0xFFFFFFFF);
-
 	m_spriteBatch->Begin(
 		DirectX::SpriteSortMode_Deferred,
 		BlendState,
@@ -118,34 +116,6 @@ void Font::Draw(
 	float frameBufferHalfHeight = g_graphicsEngine->Get2DSpaceScreenHeight() * 0.5f;
 	pos.x += frameBufferHalfWidth;
 	pos.y = -pos.y + frameBufferHalfHeight;
-
-	if (m_isDrawShadow) {
-		//‰e‚ð‘‚­B
-		CVector2 offsetTbl[] = {
-			{ m_shadowOffset , 0.0f},
-			{ -m_shadowOffset , 0.0f },
-			{ 0.0f , m_shadowOffset },
-			{ 0.0f , -m_shadowOffset },
-			{ m_shadowOffset ,  m_shadowOffset },
-			{ m_shadowOffset ,  -m_shadowOffset },
-			{ -m_shadowOffset , m_shadowOffset },
-			{ -m_shadowOffset , -m_shadowOffset },
-		};
-		for (auto offset : offsetTbl) {
-			CVector2 sPos = pos;
-			sPos.x += offset.x;
-			sPos.y += offset.y;
-			m_spriteFont->DrawString(
-				m_spriteBatch,
-				text,
-				sPos.vec,
-				m_shadowColor,
-				rotation,
-				DirectX::XMFLOAT2(pivot.x, pivot.y),
-				scale
-			);
-		}
-	}
 	m_spriteFont->DrawString(
 		m_spriteBatch,
 		text,
@@ -155,4 +125,5 @@ void Font::Draw(
 		DirectX::XMFLOAT2(pivot.x, pivot.y),
 		scale
 	);
+	
 }

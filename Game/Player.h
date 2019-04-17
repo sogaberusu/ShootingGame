@@ -108,6 +108,14 @@ public:
 	{
 		return m_model;
 	}
+	bool GetCrouch()
+	{
+		return m_crouch;
+	}
+	int GetRandom(int min, int max)
+	{
+		return min + (int)(rand()*(max - min + 1.0) / (1.0 + RAND_MAX));
+	}
 private:
 	void InitAnimation();								//アニメーションの初期化
 	void Move(Camera& camera, int PlayerNumber);					//移動処理
@@ -125,9 +133,9 @@ private:
 		enAnimation_Jump_Land,
 		enAnimation_Crouch_Idle,
 		enAnimation_Crouch_Reload,
+		enAnimation_Crouch_Shoot,
 		enAnimation_Crouch_Walk_Shoot,
 		enAnimation_Crouch_Walk_Forward,
-		enAnimation_Crouch_Shoot,
 		enAnimation_Reload,
 		enAnimation_Shoot,
 		enAnimation_Damage,
@@ -190,5 +198,6 @@ private:
 	Benelli_M4 m_benelli_m4;
 	PlayerStatus m_status;
 	CSoundEngine m_soundEngine;				//サウンドエンジン。
-	CSoundSource m_M4A1_Shot;						//SE。
+	CSoundSource m_M4A1_Shot;				//SE。
+	bool m_crouch = false;					//プレイヤーがしゃがんでいるか
 };

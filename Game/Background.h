@@ -5,7 +5,7 @@
 class Background
 {
 public:
-	Background();
+	Background(CVector3 pos,CQuaternion rot);
 	~Background();
 	/// <summary>
 	/// 
@@ -21,4 +21,6 @@ public:
 private:
 	SkinModel m_model;
 	PhysicsStaticObject m_phyStaticObject;
+	CVector3 m_position = CVector3::Zero();
+	CQuaternion m_rotation = CQuaternion::Identity();
 };

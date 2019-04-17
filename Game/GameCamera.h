@@ -9,7 +9,7 @@ class Player;
 class GameCamera
 {
 public:
-	GameCamera();
+	GameCamera(CVector3 camerapos);
 	~GameCamera();
 	/*void SetPlayer(Minotaur* minotaur)
 	{
@@ -36,6 +36,15 @@ public:
 		i = a;
 	}
 	void StartRender();
+	void Respawn(int cameraNo,CVector3 position)
+	{
+		g_camera3D[cameraNo].SetPosition(position);
+		g_camera3D[cameraNo].SetTarget({ 0.0f, 200.0f, 0.0f });
+		////注視点から視点までのベクトルを設定。
+		m_toCameraPos.Set(g_camera3D[i].GetTarget() - g_camera3D[i].GetPosition());
+		////視点から注視点までのベクトルを設定。
+		m_toCameraTarget.Set(g_camera3D[i].GetPosition() - g_camera3D[i].GetTarget());
+	}
 private:	
 	//Minotaur * m_minotaur = nullptr;				//プレイヤー。
 	//Goblin * m_goblin = nullptr;					//プレイヤー。
@@ -57,6 +66,7 @@ private:
 	float m_topLeftY = 0;
 
 	int i = 0;
-	
+
+
 	CVector3 hoge;
 };

@@ -136,6 +136,7 @@
     <ClCompile Include="sound\WaveFile.cpp" />
     <ClCompile Include="sound\WaveFileBank.cpp" />
     <ClCompile Include="graphics\Font.cpp" />
+    <ClCompile Include="TimerHUD.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -250,6 +251,7 @@
     <ClInclude Include="sound\WaveFile.h" />
     <ClInclude Include="sound\WaveFileBank.h" />
     <ClInclude Include="graphics\Font.h" />
+    <ClInclude Include="TimerHUD.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -292,8 +294,6 @@
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\mikyan.jpg" />
     <ImageContentTask Include="Assets\sprite\box.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\sprite\Title.png" />
+    <ImageContentTask Include="Assets\sprite\Title.png" />
   </ItemGroup>
 </Project>

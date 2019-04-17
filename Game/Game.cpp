@@ -21,28 +21,82 @@ Game::Game()
 		m_bulletManager.SetInstance(&m_player[i],i);
 	}
 	
+	m_level.Init(L"Assets/level/stage_00.tkl", [&](LevelObjectData& objData) {
+		if (objData.EqualName(L"Background") == true) {
+			m_bg = new Background(objData.position, objData.rotation);
+		}
+		else if (objData.EqualName(L"Player1") == true) {
+			m_player[0].SetPosition(objData.position);
+			m_player[0].SetRotation(objData.rotation);
+			m_gameCamera[0] = new GameCamera({ -200.0f, 150.0f, 0.0f });
+			m_respawn[0].PlayerPosition = objData.position;
+			m_respawn[0].PlayerRotation = objData.rotation;
+			m_respawn[0].CameraPosition = CVector3(-200.0f, 150.0f, 0.0f);
+		}
+		else if (objData.EqualName(L"Player2") == true) {
+			m_player[1].SetPosition(objData.position);
+			m_player[1].SetRotation(objData.rotation);
+			m_gameCamera[1] = new GameCamera({ 0.0f, 150.0f, 200.0f });
+			m_respawn[1].PlayerPosition = objData.position;
+			m_respawn[1].PlayerRotation = objData.rotation;
+			m_respawn[1].CameraPosition = CVector3(0.0f, 150.0f, 200.0f);
+		}
+		else if (objData.EqualName(L"Player3") == true) {
+			m_player[2].SetPosition(objData.position);
+			m_player[2].SetRotation(objData.rotation);
+			m_gameCamera[2] = new GameCamera({ 0.0f, 150.0f, -200.0f });
+			m_respawn[2].PlayerPosition = objData.position;
+			m_respawn[2].PlayerRotation = objData.rotation;
+			m_respawn[2].CameraPosition = CVector3(0.0f, 150.0f, -200.0f);
+		}
+		else if (objData.EqualName(L"Player4") == true) {
+			m_player[3].SetPosition(objData.position);
+			m_player[3].SetRotation(objData.rotation);
+			m_gameCamera[3] = new GameCamera({ 200.0f, 150.0f, 0.0f });
+			m_respawn[3].PlayerPosition = objData.position;
+			m_respawn[3].PlayerRotation = objData.rotation;
+			m_respawn[3].CameraPosition = CVector3(200.0f, 150.0f, 0.0f);
+		}
+		return true;
+	});
 	
-	m_gameCamera[0].InitViewport(640, 360, 0, 0);
-	m_gameCamera[0].SetPlayer(&m_player[0]);
-	m_gameCamera[0].Seti(0);
-	m_player[0].SetPosition({ 1087.0f,0.0f,-1017.20f });
+	m_gameCamera[0]->InitViewport(640, 360, 0, 0);
+	m_viewport[0].Width = 640;
+	m_viewport[0].Height = 360;
+	m_viewport[0].TopLeftX = 0;
+	m_viewport[0].TopLeftY = 0;
+	m_gameCamera[0]->SetPlayer(&m_player[0]);
+	m_gameCamera[0]->Seti(0);
+	//m_player[0].SetPosition({ 1087.0f,0.0f,-1017.20f });
 	
 
-	m_gameCamera[1].InitViewport(640, 360, 640, 0);
-	m_gameCamera[1].SetPlayer(&m_player[1]);
-	m_gameCamera[1].Seti(1);
-	m_player[1].SetPosition({ 1048.0f,0.0f,1003.8f });
+	m_gameCamera[1]->InitViewport(640, 360, 640, 0);
+	m_viewport[1].Width = 640;
+	m_viewport[1].Height = 360;
+	m_viewport[1].TopLeftX = 640;
+	m_viewport[1].TopLeftY = 0;
+	m_gameCamera[1]->SetPlayer(&m_player[1]);
+	m_gameCamera[1]->Seti(1);
+	//m_player[1].SetPosition({ 1048.0f,0.0f,1003.8f });
 
-	m_gameCamera[2].InitViewport(640, 360, 0, 360);
-	m_gameCamera[2].SetPlayer(&m_player[2]);
-	m_gameCamera[2].Seti(2);
-	m_player[2].SetPosition({ -1192.6f,0.0f,1029.3f });
+	m_gameCamera[2]->InitViewport(640, 360, 0, 360);
+	m_viewport[2].Width = 640;
+	m_viewport[2].Height = 360;
+	m_viewport[2].TopLeftX = 0;
+	m_viewport[2].TopLeftY = 360;
+	m_gameCamera[2]->SetPlayer(&m_player[2]);
+	m_gameCamera[2]->Seti(2);
+	//m_player[2].SetPosition({ -1192.6f,0.0f,1029.3f });
 	
 
-	m_gameCamera[3].InitViewport(640, 360, 640, 360);
-	m_gameCamera[3].SetPlayer(&m_player[3]);
-	m_gameCamera[3].Seti(3);
-	m_player[3].SetPosition({ -1191.1f,0.0f,-991.5f });
+	m_gameCamera[3]->InitViewport(640, 360, 640, 360);
+	m_viewport[0].Width = 640;
+	m_viewport[0].Height = 360;
+	m_viewport[0].TopLeftX = 640;
+	m_viewport[0].TopLeftY = 360;
+	m_gameCamera[3]->SetPlayer(&m_player[3]);
+	m_gameCamera[3]->Seti(3);
+	//m_player[3].SetPosition({ -1191.1f,0.0f,-991.5f });
 
 
 	g_shadowMap.InitShadowMap();
@@ -79,7 +133,7 @@ void Game::Update()
 {
 	//シャドウマップを更新。
 	g_shadowMap.UpdateFromLightTarget(
-		{1000.0f,1000.0f,1000.0f},
+		{1000.0f,1000.0f,0.0f},
 		{ 0.0f,0.0f,0.0f }
 	);
 	//プレイヤーの更新。
@@ -88,9 +142,9 @@ void Game::Update()
 	for (int i = 0; i < 4; i++)
 	{
 		m_player[i].Update(g_camera3D[i],i);
-		m_gameCamera[i].Update();	
+		m_gameCamera[i]->Update();	
 	}
-	m_bg.Update();
+	m_bg->Update();
 	//m_stoneManager.Update();
 	m_bulletManager.Update();
 	
@@ -107,7 +161,7 @@ void Game::Draw()
 	auto rtSRV = g_mainRenderTarget.GetRenderTargetSRV();
 	deviceContext->PSSetShaderResources(0, 1, &rtSRV);
 	for (int i = 0; i < 4; i++) {
-		m_gameCamera[i].StartRender();
+		m_gameCamera[i]->StartRender();
 		
 		for (int j = 0; j < 4; j++)
 		{
@@ -116,7 +170,7 @@ void Game::Draw()
 		/*m_goblin.Draw(g_camera3D[i]);
 		m_orc.Draw(g_camera3D[i]);*/
 		//背景の描画
-		m_bg.Draw(g_camera3D[i]);
+		m_bg->Draw(g_camera3D[i]);
 		//m_stoneManager.Draw(g_camera3D[i]);
 		m_bulletManager.Draw(g_camera3D[i]);
 		m_sky.Draw(g_camera3D[i]);

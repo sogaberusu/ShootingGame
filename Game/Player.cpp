@@ -107,19 +107,21 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		m_state == enState_Death && 
 		m_animation.IsPlaying() == false )
 	{
+		m_rStickX = 0.0f;
+		m_rStickY = 0.0f;
+		auto respawn = g_game->GetPlayerRespawn(PlayerNumber,GetRandom(0, 3));
+		m_position = respawn.PlayerPosition;
+		m_rotation = respawn.PlayerRotation;
+		m_charaCon.SetPosition(m_position);
 		m_state = enState_Idle;
 		m_status.HitPoint = 100;
 	}
 	//âÒì]èàóù
 	Turn(PlayerNumber);
-
 	switch (m_state)
 	{
 	case Player::enState_Idle:
 		m_animation.Play(enAnimation_Idle, 0.3);
-		break;
-	case Player::enState_Run:
-		m_animation.Play(enAnimation_Run, 0.3);
 		break;
 	case Player::enState_Walk_Forward:
 		m_animation.Play(enAnimation_Walk_Forward, 0.3);
@@ -133,26 +135,11 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	case Player::enState_Walk_Left:
 		m_animation.Play(enAnimation_Walk_Left, 0.3);
 		break;
-	case Player::enState_Crouch_Idle:
-		m_animation.Play(enAnimation_Crouch_Idle, 0.3);
-		break;
-	case Player::enState_Crouch_Walk_Shoot:
-		m_animation.Play(enAnimation_Crouch_Walk_Shoot,0.3);
-		break;
 	case Player::enState_Walk_Shoot:
 		m_animation.Play(enAnimation_Walk_Shoot, 0.3);
 		break;
-	case Player::enState_Crouch_Walk_Forward:
-		m_animation.Play(enAnimation_Crouch_Walk_Forward,0.3);
-		break;
-	case Player::enState_Crouch_Reload:
-		m_animation.Play(enAnimation_Crouch_Reload, 0.3);
-		break;
-	case Player::enState_Reload:
-		m_animation.Play(enAnimation_Reload, 0.3);
-		break;
-	case Player::enState_Shoot:
-		m_animation.Play(enAnimation_Shoot, 0.3);
+	case Player::enState_Run:
+		m_animation.Play(enAnimation_Run, 0.3);
 		break;
 	case Player::enState_Jump_Start:
 		m_animation.Play(enAnimation_Jump_Start, 0.3);
@@ -163,8 +150,35 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	case Player::enState_Jump_Land:
 		m_animation.Play(enAnimation_Jump_Land, 0.3);
 		break;
+	case Player::enState_Crouch_Idle:
+		m_animation.Play(enAnimation_Crouch_Idle, 0.3);
+		break;
+	case Player::enState_Crouch_Reload:
+		m_animation.Play(enAnimation_Crouch_Reload, 0.3);
+		break;
+	case Player::enState_Crouch_Shoot:
+		m_animation.Play(enAnimation_Crouch_Shoot, 0.3);
+		break;
+	case Player::enState_Crouch_Walk_Shoot:
+		m_animation.Play(enAnimation_Crouch_Walk_Shoot,0.3);
+		break;
+	case Player::enState_Crouch_Walk_Forward:
+		m_animation.Play(enAnimation_Crouch_Walk_Forward,0.3);
+		break;
+	case Player::enState_Reload:
+		m_animation.Play(enAnimation_Reload, 0.3);
+		break;
+	case Player::enState_Shoot:
+		m_animation.Play(enAnimation_Shoot, 0.3);
+		break;
+	case Player::enState_Damage:
+		m_animation.Play(enAnimation_Damage, 0.3);
+		break;
 	case Player::enState_Death:
 		m_animation.Play(enAnimation_Death, 0.3);
+		break;
+	default:
+		m_position = { 0.0f,0.0f,0.0f };
 		break;
 	}
 	Bone* m_righthandBoneMat = m_model.FindBone(L"Bip001 R Hand");
@@ -209,20 +223,44 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			m_state = enState_Crouch_Idle;
 		}
 		else if (
-				m_state != enState_Crouch_Idle &&
-				m_state != enState_Crouch_Reload &&
-				m_state != enState_Crouch_Shoot&&
-				m_state != enState_Jump_Air &&
-				m_state != enState_Jump_Start &&
-				m_state != enState_Jump_Land &&
-				m_state != enState_Reload
+			m_state != enState_Crouch_Idle &&
+			m_state != enState_Crouch_Reload &&
+			m_state != enState_Crouch_Shoot &&
+			m_state != enState_Jump_Air &&
+			m_state != enState_Jump_Start &&
+			m_state != enState_Jump_Land &&
+			m_state != enState_Reload
+			)
+		{
+			m_state = enState_Idle;
+		}
+	}
+		/*if (m_state == enState_Crouch_Idle ||
+			m_state == enState_Crouch_Walk_Forward ||
+			m_state == enState_Crouch_Walk_Shoot ||
+			m_state == enState_Crouch_Reload ||
+			m_state == enState_Crouch_Shoot
+			)
+		{
+			m_state = enState_Crouch_Idle;
+		}
+		if (m_state != enState_Crouch_Idle &&
+			m_state != enState_Crouch_Walk_Forward &&
+			m_state != enState_Crouch_Walk_Shoot &&
+			m_state != enState_Crouch_Reload &&
+			m_state != enState_Crouch_Shoot &&
+			m_state != enState_Reload 
 				)
 			{
 				m_state = enState_Idle;
 			}
-	}
+	}*/
 	else{
-		if (m_state == enState_Crouch_Idle)
+		if (m_state == enState_Crouch_Idle ||
+			m_state == enState_Crouch_Walk_Forward ||
+			m_state == enState_Crouch_Walk_Shoot ||
+			m_state == enState_Crouch_Reload ||
+			m_state == enState_Crouch_Shoot)
 		{
 			m_state = enState_Crouch_Walk_Forward;
 		}
@@ -267,12 +305,15 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		m_state = enState_Jump_Land;
 	}
 	
-	if (g_pad[PlayerNumber].IsTrigger(enButtonB) == true)
+	if (g_pad[PlayerNumber].IsTrigger(enButtonB) == true
+		&& m_charaCon.IsOnGround() == true)
 	{
 		if (m_state == enState_Crouch_Idle ||
 			m_state == enState_Crouch_Walk_Forward ||
+			m_state == enState_Crouch_Walk_Shoot ||
 			m_state == enState_Crouch_Shoot ||
-			m_state == enState_Crouch_Walk_Shoot)
+			m_state == enState_Crouch_Reload 
+			)
 		{
 			m_state = enState_Idle;
 		}
@@ -300,24 +341,31 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		}
 		m_M4A1_Shot.Play(false);
 		if (m_state == enState_Crouch_Idle ||
-			m_state == enState_Crouch_Shoot ||
 			m_state == enState_Crouch_Walk_Forward ||
-			m_state == enState_Crouch_Walk_Shoot)
+			m_state == enState_Crouch_Walk_Shoot ||
+			m_state == enState_Crouch_Reload ||
+			m_state == enState_Crouch_Shoot
+			)
 		{
 			if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0)
 			{
 				m_state = enState_Crouch_Shoot;
 			}
 			else {
-				m_state = enState_Crouch_Walk_Shoot;
+				m_state = enState_Crouch_Walk_Forward;
 			}
-
 			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
 			bullet->SetMoveSpeed(target * 1000);
 		}
-		else {
+		if (m_state != enState_Crouch_Idle &&
+			m_state != enState_Crouch_Walk_Forward &&
+			m_state != enState_Crouch_Walk_Shoot &&
+			m_state != enState_Crouch_Reload &&
+			m_state != enState_Crouch_Shoot
+			)
+		{
 			if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0)
 			{
 				m_state = enState_Shoot;
@@ -325,7 +373,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			else {
 				m_state = enState_Walk_Shoot;
 			}
-			
+
 			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
@@ -359,6 +407,20 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	{
 		m_state = enState_Death;
 	}
+	if (m_state == enState_Crouch_Idle ||
+		m_state == enState_Crouch_Reload ||
+		m_state == enState_Crouch_Shoot ||
+		m_state == enState_Crouch_Walk_Forward ||
+		m_state == enState_Crouch_Walk_Shoot)
+	{
+		m_crouch = true;
+	}
+	else
+	{
+		m_crouch = false;
+	}
+
+
 	m_charaCon.GetRigidBody()->GetBody()->setUserIndex(PlayerNumber);
 	m_position = m_charaCon.Execute(1.0f / 60.0f, m_moveSpeed);
 
@@ -379,7 +441,11 @@ void Player::Turn(int PlayerNumber)
 	{
 		SetCameraType(EnCameraType::enType_FPS);
 
-		m_rotation.SetRotation(CVector3::AxisY(), atan2f(m_cameraDirection.x, m_cameraDirection.z));
+		CQuaternion qRot;
+		qRot.SetRotationDeg(CVector3::AxisY(), m_rStickX* 2.0f);
+		//âÒì]Çâ¡éZÇ∑ÇÈÅB
+		m_rotation.Multiply(qRot);
+		//m_rotation.SetRotation(CVector3::AxisY(), atan2f(m_cameraDirection.x, m_cameraDirection.z));
 	}
 	else
 	{
