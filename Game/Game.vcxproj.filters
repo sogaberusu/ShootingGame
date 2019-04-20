@@ -120,8 +120,6 @@
     <ClCompile Include="graphics\RenderTarget.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Minotaur.cpp" />
-    <ClCompile Include="graphics\Bloom.cpp" />
-    <ClCompile Include="graphics\PostEffect.cpp" />
     <ClCompile Include="graphics\Sprite.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
@@ -137,6 +135,13 @@
     <ClCompile Include="sound\WaveFileBank.cpp" />
     <ClCompile Include="graphics\Font.cpp" />
     <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="physics\PhysicsDebugDraw.cpp" />
+    <ClCompile Include="graphics\SpriteData.cpp" />
+    <ClCompile Include="graphics\vertexBuffer.cpp" />
+    <ClCompile Include="graphics\indexBuffer.cpp" />
+    <ClCompile Include="HUDCamera.cpp" />
+    <ClCompile Include="graphics\PostEffect.cpp" />
+    <ClCompile Include="graphics\Bloom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -235,8 +240,6 @@
     <ClInclude Include="graphics\RenderTarget.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Minotaur.h" />
-    <ClInclude Include="graphics\Bloom.h" />
-    <ClInclude Include="graphics\PostEffect.h" />
     <ClInclude Include="graphics\Sprite.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
@@ -252,6 +255,13 @@
     <ClInclude Include="sound\WaveFileBank.h" />
     <ClInclude Include="graphics\Font.h" />
     <ClInclude Include="HUD.h" />
+    <ClInclude Include="physics\PhysicsDebugDraw.h" />
+    <ClInclude Include="graphics\SpriteData.h" />
+    <ClInclude Include="graphics\vertexBuffer.h" />
+    <ClInclude Include="graphics\indexBuffer.h" />
+    <ClInclude Include="HUDCamera.h" />
+    <ClInclude Include="graphics\PostEffect.h" />
+    <ClInclude Include="graphics\Bloom.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -285,6 +295,7 @@
     <MeshContentTask Include="Assets\modelData\MP5.FBX" />
     <MeshContentTask Include="Assets\modelData\Player_.FBX" />
     <MeshContentTask Include="Assets\modelData\SMAW.FBX" />
+    <MeshContentTask Include="Assets\modelData\Background1.FBX" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\animData\Minotaur_Down.tka" />

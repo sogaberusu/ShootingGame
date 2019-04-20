@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "Camera.h"
 
-Camera g_camera3D[4];//3Dカメラ。
-Camera g_camera2D;	//2Dカメラ。
+Camera g_camera3D[4];	//3Dカメラ。
+Camera g_camera2D[4];	//2Dカメラ。
 
 void Camera::Update()
 {

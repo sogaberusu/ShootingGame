@@ -6,7 +6,7 @@ Benelli_M4::Benelli_M4()
 {
 	m_model.Init(L"Assets/modelData/Benelli M4.cmo");
 
-	m_model.SetShadowReciever(true);
+	//m_model.SetShadowReciever(true);
 }
 
 

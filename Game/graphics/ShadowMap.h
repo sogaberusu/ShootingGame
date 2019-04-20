@@ -126,7 +126,6 @@ public:
 	{
 		return m_shadowMapRT.GetRenderTargetSRV();
 	}
-	void InitShadowMap();
 private:
 	CVector3 m_lightCameraPosition = CVector3::Zero();	//ライトカメラの視点。
 	CVector3 m_lightCameraTarget = CVector3::Zero();	//ライトカメラの注視点。
@@ -135,5 +134,3 @@ private:
 	RenderTarget m_shadowMapRT;						//シャドウマップを描画するレンダリングターゲット。
 	std::vector<SkinModel*> m_shadowCasters;	//シャドウキャスターの配列。
 };
-
-extern ShadowMap g_shadowMap;

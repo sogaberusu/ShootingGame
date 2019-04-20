@@ -204,7 +204,7 @@ void Sprite::Init(ID3D11ShaderResourceView* srv, float w, float h)
 	}
 }
 //Sprite::Draw関数の実装。
-void Sprite::Draw()
+void Sprite::Draw(int cameraNo)
 {
 	auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
 
@@ -242,8 +242,8 @@ void Sprite::Draw()
 	//ワールドビュープロジェクション行列を作成。
 	ConstantBuffer cb;
 	cb.WVP = m_world;
-	cb.WVP.Mul(cb.WVP, g_camera2D.GetViewMatrix());
-	cb.WVP.Mul(cb.WVP, g_camera2D.GetProjectionMatrix());
+	cb.WVP.Mul(cb.WVP, g_camera2D[cameraNo].GetViewMatrix());
+	cb.WVP.Mul(cb.WVP, g_camera2D[cameraNo].GetProjectionMatrix());
 	cb.alpha = m_alpha;
 
 	d3dDeviceContext->UpdateSubresource(m_cb, 0, NULL, &cb, 0, 0);

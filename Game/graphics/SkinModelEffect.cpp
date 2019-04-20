@@ -14,7 +14,7 @@ void __cdecl ModelEffect::Apply(ID3D11DeviceContext* deviceContext)
 		//todo シェーダーリソースビューを一気に設定する。
 		ID3D11ShaderResourceView* srvArray[] = {
 			m_albedoTex,							//アルベドテクスチャ。
-			g_shadowMap.GetShadowMapSRV()			//シャドウマップ。
+			g_graphicsEngine->GetShadowMap()->GetShadowMapSRV()			//シャドウマップ。
 		};
 		deviceContext->PSSetShaderResources(0, 1, srvArray);
 	}break;

@@ -6,7 +6,7 @@ M4A1::M4A1()
 {
 	m_model.Init(L"Assets/modelData/M4A1.cmo");
 
-	m_model.SetShadowReciever(true);
+	//m_model.SetShadowReciever(true);
 
 }
 

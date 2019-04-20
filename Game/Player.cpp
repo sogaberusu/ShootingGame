@@ -4,23 +4,25 @@
 #include "Game.h"
 #include "Stone.h"
 #include "Bullet.h"
+#include "sound/SoundEngine.h"
 
 
 
-Player::Player()
+Player::Player(int playerNo)
 {
 	//サウンドエンジンを初期化。
-	m_soundEngine.Init();
+	//g_soundEngine.Init();
 	//ワンショット再生のSE
 	m_M4A1_Shot.Init(L"Assets/sound/M4A1_Shot.wav");
 	//cmoファイルの読み込み。
 	m_model.Init(L"Assets/modelData/Player.cmo");
 
 	m_model.SetShadowReciever(true);
-
 	InitAnimation();
 
-	m_charaCon.Init(15.0f, 110.0f, m_position);
+	m_charaCon.Init(20.0f, 150.0f, m_position);
+
+	m_charaCon.GetRigidBody()->GetBody()->setUserIndex(playerNo);
 }
 
 void Player::InitAnimation()
@@ -93,7 +95,6 @@ void Player::InitAnimation()
 
 Player::~Player()
 {
-	
 }
 
 void Player::Update(Camera& camera, int PlayerNumber)
@@ -103,8 +104,7 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		//移動処理
 		Move(camera, PlayerNumber);
 	}
-	if (g_pad[PlayerNumber].IsTrigger(enButtonX) == true &&
-		m_state == enState_Death && 
+	if (m_state == enState_Death && 
 		m_animation.IsPlaying() == false )
 	{
 		m_rStickX = 0.0f;
@@ -192,7 +192,7 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	m_animation.Update(1.0f / 30.0f);
 	//シャドウキャスターを登録。
-	g_shadowMap.RegistShadowCaster(&m_model);
+	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
 }
 void Player::Move(Camera& camera, int PlayerNumber)
 {
@@ -335,49 +335,11 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	}
 	if (g_pad[PlayerNumber].IsPress(enButtonRB2) == true)
 	{
-		if (m_M4A1_Shot.IsPlaying())
+		Shot(PlayerNumber, camera);
+		m_shotCount++;
+		if (m_shotCount == SHOTINTERVAL)
 		{
-			m_M4A1_Shot.Stop();
-		}
-		m_M4A1_Shot.Play(false);
-		if (m_state == enState_Crouch_Idle ||
-			m_state == enState_Crouch_Walk_Forward ||
-			m_state == enState_Crouch_Walk_Shoot ||
-			m_state == enState_Crouch_Reload ||
-			m_state == enState_Crouch_Shoot
-			)
-		{
-			if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0)
-			{
-				m_state = enState_Crouch_Shoot;
-			}
-			else {
-				m_state = enState_Crouch_Walk_Forward;
-			}
-			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
-			CVector3 target = camera.GetTarget() - camera.GetPosition();
-			target.Normalize();
-			bullet->SetMoveSpeed(target * 1000);
-		}
-		if (m_state != enState_Crouch_Idle &&
-			m_state != enState_Crouch_Walk_Forward &&
-			m_state != enState_Crouch_Walk_Shoot &&
-			m_state != enState_Crouch_Reload &&
-			m_state != enState_Crouch_Shoot
-			)
-		{
-			if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0)
-			{
-				m_state = enState_Shoot;
-			}
-			else {
-				m_state = enState_Walk_Shoot;
-			}
-
-			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
-			CVector3 target = camera.GetTarget() - camera.GetPosition();
-			target.Normalize();
-			bullet->SetMoveSpeed(target * 1000);
+			m_shotCount = 0;
 		}
 	}
 	
@@ -420,8 +382,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		m_crouch = false;
 	}
 
-
-	m_charaCon.GetRigidBody()->GetBody()->setUserIndex(PlayerNumber);
+	
 	m_position = m_charaCon.Execute(1.0f / 60.0f, m_moveSpeed);
 
 	CMatrix rotMatrix = m_model.GetRotationMatrix();
@@ -486,5 +447,64 @@ void Player::WeaponDraw(Camera& camera)
 	if (m_weapon == enM110)
 	{
 		m_m110.Draw(camera);
+	}
+}
+
+void Player::Shot(int PlayerNumber,Camera& camera)
+{
+	
+	if (m_state == enState_Crouch_Idle ||
+		m_state == enState_Crouch_Walk_Forward ||
+		m_state == enState_Crouch_Walk_Shoot ||
+		m_state == enState_Crouch_Reload ||
+		m_state == enState_Crouch_Shoot
+		)
+	{
+		if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0)
+		{
+			m_state = enState_Crouch_Shoot;
+		}
+		else {
+			m_state = enState_Crouch_Walk_Forward;
+		}
+		if (m_shotCount == 0)
+		{
+			if (m_M4A1_Shot.IsPlaying())
+			{
+				m_M4A1_Shot.Stop();
+			}
+			m_M4A1_Shot.Play(false);
+			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
+			CVector3 target = camera.GetTarget() - camera.GetPosition();
+			target.Normalize();
+			bullet->SetMoveSpeed(target * 2000);
+		}
+	}
+	if (m_state != enState_Crouch_Idle &&
+		m_state != enState_Crouch_Walk_Forward &&
+		m_state != enState_Crouch_Walk_Shoot &&
+		m_state != enState_Crouch_Reload &&
+		m_state != enState_Crouch_Shoot
+		)
+	{
+		if (m_moveSpeed.x == 0 && m_moveSpeed.z == 0)
+		{
+			m_state = enState_Shoot;
+		}
+		else {
+			m_state = enState_Walk_Shoot;
+		}
+		if (m_shotCount == 0)
+		{
+			if (m_M4A1_Shot.IsPlaying())
+			{
+				m_M4A1_Shot.Stop();
+			}
+			m_M4A1_Shot.Play(false);
+			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
+			CVector3 target = camera.GetTarget() - camera.GetPosition();
+			target.Normalize();
+			bullet->SetMoveSpeed(target * 2000);
+		}
 	}
 }

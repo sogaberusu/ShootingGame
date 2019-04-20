@@ -33,6 +33,7 @@ GameCamera::GameCamera(CVector3 camerapos)
 
 GameCamera::~GameCamera()
 {
+	EndRender();
 }
 void GameCamera::Update()
 {	
@@ -148,4 +149,9 @@ void GameCamera::Update()
 void GameCamera::StartRender()
 {
 	g_graphicsEngine->SetViewport(m_width, m_height, m_topLeftX, m_topLeftY);
+}
+
+void GameCamera::EndRender()
+{
+	g_graphicsEngine->SetViewport(1280, 740, 0, 0);
 }

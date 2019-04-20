@@ -71,7 +71,7 @@ void Minotaur::Update(Camera& camera, int i)
 	m_animation.Update(1.0f / 30.0f);
 
 	//シャドウキャスターを登録。
-	g_shadowMap.RegistShadowCaster(&m_model);
+	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
 }
 void Minotaur::Move(Camera& camera, int i)
 {

@@ -48,7 +48,7 @@ public:
 	/// <summary>
 	/// •`‰æ
 	/// </summary>
-	void Draw();
+	void Draw(int cameraNo);
 	/// <summary>
 	/// ƒ¿‚ð•ÏˆÊ‚³‚¹‚é
 	/// </summary>

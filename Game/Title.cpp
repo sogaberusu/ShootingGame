@@ -34,5 +34,5 @@ void Title::Update()
 }
 void Title::Draw()
 {
-	m_sprite.Draw();
+	m_sprite.Draw(0);
 }

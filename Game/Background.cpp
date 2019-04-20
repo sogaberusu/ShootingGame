@@ -24,7 +24,7 @@ void Background::Update()
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
 	//m_model.UpdateWorldMatrix(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
 	//シャドウキャスターを登録。
-	g_shadowMap.RegistShadowCaster(&m_model);
+	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
 	
 }
 

@@ -56,6 +56,7 @@ void GraphicsEngine::Release()
 		m_pd3dDevice->Release();
 		m_pd3dDevice = NULL;
 	}
+	delete m_shadowMap;
 }
 void GraphicsEngine::Init(HWND hWnd)
 {
@@ -193,12 +194,15 @@ void GraphicsEngine::Init(HWND hWnd)
 	m_pd3dDeviceContext->RSSetViewports(1, &viewport);
 	m_pd3dDeviceContext->RSSetState(m_rasterizerState);
 
-	g_camera2D.SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
-	g_camera2D.SetWidth(FRAME_BUFFER_W);
-	g_camera2D.SetHeight(FRAME_BUFFER_H);
-	g_camera2D.SetPosition({ 0.0f, 0.0f, -10.0f });
-	g_camera2D.SetTarget(CVector3::Zero());
-	g_camera2D.Update();
+	for (int i = 0; i < 4; i++)
+	{
+		g_camera2D[i].SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
+		g_camera2D[i].SetWidth(FRAME_BUFFER_W);
+		g_camera2D[i].SetHeight(FRAME_BUFFER_H);
+		g_camera2D[i].SetPosition({ 0.0f, 0.0f, -10.0f });
+		g_camera2D[i].SetTarget(CVector3::Zero());
+		g_camera2D[i].Update();
+	}
 
 	g_camera3D[0].SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Perspective);
 	g_camera3D[0].SetWidth(FRAME_BUFFER_W);
@@ -210,6 +214,14 @@ void GraphicsEngine::Init(HWND hWnd)
 	//フォント用のデータの初期化。
 	m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_pd3dDeviceContext);
 	m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_pd3dDevice, L"Assets/font/myfile.spritefont");
+
+	m_shadowMap = new ShadowMap();
+	//シャドウマップを更新。
+	m_shadowMap->UpdateFromLightTarget(
+		{ 1000.0f,1000.0f,0.0f },
+		{ 0.0f,0.0f,0.0f }
+	);
+
 }
 
 void GraphicsEngine::SetViewport(float Width, float Height, float TopLeftX, float TopLeftY)

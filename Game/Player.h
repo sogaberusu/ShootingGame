@@ -9,17 +9,18 @@
 #include "sound/SoundSource.h"
 
 class GameCamera;
-struct PlayerStatus
+struct SPlayerStatus
 {
 	int HitPoint = 100;				//体力
 	int Kills = 0;					//キル数
 	int Attack = 30;				//攻撃力
+	int Ammo = 30;					//残弾数
 };
 class Player
 {
 public:
 	
-	Player();
+	Player(int playerNo);
 	~Player();
 	void Update(Camera& camera, int PlayerNumber);
 	void Draw(Camera& camera, int ViewportNumber, int PlayerNumber);
@@ -69,7 +70,7 @@ public:
 	{
 		return m_handPos;
 	}
-	PlayerStatus GetStatus()
+	SPlayerStatus GetStatus()
 	{
 		return m_status;
 	}
@@ -95,6 +96,7 @@ private:
 		enType_TPS,
 		enType_FPS
 	};
+	void Shot(int PlayerNumber,Camera& camera);
 public:
 	bool GetCameraType()
 	{
@@ -115,6 +117,10 @@ public:
 	int GetRandom(int min, int max)
 	{
 		return min + (int)(rand()*(max - min + 1.0) / (1.0 + RAND_MAX));
+	}
+	int GetAmmo()
+	{
+		return m_status.Ammo;
 	}
 private:
 	void InitAnimation();								//アニメーションの初期化
@@ -172,6 +178,7 @@ private:
 	};
 
 	SkinModel m_model;									//スキンモデル。
+	SkinModel m_model_debag;									//スキンモデル。
 	Animation m_animation;								//アニメーション。
 	AnimationClip m_animationClips[enAnimation_Num];	//アニメーションクリップ。
 	CVector3 m_position = CVector3::Zero();				//座標
@@ -196,8 +203,10 @@ private:
 	M110 m_m110;
 	SMAW m_smaw;
 	Benelli_M4 m_benelli_m4;
-	PlayerStatus m_status;
-	CSoundEngine m_soundEngine;				//サウンドエンジン。
+	SPlayerStatus m_status;
+	//CSoundEngine m_soundEngine;				//サウンドエンジン。
 	CSoundSource m_M4A1_Shot;				//SE。
 	bool m_crouch = false;					//プレイヤーがしゃがんでいるか
+	int m_shotCount = 0;
+	static const int SHOTINTERVAL = 3;
 };

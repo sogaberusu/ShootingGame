@@ -6,7 +6,7 @@ SMAW::SMAW()
 {
 	m_model.Init(L"Assets/modelData/SMAW.cmo");
 
-	m_model.SetShadowReciever(true);
+	//m_model.SetShadowReciever(true);
 
 }
 

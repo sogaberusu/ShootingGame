@@ -1,6 +1,8 @@
 #pragma once
+#include "ShadowMap.h"
 
 class RenderTarget;
+
 
 /*!
  *@brief	グラフィックスエンジン。
@@ -105,6 +107,10 @@ public:
 	{
 		return m_rasterizerState;
 	}
+	ShadowMap* GetShadowMap()
+	{
+		return m_shadowMap;
+	}
 private:
 	D3D_FEATURE_LEVEL		m_featureLevel;				//Direct3D デバイスのターゲットとなる機能セット。
 	ID3D11Device*			m_pd3dDevice = NULL;		//D3D11デバイス。
@@ -121,6 +127,7 @@ private:
 	int						m_2dSpaceScreenWidth = 1280;				//!<2D空間のスクリーンの幅。2Dはこの座標系を前提に表示されていれば、解像度が変わっても大丈夫。
 	int						m_2dSpaceScreenHeight = 720;				//!<2D空間のスクリーンの高さ。2Dはこの座標系を前提に表示されていれば、解像度が変わっても大丈夫。
 	D3D11_VIEWPORT m_viewport;
+	ShadowMap* m_shadowMap;
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

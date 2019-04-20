@@ -36,6 +36,7 @@ public:
 		i = a;
 	}
 	void StartRender();
+	void EndRender();
 	void Respawn(int cameraNo,CVector3 position)
 	{
 		g_camera3D[cameraNo].SetPosition(position);
@@ -66,7 +67,4 @@ private:
 	float m_topLeftY = 0;
 
 	int i = 0;
-
-
-	CVector3 hoge;
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "graphics/Font.h"
+#include "Player.h"
 class Game;
 
 /// <summary>
@@ -17,9 +18,21 @@ public:
 	/// </summary>
 	~HUD();
 	/// <summary>
-	/// あっぷでーと
+	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw(int playerNo);
+	void SetPlayer(Player* player,int playerNo)
+	{
+		m_player[playerNo] = player;
+	}
+	enum EnPlayer
+	{
+		enPlayer1,
+		enPlayer2,
+		enPlayer3,
+		enPlayer4
+	};
 private:
 	Font* m_font = nullptr;	//フォント。
+	Player * m_player[4];
 };

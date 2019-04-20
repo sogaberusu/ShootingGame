@@ -6,7 +6,7 @@ M110::M110()
 {
 	m_model.Init(L"Assets/modelData/M110.cmo");
 
-	m_model.SetShadowReciever(true);
+	//m_model.SetShadowReciever(true);
 
 }
 

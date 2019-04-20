@@ -17,6 +17,7 @@
 #include "graphics/Sprite.h"
 #include "graphics/PostEffect.h"
 #include "HUD.h"
+#include "HUDCamera.h"
 //ゲームクラス。
 class Game : public IScene
 {
@@ -30,13 +31,6 @@ public:
 		CVector3 PlayerPosition;
 		CQuaternion PlayerRotation;
 		CVector3 CameraPosition;
-	};
-	struct SViewport
-	{
-		float Width;
-		float Height;
-		float TopLeftX;
-		float TopLeftY;
 	};
 	/*!
 	* @brief	コンストラクタ。
@@ -90,7 +84,7 @@ public:
 	}
 private:
 	//Minotaur m_minotaur[4];				//プレイヤー
-	Player m_player[4];
+	Player *m_player[4];
 	//Level m_level;						//レベルを初期化。
 	GameCamera* m_gameCamera[4];
 	Background* m_bg;
@@ -110,9 +104,10 @@ private:
 	D3D11_VIEWPORT m_frameBufferViewports;			//フレームバッファのビューポート。
 	Level m_level;
 	SRespawn m_respawn[4];
-	SViewport m_viewport[4];
-	float m_restTimer = 90.0f;									//ゲームの残り時間。単位：秒。
-	HUD m_timer;
+	
+	float m_restTimer = 10.0f;									//ゲームの残り時間。単位：秒。
+	HUD m_hud;
+	HUDCamera m_hudCamera[4];
 };
 
 //グローバルなアクセスポイントをグローバル変数として提供する。

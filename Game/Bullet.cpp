@@ -11,7 +11,7 @@ Bullet::Bullet(CVector3 pos,int tag)
 {
 	m_model.Init(L"Assets/modelData/Bullet.cmo");
 
-	m_bulletController.Init(15.0f, 15.0f, pos, tag);
+	m_bulletController.Init(5.0f,2.0f, pos, tag);
 }
 
 Bullet::~Bullet()

@@ -2,6 +2,7 @@
 #include "system/system.h"
 #include "Title.h"
 #include <algorithm>
+#include "sound/SoundEngine.h"
 
 IScene* g_currentScene = nullptr;
 
@@ -21,9 +22,10 @@ void RenderGame()
 {
 	//描画開始。
 	g_graphicsEngine->BegineRender();
-
+	
 	//現在のシーンの描画。
 	g_currentScene->Draw();
+	//g_physics.DebubDrawWorld();
 
 	//描画終了。
 	g_graphicsEngine->EndRender();
@@ -43,15 +45,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 {
 	//ゲームエンジンの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, "Game");
-
+	CSoundEngine soundEngine;				//サウンドエンジン。
+	soundEngine.Init();
 	//タイトルシーンの作成。
 	g_currentScene = new Title;
-
+	//g_physics.SetDebugDrawMode(btIDebugDraw::DBG_DrawWireframe);
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{
 		//ゲームの更新。
 		UpdateGame();
+		//音楽データの更新
+		soundEngine.Update();
 		//ゲームの描画処理。
 		RenderGame();
 	}
