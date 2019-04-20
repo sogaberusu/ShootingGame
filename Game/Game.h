@@ -18,6 +18,7 @@
 #include "graphics/PostEffect.h"
 #include "HUD.h"
 #include "HUDCamera.h"
+#include "Result.h"
 //ゲームクラス。
 class Game : public IScene
 {
@@ -105,9 +106,10 @@ private:
 	Level m_level;
 	SRespawn m_respawn[4];
 	
-	float m_restTimer = 10.0f;									//ゲームの残り時間。単位：秒。
+	float m_restTimer = 90.0f;									//ゲームの残り時間。単位：秒。
 	HUD m_hud;
 	HUDCamera m_hudCamera[4];
+	//Result *m_result;
 };
 
 //グローバルなアクセスポイントをグローバル変数として提供する。

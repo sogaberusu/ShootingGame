@@ -42,5 +42,5 @@ private:
 	float				m_height = 0.0f;				//コライダーの高さ
 	RigidBody			m_rigidBody;					//剛体。
 	bool m_isDead = false;
-
+	
 };

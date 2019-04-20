@@ -78,6 +78,10 @@ public:
 	{
 		m_status.HitPoint = hp;
 	}
+	void SetKills(int kills)
+	{
+		m_status.Kills = kills;
+	}
 	void SetCameraDirection(CVector3 direction)
 	{
 		m_cameraDirection = direction;
@@ -121,6 +125,10 @@ public:
 	int GetAmmo()
 	{
 		return m_status.Ammo;
+	}
+	int GetKills()
+	{
+		return m_status.Kills;
 	}
 private:
 	void InitAnimation();								//アニメーションの初期化

@@ -8,6 +8,8 @@
 #include "Orc.h"
 #include "Player.h"
 #include "Title.h"
+#include "Result.h"
+
 
 //グローバルなアクセスポイントをグローバル変数として提供する。
 Game* g_game = nullptr;
@@ -118,6 +120,8 @@ Game::~Game()
 {
 	g_game = nullptr;
 
+	//シャドウマップにレンダリング
+	g_graphicsEngine->GetShadowMap()->ResetShadowCasters();
 	if (m_frameBufferRenderTargetView != nullptr) {
 		m_frameBufferRenderTargetView->Release();
 	}
@@ -155,7 +159,8 @@ void Game::Update()
 
 	if (m_restTimer == 0.0f)
 	{
-		g_currentScene = new Title;
+		//g_currentScene = new Title();
+		g_currentScene = new Result(m_player[0]->GetKills(),m_player[1]->GetKills(),m_player[2]->GetKills(),m_player[3]->GetKills());
 		delete this;
 	}
 }

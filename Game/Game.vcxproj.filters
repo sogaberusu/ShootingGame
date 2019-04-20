@@ -142,6 +142,7 @@
     <ClCompile Include="HUDCamera.cpp" />
     <ClCompile Include="graphics\PostEffect.cpp" />
     <ClCompile Include="graphics\Bloom.cpp" />
+    <ClCompile Include="Result.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -262,6 +263,7 @@
     <ClInclude Include="HUDCamera.h" />
     <ClInclude Include="graphics\PostEffect.h" />
     <ClInclude Include="graphics\Bloom.h" />
+    <ClInclude Include="Result.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -304,5 +306,8 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\Title.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\sprite\Result.png" />
   </ItemGroup>
 </Project>

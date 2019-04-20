@@ -5,6 +5,7 @@
 #include "Stone.h"
 #include "Bullet.h"
 #include "sound/SoundEngine.h"
+#include "Physics/CollisionAttr.h"
 
 
 
@@ -101,12 +102,14 @@ void Player::Update(Camera& camera, int PlayerNumber)
 {
 	if (m_state != enState_Death)
 	{
+		m_charaCon.GetRigidBody()->GetBody()->setUserIndex(PlayerNumber);
 		//ˆÚ“®ˆ—
 		Move(camera, PlayerNumber);
 	}
 	if (m_state == enState_Death && 
 		m_animation.IsPlaying() == false )
 	{
+		
 		m_rStickX = 0.0f;
 		m_rStickY = 0.0f;
 		auto respawn = g_game->GetPlayerRespawn(PlayerNumber,GetRandom(0, 3));
@@ -367,6 +370,8 @@ void Player::Move(Camera& camera, int PlayerNumber)
 
 	if (m_status.HitPoint <= 0)
 	{
+		m_charaCon.GetRigidBody()->GetBody()->setUserIndex(enCollisionAttr_Ground);
+
 		m_state = enState_Death;
 	}
 	if (m_state == enState_Crouch_Idle ||

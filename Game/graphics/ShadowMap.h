@@ -126,6 +126,10 @@ public:
 	{
 		return m_shadowMapRT.GetRenderTargetSRV();
 	}
+	void ResetShadowCasters()
+	{
+		m_shadowCasters.clear();
+	}
 private:
 	CVector3 m_lightCameraPosition = CVector3::Zero();	//ライトカメラの視点。
 	CVector3 m_lightCameraTarget = CVector3::Zero();	//ライトカメラの注視点。
