@@ -259,13 +259,6 @@
     <None Include="Assets\animData\Player_Death.tka" />
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\box.png">
-      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Assets/sprite/%(Filename).dds</ContentOutput>
-      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)/Assets/sprite/%(Filename).dds</ContentOutput>
-    </ImageContentTask>
-    <ImageContentTask Include="Assets\sprite\mikyan.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <ImageContentTask Include="Assets\sprite\Title.png">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
     </ImageContentTask>

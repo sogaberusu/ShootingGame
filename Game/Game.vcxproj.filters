@@ -303,8 +303,6 @@
     <None Include="Assets\animData\Player_Death.tka" />
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\mikyan.jpg" />
-    <ImageContentTask Include="Assets\sprite\box.png" />
     <ImageContentTask Include="Assets\sprite\Title.png" />
   </ItemGroup>
 </Project>
