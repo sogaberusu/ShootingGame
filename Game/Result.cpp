@@ -27,15 +27,26 @@ void Result::Update()
 {
 	m_sprite.Update(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
 
-	if (g_pad[0].IsPress(enButtonStart) == true) {
+	bool newflag = false;
+
+	if (g_pad[0].IsPress(enButtonA) == true) {
+		newflag = true;
+	}
+	if (g_pad[1].IsPress(enButtonA) == true) {
+		newflag = true;
+	}
+	if (g_pad[2].IsPress(enButtonA) == true) {
+		newflag = true;
+	}
+	if (g_pad[3].IsPress(enButtonA) == true) {
+		newflag = true;
+	}
+	if (newflag == true)
+	{
 		//ゲームシーンを作成して、自分は死ぬ。
 		g_currentScene = new Title;
 		delete this;
 	}
-
-	
-
-	
 }
 
 void Result::Draw()
@@ -48,10 +59,10 @@ void Result::Draw()
 
 	m_font.BeginDraw();
 
-	m_font.Draw(Player1Kills, { 0.0f, 200.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
-	m_font.Draw(Player2Kills, { 0.0f, 100.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
-	m_font.Draw(Player3Kills, { 0.0f, 0.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
-	m_font.Draw(Player4Kills, { 0.0f, -100.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+	m_font.Draw(Player1Kills, { -100.0f, 200.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+	m_font.Draw(Player2Kills, { -100.0f, 100.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+	m_font.Draw(Player3Kills, { -100.0f, 0.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+	m_font.Draw(Player4Kills, { -100.0f, -100.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
 
 	m_font.EndDraw();
 	

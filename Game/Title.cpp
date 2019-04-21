@@ -24,9 +24,24 @@ Title::~Title()
 }
 void Title::Update()
 {
+	bool newflag = false;
+
 	m_sprite.Update(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
 	
 	if (g_pad[0].IsPress(enButtonStart) == true) {
+		newflag = true;
+	}
+	if (g_pad[1].IsPress(enButtonStart) == true) {
+		newflag = true;
+	}
+	if (g_pad[2].IsPress(enButtonStart) == true) {
+		newflag = true;
+	}
+	if (g_pad[3].IsPress(enButtonStart) == true) {
+		newflag = true;
+	}
+	if (newflag == true)
+	{
 		//ゲームシーンを作成して、自分は死ぬ。
 		g_currentScene = new Game;
 		delete this;
