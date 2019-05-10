@@ -7,6 +7,7 @@
 #include "SMAW.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
+#include "Effect.h"
 
 class GameCamera;
 struct SPlayerStatus
@@ -212,9 +213,9 @@ private:
 	SMAW m_smaw;
 	Benelli_M4 m_benelli_m4;
 	SPlayerStatus m_status;
-	//CSoundEngine m_soundEngine;				//サウンドエンジン。
 	CSoundSource m_M4A1_Shot;				//SE。
 	bool m_crouch = false;					//プレイヤーがしゃがんでいるか
 	int m_shotCount = 0;
 	static const int SHOTINTERVAL = 3;
+	float m_hoge;
 };

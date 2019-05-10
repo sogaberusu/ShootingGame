@@ -445,7 +445,7 @@ public:
 	/**
 		@brief	カメラ行列を設定する。
 	*/
-	void SetCameraMatrix( const ::Effekseer::Matrix44& mat );
+	void SetCameraMatrix( const ::Effekseer::Matrix44& mat);
 
 	/**
 		@brief	カメラプロジェクション行列を取得する。

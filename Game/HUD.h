@@ -1,38 +1,27 @@
 #pragma once
-#include "graphics/Font.h"
-#include "Player.h"
-class Game;
-
-/// <summary>
-/// HUD
-/// </summary>
 class HUD
 {
 public:
-	/// <summary>
-	/// コンストラクタ。
-	/// </summary>
 	HUD();
-	/// <summary>
-	/// デストラクタ。
-	/// </summary>
 	~HUD();
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw(int playerNo);
-	void SetPlayer(Player* player,int playerNo)
+	void InitViewport(float Width, float Height, float TopLeftX, float TopLeftY)
 	{
-		m_player[playerNo] = player;
+		m_width = Width;
+		m_height = Height;
+		m_topLeftX = TopLeftX;
+		m_topLeftY = TopLeftY;
 	}
-	enum EnPlayer
+	void SetCameraNo(int No)
 	{
-		enPlayer1,
-		enPlayer2,
-		enPlayer3,
-		enPlayer4
-	};
+		cameraNo = No;
+	}
+	void StartRender();
 private:
-	Font* m_font = nullptr;	//フォント。
-	Player * m_player[4];
+	float m_width = 0;
+	float m_height = 0;
+	float m_topLeftX = 0;
+	float m_topLeftY = 0;
+
+	int cameraNo;
 };
+

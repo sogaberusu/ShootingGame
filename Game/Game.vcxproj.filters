@@ -110,16 +110,11 @@
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Title.cpp" />
-    <ClCompile Include="Goblin.cpp" />
-    <ClCompile Include="Orc.cpp" />
-    <ClCompile Include="Stone.cpp" />
-    <ClCompile Include="StoneManager.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="graphics\ShadowMap.cpp" />
     <ClCompile Include="graphics\RenderTarget.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Minotaur.cpp" />
     <ClCompile Include="graphics\Sprite.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
@@ -134,15 +129,16 @@
     <ClCompile Include="sound\WaveFile.cpp" />
     <ClCompile Include="sound\WaveFileBank.cpp" />
     <ClCompile Include="graphics\Font.cpp" />
-    <ClCompile Include="HUD.cpp" />
     <ClCompile Include="physics\PhysicsDebugDraw.cpp" />
     <ClCompile Include="graphics\SpriteData.cpp" />
     <ClCompile Include="graphics\vertexBuffer.cpp" />
     <ClCompile Include="graphics\indexBuffer.cpp" />
-    <ClCompile Include="HUDCamera.cpp" />
     <ClCompile Include="graphics\PostEffect.cpp" />
     <ClCompile Include="graphics\Bloom.cpp" />
     <ClCompile Include="Result.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -231,16 +227,11 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="IScene.h" />
-    <ClInclude Include="Goblin.h" />
-    <ClInclude Include="Orc.h" />
-    <ClInclude Include="Stone.h" />
-    <ClInclude Include="StoneManager.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="graphics\ShadowMap.h" />
     <ClInclude Include="graphics\RenderTarget.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Minotaur.h" />
     <ClInclude Include="graphics\Sprite.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
@@ -255,15 +246,16 @@
     <ClInclude Include="sound\WaveFile.h" />
     <ClInclude Include="sound\WaveFileBank.h" />
     <ClInclude Include="graphics\Font.h" />
-    <ClInclude Include="HUD.h" />
     <ClInclude Include="physics\PhysicsDebugDraw.h" />
     <ClInclude Include="graphics\SpriteData.h" />
     <ClInclude Include="graphics\vertexBuffer.h" />
     <ClInclude Include="graphics\indexBuffer.h" />
-    <ClInclude Include="HUDCamera.h" />
     <ClInclude Include="graphics\PostEffect.h" />
     <ClInclude Include="graphics\Bloom.h" />
     <ClInclude Include="Result.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="HUD.h" />
+    <ClInclude Include="Effect.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -306,8 +298,6 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\Title.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\sprite\Result.png" />
+    <ImageContentTask Include="Assets\sprite\Result.png" />
   </ItemGroup>
 </Project>

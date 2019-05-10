@@ -2,7 +2,6 @@
 #include "Player.h"
 #include "GameCamera.h"
 #include "Game.h"
-#include "Stone.h"
 #include "Bullet.h"
 #include "sound/SoundEngine.h"
 #include "Physics/CollisionAttr.h"
@@ -17,6 +16,8 @@ Player::Player(int playerNo)
 	m_M4A1_Shot.Init(L"Assets/sound/M4A1_Shot.wav");
 	//cmoファイルの読み込み。
 	m_model.Init(L"Assets/modelData/Player.cmo");
+
+	//m_effect.Init(L"Assets/effect/MuzzleFlash.efk");
 
 	m_model.SetShadowReciever(true);
 	InitAnimation();
@@ -196,6 +197,8 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	m_animation.Update(1.0f / 30.0f);
 	//シャドウキャスターを登録。
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
+
+	//m_effect.Update(PlayerNumber);
 }
 void Player::Move(Camera& camera, int PlayerNumber)
 {
@@ -399,6 +402,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	m_right.y = rotMatrix.m[0][1];
 	m_right.z = rotMatrix.m[0][2];
 	m_right.Normalize();
+	m_hoge = rotMatrix.m[4][3];
 }
 
 void Player::Turn(int PlayerNumber)
@@ -474,6 +478,7 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 		}
 		if (m_shotCount == 0)
 		{
+			g_game->m_effect[PlayerNumber].Play(m_handPos, { 1.0,1.0,1.0 }, m_rotation);
 			if (m_M4A1_Shot.IsPlaying())
 			{
 				m_M4A1_Shot.Stop();
@@ -501,6 +506,8 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 		}
 		if (m_shotCount == 0)
 		{
+			g_game->m_effect[PlayerNumber].Play(m_handPos, { 1.0,1.0,1.0 }, m_rotation);
+
 			if (m_M4A1_Shot.IsPlaying())
 			{
 				m_M4A1_Shot.Stop();
