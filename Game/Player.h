@@ -7,7 +7,6 @@
 #include "SMAW.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
-#include "Effect.h"
 
 class GameCamera;
 struct SPlayerStatus
@@ -25,7 +24,6 @@ public:
 	~Player();
 	void Update(Camera& camera, int PlayerNumber);
 	void Draw(Camera& camera, int ViewportNumber, int PlayerNumber);
-	void WeaponDraw(Camera& camera);
 	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
@@ -131,6 +129,14 @@ public:
 	{
 		return m_status.Kills;
 	}
+	bool GetDrawFlag()
+	{
+		return m_drawflag;
+	}
+	CQuaternion GetRotation()
+	{
+		return m_rotation;
+	}
 private:
 	void InitAnimation();								//アニメーションの初期化
 	void Move(Camera& camera, int PlayerNumber);					//移動処理
@@ -179,15 +185,9 @@ private:
 		enState_Death,
 		enState_Num
 	};
-	enum EnWeapon {
-		enM4A1,
-		enM110,
-		enBenelli_M4,
-		enSMAW
-	};
 
 	SkinModel m_model;									//スキンモデル。
-	SkinModel m_model_debag;									//スキンモデル。
+	SkinModel m_model_debag;							//スキンモデル。
 	Animation m_animation;								//アニメーション。
 	AnimationClip m_animationClips[enAnimation_Num];	//アニメーションクリップ。
 	CVector3 m_position = CVector3::Zero();				//座標
@@ -207,8 +207,6 @@ private:
 	bool m_drawflag = true;
 	CVector3 m_handPos;
 	RigidBody* m_rigidBody;
-	EnWeapon m_weapon = enM4A1;
-	M4A1 m_m4a1;
 	M110 m_m110;
 	SMAW m_smaw;
 	Benelli_M4 m_benelli_m4;
@@ -217,5 +215,5 @@ private:
 	bool m_crouch = false;					//プレイヤーがしゃがんでいるか
 	int m_shotCount = 0;
 	static const int SHOTINTERVAL = 3;
-	float m_hoge;
+	static const int SHOTSPEED = 2000;
 };

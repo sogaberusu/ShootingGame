@@ -16,6 +16,7 @@
 #include "HUD.h"
 #include "Result.h"
 #include "Effect.h"
+#include "M4A1.h"
 //ゲームクラス。
 class Game : public IScene
 {
@@ -72,6 +73,14 @@ public:
 	{
 		return m_restTimer;
 	}
+	Effect &GetEffect(int playerNo)
+	{
+		return m_effect[playerNo];
+	}
+	M4A1 &GetM4A1(int playerNo)
+	{
+		return m_m4a1[playerNo];
+	}
 private:
 	Player *m_player[4];												//プレイヤー
 	GameCamera* m_gameCamera[4];										//ゲームカメラ
@@ -91,9 +100,8 @@ private:
 	float m_restTimer = 90.0f;											//ゲームの残り時間。単位：秒。
 	Timer m_timer;														//残り時間を描画する
 	HUD m_hud[4];														//
-public:
+	M4A1 m_m4a1[4];														//fps視点の時のモデル
 	Effect m_effect[4];
-	//Effect m_effect;
 };
 
 //グローバルなアクセスポイントをグローバル変数として提供する。

@@ -65,8 +65,8 @@ Game::Game()
 		m_bulletManager.SetInstance(m_player[i], i);
 		m_timer.SetPlayer(m_player[i], i);
 		m_effect[i].Init(L"Assets/effect/MuzzleFlash.efk");
+		m_m4a1[i].SetInstance(m_player[i]);
 	}
-	//m_effect.Init(L"Assets/effect/MuzzleFlash.efk");
 
 	m_gameCamera[0]->InitViewport(640, 360, 0, 0);
 	m_gameCamera[0]->SetPlayer(m_player[0]);
@@ -131,12 +131,10 @@ void Game::Update()
 	{
 		m_player[i]->Update(g_camera3D[i],i);
 		m_gameCamera[i]->Update();
-		//m_effect[i].Update(i);
-		//m_effect.Update(i);
+		m_m4a1[i].Update(m_player[i]->GetHandPos());
 	}
 	m_background->Update();
 	m_bulletManager.Update();
-	
 	//ポストエフェクトの更新。
 	m_postEffect.Update();
 	if (m_restTimer == 0.0f)
@@ -163,6 +161,7 @@ void Game::Draw()
 		for (int j = 0; j < 4; j++)
 		{
 			m_player[j]->Draw(g_camera3D[i], i, j);
+			m_m4a1[j].Draw(g_camera3D[i], i, j);
 		}
 		//背景の描画
 		m_background->Draw(g_camera3D[i]);
@@ -173,7 +172,6 @@ void Game::Draw()
 		{
 			m_effect[j].Draw(i);
 		}
-		//m_effect.Draw();
 	}
 	
 }

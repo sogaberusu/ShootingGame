@@ -191,14 +191,11 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	m_handPos.y = hand.m[3][1];
 	m_handPos.z = hand.m[3][2];
 
-	WeaponDraw(camera);
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	m_animation.Update(1.0f / 30.0f);
 	//シャドウキャスターを登録。
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
-
-	//m_effect.Update(PlayerNumber);
 }
 void Player::Move(Camera& camera, int PlayerNumber)
 {
@@ -354,23 +351,6 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		m_moveSpeed.Add(m_moveSpeed);
 	}
 
-	if (g_pad[PlayerNumber].IsTrigger(enButtonUp) == true)
-	{
-		m_weapon = enM4A1;
-	}
-	if (g_pad[PlayerNumber].IsTrigger(enButtonRight) == true)
-	{
-		m_weapon = enBenelli_M4;
-	}
-	if (g_pad[PlayerNumber].IsTrigger(enButtonDown) == true)
-	{
-		m_weapon = enSMAW;
-	}
-	if (g_pad[PlayerNumber].IsTrigger(enButtonLeft) == true)
-	{
-		m_weapon = enM110;
-	}
-
 	if (m_status.HitPoint <= 0)
 	{
 		m_charaCon.GetRigidBody()->GetBody()->setUserIndex(enCollisionAttr_Ground);
@@ -402,7 +382,6 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	m_right.y = rotMatrix.m[0][1];
 	m_right.z = rotMatrix.m[0][2];
 	m_right.Normalize();
-	m_hoge = rotMatrix.m[4][3];
 }
 
 void Player::Turn(int PlayerNumber)
@@ -439,26 +418,6 @@ void Player::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
 	
 }
 
-void Player::WeaponDraw(Camera& camera)
-{
-	if (m_weapon == enM4A1)
-	{
-		m_m4a1.Draw(camera);
-	}
-	if (m_weapon == enSMAW)
-	{
-		m_smaw.Draw(camera);
-	}
-	if (m_weapon == enBenelli_M4)
-	{
-		m_benelli_m4.Draw(camera);
-	}
-	if (m_weapon == enM110)
-	{
-		m_m110.Draw(camera);
-	}
-}
-
 void Player::Shot(int PlayerNumber,Camera& camera)
 {
 	
@@ -478,7 +437,7 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 		}
 		if (m_shotCount == 0)
 		{
-			g_game->m_effect[PlayerNumber].Play(m_handPos, { 1.0,1.0,1.0 }, m_rotation);
+			g_game->GetEffect(PlayerNumber).Play(m_handPos, CVector3::One(), m_rotation);
 			if (m_M4A1_Shot.IsPlaying())
 			{
 				m_M4A1_Shot.Stop();
@@ -487,7 +446,7 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
-			bullet->SetMoveSpeed(target * 2000);
+			bullet->SetMoveSpeed(target * SHOTSPEED);
 		}
 	}
 	if (m_state != enState_Crouch_Idle &&
@@ -506,7 +465,7 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 		}
 		if (m_shotCount == 0)
 		{
-			g_game->m_effect[PlayerNumber].Play(m_handPos, { 1.0,1.0,1.0 }, m_rotation);
+			g_game->GetEffect(PlayerNumber).Play(m_handPos, CVector3::One(), m_rotation);
 
 			if (m_M4A1_Shot.IsPlaying())
 			{
@@ -516,7 +475,7 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
-			bullet->SetMoveSpeed(target * 2000);
+			bullet->SetMoveSpeed(target * SHOTSPEED);
 		}
 	}
 }

@@ -9,7 +9,6 @@ public:
 	WeaponManager();
 	~WeaponManager();
 private:
-	M4A1 m_m4a1;
 	M110 m_m110;
 	SMAW m_smaw;
 	Benelli_M4 m_benelli_m4;

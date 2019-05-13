@@ -140,9 +140,6 @@ void GameCamera::Update()
 		g_camera3D[i].SetPosition(newPosition);
 		g_camera3D[i].Update();
 	}
-
-	
-
 }
 
 void GameCamera::StartRender()
