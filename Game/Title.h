@@ -2,7 +2,6 @@
 
 #include "IScene.h"
 #include "graphics/Sprite.h"
-#include "graphics/Font.h"
 
 class Title : public IScene
 {
@@ -19,6 +18,5 @@ public:
 private:
 	Sprite m_sprite;
 	ID3D11ShaderResourceView* m_title = nullptr;
-	Font m_font;
 };
 

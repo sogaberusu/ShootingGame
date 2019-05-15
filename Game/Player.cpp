@@ -159,6 +159,10 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		break;
 	case Player::enState_Crouch_Reload:
 		m_animation.Play(enAnimation_Crouch_Reload, 0.3);
+		if (m_animation.IsPlaying() == false)
+		{
+			m_status.Ammo = 30;
+		}
 		break;
 	case Player::enState_Crouch_Shoot:
 		m_animation.Play(enAnimation_Crouch_Shoot, 0.3);
@@ -171,6 +175,10 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		break;
 	case Player::enState_Reload:
 		m_animation.Play(enAnimation_Reload, 0.3);
+		if (m_animation.IsPlaying() == false)
+		{
+			m_status.Ammo = 30;
+		}
 		break;
 	case Player::enState_Shoot:
 		m_animation.Play(enAnimation_Shoot, 0.3);
@@ -238,26 +246,6 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			m_state = enState_Idle;
 		}
 	}
-		/*if (m_state == enState_Crouch_Idle ||
-			m_state == enState_Crouch_Walk_Forward ||
-			m_state == enState_Crouch_Walk_Shoot ||
-			m_state == enState_Crouch_Reload ||
-			m_state == enState_Crouch_Shoot
-			)
-		{
-			m_state = enState_Crouch_Idle;
-		}
-		if (m_state != enState_Crouch_Idle &&
-			m_state != enState_Crouch_Walk_Forward &&
-			m_state != enState_Crouch_Walk_Shoot &&
-			m_state != enState_Crouch_Reload &&
-			m_state != enState_Crouch_Shoot &&
-			m_state != enState_Reload 
-				)
-			{
-				m_state = enState_Idle;
-			}
-	}*/
 	else{
 		if (m_state == enState_Crouch_Idle ||
 			m_state == enState_Crouch_Walk_Forward ||
@@ -330,10 +318,13 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		if (m_state == enState_Crouch_Idle)
 		{
 			m_state = enState_Crouch_Reload;
+
+			//m_status.Ammo = 30;
 		}
 		else 
 		{
 			m_state = enState_Reload;
+			//m_status.Ammo = 30;
 		}
 	}
 	if (g_pad[PlayerNumber].IsPress(enButtonRB2) == true)
@@ -435,7 +426,7 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 		else {
 			m_state = enState_Crouch_Walk_Forward;
 		}
-		if (m_shotCount == 0)
+		if (m_shotCount == 0 && m_status.Ammo > 0)
 		{
 			g_game->GetEffect(PlayerNumber).Play(m_handPos, CVector3::One(), m_rotation);
 			if (m_M4A1_Shot.IsPlaying())
@@ -463,7 +454,7 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 		else {
 			m_state = enState_Walk_Shoot;
 		}
-		if (m_shotCount == 0)
+		if (m_shotCount == 0 && m_status.Ammo > 0)
 		{
 			g_game->GetEffect(PlayerNumber).Play(m_handPos, CVector3::One(), m_rotation);
 
@@ -476,6 +467,7 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
 			bullet->SetMoveSpeed(target * SHOTSPEED);
+			m_status.Ammo = m_status.Ammo - 1;
 		}
 	}
 }

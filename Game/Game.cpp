@@ -174,7 +174,7 @@ void Game::Draw()
 			m_effect[j].Draw(i);
 			
 		}
-		m_hud[i].Draw(i);
+		m_hud[i].Draw(i,m_player[i]->GetAmmo());
 	}
 	
 }
