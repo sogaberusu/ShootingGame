@@ -14,7 +14,7 @@ M4A1::~M4A1()
 void M4A1::Update(CVector3 pos)
 {
 	m_position = m_player->GetHandPos();
-
+	
 	m_rotation = m_player->GetRotation();
 
 	//CQuaternion qRot = CQuaternion::Identity();

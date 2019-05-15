@@ -12,8 +12,7 @@ Title::Title()
 	{
 		int i = 0;
 	}
-	/*MessageBox(nullptr, "最初の画面はタイトルシーン！Aボタンを押すとゲームが始まるよ！", "通知", MB_OK);*/
-	m_sprite.Init(m_title,1280.0,720.0);
+	m_sprite.Init(m_title, 1280.0, 720.0);
 	m_sprite.SetTexture(*m_title);
 }
 

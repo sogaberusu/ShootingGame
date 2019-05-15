@@ -132,6 +132,7 @@ void Game::Update()
 		m_player[i]->Update(g_camera3D[i],i);
 		m_gameCamera[i]->Update();
 		m_m4a1[i].Update(m_player[i]->GetHandPos());
+		m_hud[i].Update();
 	}
 	m_background->Update();
 	m_bulletManager.Update();
@@ -171,7 +172,9 @@ void Game::Draw()
 		for (int j = 0; j < 4; j++)
 		{
 			m_effect[j].Draw(i);
+			
 		}
+		m_hud[i].Draw(i);
 	}
 	
 }

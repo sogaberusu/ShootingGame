@@ -299,5 +299,6 @@
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\Title.png" />
     <ImageContentTask Include="Assets\sprite\Result.png" />
+    <ImageContentTask Include="Assets\sprite\Target.png" />
   </ItemGroup>
 </Project>
