@@ -127,6 +127,7 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		m_state = enState_Idle;
 		m_status.HitPoint = 100;
 		m_status.HealTimer = 0;
+		m_status.Ammo = 30;
 	}
 	//‰ñ“]ˆ—
 	Turn(PlayerNumber);
