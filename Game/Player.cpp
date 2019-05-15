@@ -106,11 +106,18 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		m_charaCon.GetRigidBody()->GetBody()->setUserIndex(PlayerNumber);
 		//移動処理
 		Move(camera, PlayerNumber);
+		if (m_status.HealTimer > 0)
+		{
+			m_status.HealTimer--;
+		}
+		if (m_status.HitPoint < 100 && m_status.HealTimer == 0)
+		{
+			m_status.HitPoint++;
+		}
 	}
 	if (m_state == enState_Death && 
 		m_animation.IsPlaying() == false )
 	{
-		
 		m_rStickX = 0.0f;
 		m_rStickY = 0.0f;
 		auto respawn = g_game->GetPlayerRespawn(PlayerNumber,GetRandom(0, 3));
@@ -119,6 +126,7 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		m_charaCon.SetPosition(m_position);
 		m_state = enState_Idle;
 		m_status.HitPoint = 100;
+		m_status.HealTimer = 0;
 	}
 	//回転処理
 	Turn(PlayerNumber);
@@ -204,6 +212,8 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	m_animation.Update(1.0f / 30.0f);
 	//シャドウキャスターを登録。
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
+
+	
 }
 void Player::Move(Camera& camera, int PlayerNumber)
 {
@@ -318,13 +328,10 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		if (m_state == enState_Crouch_Idle)
 		{
 			m_state = enState_Crouch_Reload;
-
-			//m_status.Ammo = 30;
 		}
 		else 
 		{
 			m_state = enState_Reload;
-			//m_status.Ammo = 30;
 		}
 	}
 	if (g_pad[PlayerNumber].IsPress(enButtonRB2) == true)

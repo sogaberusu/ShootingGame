@@ -15,6 +15,7 @@ struct SPlayerStatus
 	int Kills = 0;					//キル数
 	int Attack = 30;				//攻撃力
 	int Ammo = 30;					//残弾数
+	int HealTimer = 0;
 };
 class Player
 {
@@ -81,6 +82,10 @@ public:
 	{
 		m_status.Kills = kills;
 	}
+	void SetHealTimer(int timer)
+	{
+		m_status.HealTimer = timer;
+	}
 	void SetCameraDirection(CVector3 direction)
 	{
 		m_cameraDirection = direction;
@@ -136,6 +141,34 @@ public:
 	CQuaternion GetRotation()
 	{
 		return m_rotation;
+	}
+	int GetHitPoint()
+	{
+		return m_status.HitPoint;
+	}
+	void SetAttackTrue()
+	{
+		m_attackflag = true;
+	}
+	void SetAttackFalse()
+	{
+		m_attackflag = false;
+	}
+	bool GetAttackFlag()
+	{
+		return m_attackflag;
+	}
+	void SetKillTrue()
+	{
+		m_killflag = true;
+	}
+	void SetKillFalse()
+	{
+		m_killflag = false;
+	}
+	bool GetKillFlag()
+	{
+		return m_killflag;
 	}
 private:
 	void InitAnimation();								//アニメーションの初期化
@@ -216,4 +249,6 @@ private:
 	int m_shotCount = 0;
 	static const int SHOTINTERVAL = 3;
 	static const int SHOTSPEED = 2000;
+	bool m_attackflag = false;
+	bool m_killflag = false;
 };

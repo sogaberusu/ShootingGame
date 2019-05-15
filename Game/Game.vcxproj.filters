@@ -301,5 +301,8 @@
     <ImageContentTask Include="Assets\sprite\Result.png" />
     <ImageContentTask Include="Assets\sprite\Target.png" />
     <ImageContentTask Include="Assets\sprite\Xbutton.png" />
+    <ImageContentTask Include="Assets\sprite\life.png" />
+    <ImageContentTask Include="Assets\sprite\Hitmarker.png" />
+    <ImageContentTask Include="Assets\sprite\Killmarker.png" />
   </ItemGroup>
 </Project>

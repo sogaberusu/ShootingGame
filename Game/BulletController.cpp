@@ -56,8 +56,16 @@ namespace {
 				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
 				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint -
 					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetStatus().Attack);
-				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint <= 0)
+				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHealTimer(300);
+				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint > 0)
 				{
+					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetAttackTrue();
+				}
+				
+				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint < 0)
+				{
+					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKillTrue();
+					g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(0);
 					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKills(g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetStatus().Kills + 1);
 				}
 		

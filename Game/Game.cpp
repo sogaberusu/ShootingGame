@@ -174,7 +174,9 @@ void Game::Draw()
 			m_effect[j].Draw(i);
 			
 		}
-		m_hud[i].Draw(i,m_player[i]->GetAmmo());
+		m_hud[i].Draw(i,m_player[i]->GetAmmo(),m_player[i]->GetHitPoint(),m_player[i]->GetAttackFlag(),m_player[i]->GetKillFlag());
+		m_player[i]->SetAttackFalse();
+		m_player[i]->SetKillFalse();
 	}
 	
 }
