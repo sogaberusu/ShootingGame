@@ -3,6 +3,7 @@
 #include "graphics/ShadowMap.h"
 #include "Benelli_M4.h"
 #include "M4A1.h"
+#include "MP5.h"
 #include "M110.h"
 #include "SMAW.h"
 #include "sound/SoundEngine.h"
@@ -13,8 +14,8 @@ struct SPlayerStatus
 {
 	int HitPoint = 100;				//体力
 	int Kills = 0;					//キル数
-	int Attack = 30;				//攻撃力
-	int Ammo = 30;					//残弾数
+	//int Attack = 30;				//攻撃力
+	//int Ammo = 30;					//残弾数
 	int HealTimer = 0;
 };
 class Player
@@ -105,6 +106,12 @@ private:
 		enType_FPS
 	};
 	void Shot(int PlayerNumber,Camera& camera);
+	enum EnWeapon
+	{
+		enWeapon_M4A1,
+		enWeapon_MP5,
+		enWeapon_Num
+	};
 public:
 	bool GetCameraType()
 	{
@@ -126,10 +133,10 @@ public:
 	{
 		return min + (int)(rand()*(max - min + 1.0) / (1.0 + RAND_MAX));
 	}
-	int GetAmmo()
+	/*int GetAmmo()
 	{
 		return m_status.Ammo;
-	}
+	}*/
 	int GetKills()
 	{
 		return m_status.Kills;
@@ -170,6 +177,15 @@ public:
 	{
 		return m_killflag;
 	}
+	EnWeapon GetWeapon()
+	{
+		return m_weapon;
+	}
+	void SetWeaponInstance(M4A1 *m4a1,MP5 *mp5)
+	{
+		m_m4a1 = m4a1;
+		m_mp5  = mp5;
+	}
 private:
 	void InitAnimation();								//アニメーションの初期化
 	void Move(Camera& camera, int PlayerNumber);					//移動処理
@@ -181,6 +197,7 @@ private:
 		enAnimation_Walk_Right,
 		enAnimation_Walk_Left,
 		enAnimation_Walk_Shoot,
+		enAnimation_Walk_Reload,
 		enAnimation_Run,
 		enAnimation_Jump_Start,
 		enAnimation_Jump_Air,
@@ -194,6 +211,7 @@ private:
 		enAnimation_Shoot,
 		enAnimation_Damage,
 		enAnimation_Death,
+		enAnimation_Grenade,
 		enAnimation_Num
 	};
 	enum EnState {
@@ -203,6 +221,7 @@ private:
 		enState_Walk_Right,
 		enState_Walk_Left,
 		enState_Walk_Shoot,
+		enState_Walk_Reload,
 		enState_Run,
 		enState_Jump_Start,
 		enState_Jump_Air,
@@ -216,9 +235,9 @@ private:
 		enState_Shoot,
 		enState_Damage,
 		enState_Death,
+		enState_Grenade,
 		enState_Num
 	};
-
 	SkinModel m_model;									//スキンモデル。
 	SkinModel m_model_debag;							//スキンモデル。
 	Animation m_animation;								//アニメーション。
@@ -240,9 +259,6 @@ private:
 	bool m_drawflag = true;
 	CVector3 m_handPos;
 	RigidBody* m_rigidBody;
-	M110 m_m110;
-	SMAW m_smaw;
-	Benelli_M4 m_benelli_m4;
 	SPlayerStatus m_status;
 	CSoundSource m_M4A1_Shot;				//SE。
 	bool m_crouch = false;					//プレイヤーがしゃがんでいるか
@@ -251,4 +267,7 @@ private:
 	static const int SHOTSPEED = 2000;
 	bool m_attackflag = false;
 	bool m_killflag = false;
+	EnWeapon m_weapon = enWeapon_M4A1;
+	M4A1 *m_m4a1;
+	MP5  *m_mp5;
 };

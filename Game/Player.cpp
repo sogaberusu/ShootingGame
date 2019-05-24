@@ -10,14 +10,10 @@
 
 Player::Player(int playerNo)
 {
-	//サウンドエンジンを初期化。
-	//g_soundEngine.Init();
 	//ワンショット再生のSE
 	m_M4A1_Shot.Init(L"Assets/sound/M4A1_Shot.wav");
 	//cmoファイルの読み込み。
-	m_model.Init(L"Assets/modelData/Player.cmo");
-
-	//m_effect.Init(L"Assets/effect/MuzzleFlash.efk");
+	m_model.Init(L"Assets/modelData/Player_.cmo");
 
 	m_model.SetShadowReciever(true);
 	InitAnimation();
@@ -33,9 +29,6 @@ void Player::InitAnimation()
 	m_animationClips[enAnimation_Idle].Load(L"Assets/animData/Player_Idle.tka");
 	m_animationClips[enAnimation_Idle].SetLoopFlag(true);
 
-	m_animationClips[enAnimation_Run].Load(L"Assets/animData/Player_Run.tka");
-	m_animationClips[enAnimation_Run].SetLoopFlag(true);
-
 	m_animationClips[enAnimation_Walk_Forward].Load(L"Assets/animData/Player_Walk_Forward.tka");
 	m_animationClips[enAnimation_Walk_Forward].SetLoopFlag(true);
 
@@ -48,29 +41,14 @@ void Player::InitAnimation()
 	m_animationClips[enAnimation_Walk_Left].Load(L"Assets/animData/Player_Walk_Left.tka");
 	m_animationClips[enAnimation_Walk_Left].SetLoopFlag(true);
 
-	m_animationClips[enAnimation_Crouch_Idle].Load(L"Assets/animData/Player_Crouch_Idle.tka");
-	m_animationClips[enAnimation_Crouch_Idle].SetLoopFlag(true);
-
-	m_animationClips[enAnimation_Reload].Load(L"Assets/animData/Player_Reload.tka");
-	m_animationClips[enAnimation_Reload].SetLoopFlag(false);
-
-	m_animationClips[enAnimation_Crouch_Reload].Load(L"Assets/animData/Player_Crouch_Reload.tka");
-	m_animationClips[enAnimation_Crouch_Reload].SetLoopFlag(false);
-
-	m_animationClips[enAnimation_Shoot].Load(L"Assets/animData/Player_Shoot.tka");
-	m_animationClips[enAnimation_Shoot].SetLoopFlag(false);
-
-	m_animationClips[enAnimation_Crouch_Shoot].Load(L"Assets/animData/Player_Crouch_Shoot.tka");
-	m_animationClips[enAnimation_Crouch_Shoot].SetLoopFlag(false);
-
-	m_animationClips[enAnimation_Crouch_Walk_Shoot].Load(L"Assets/animData/Player_Crouch_Walk_Shoot.tka");
-	m_animationClips[enAnimation_Crouch_Walk_Shoot].SetLoopFlag(true);
-
 	m_animationClips[enAnimation_Walk_Shoot].Load(L"Assets/animData/Player_Walk_Shoot.tka");
 	m_animationClips[enAnimation_Walk_Shoot].SetLoopFlag(true);
 
-	m_animationClips[enAnimation_Crouch_Walk_Forward].Load(L"Assets/animData/Player_Crouch_Walk_Forward.tka");
-	m_animationClips[enAnimation_Crouch_Walk_Forward].SetLoopFlag(true);
+	m_animationClips[enAnimation_Walk_Reload].Load(L"Assets/animData/Player_Walk_Reload.tka");
+	m_animationClips[enAnimation_Walk_Reload].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Run].Load(L"Assets/animData/Player_Run.tka");
+	m_animationClips[enAnimation_Run].SetLoopFlag(true);
 
 	m_animationClips[enAnimation_Jump_Start].Load(L"Assets/animData/Player_Jump_Start.tka");
 	m_animationClips[enAnimation_Jump_Start].SetLoopFlag(false);
@@ -81,11 +59,35 @@ void Player::InitAnimation()
 	m_animationClips[enAnimation_Jump_Land].Load(L"Assets/animData/Player_Jump_Land.tka");
 	m_animationClips[enAnimation_Jump_Land].SetLoopFlag(false);
 
+	m_animationClips[enAnimation_Crouch_Idle].Load(L"Assets/animData/Player_Crouch_Idle.tka");
+	m_animationClips[enAnimation_Crouch_Idle].SetLoopFlag(true);
+
+	m_animationClips[enAnimation_Crouch_Reload].Load(L"Assets/animData/Player_Crouch_Reload.tka");
+	m_animationClips[enAnimation_Crouch_Reload].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Crouch_Shoot].Load(L"Assets/animData/Player_Crouch_Shoot.tka");
+	m_animationClips[enAnimation_Crouch_Shoot].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Crouch_Walk_Shoot].Load(L"Assets/animData/Player_Crouch_Walk_Shoot.tka");
+	m_animationClips[enAnimation_Crouch_Walk_Shoot].SetLoopFlag(true);
+
+	m_animationClips[enAnimation_Crouch_Walk_Forward].Load(L"Assets/animData/Player_Crouch_Walk_Forward.tka");
+	m_animationClips[enAnimation_Crouch_Walk_Forward].SetLoopFlag(true);
+
+	m_animationClips[enAnimation_Reload].Load(L"Assets/animData/Player_Reload.tka");
+	m_animationClips[enAnimation_Reload].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Shoot].Load(L"Assets/animData/Player_Shoot.tka");
+	m_animationClips[enAnimation_Shoot].SetLoopFlag(false);
+
 	m_animationClips[enAnimation_Damage].Load(L"Assets/animData/Player_Damage.tka");
 	m_animationClips[enAnimation_Damage].SetLoopFlag(false);
 
 	m_animationClips[enAnimation_Death].Load(L"Assets/animData/Player_Death.tka");
 	m_animationClips[enAnimation_Death].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Grenade].Load(L"Assets/animData/Player_Grenade.tka");
+	m_animationClips[enAnimation_Grenade].SetLoopFlag(false);
 	//アニメーションの初期化。
 	m_animation.Init(
 		m_model,			//アニメーションを流すスキンモデル。
@@ -115,19 +117,23 @@ void Player::Update(Camera& camera, int PlayerNumber)
 			m_status.HitPoint++;
 		}
 	}
-	if (m_state == enState_Death && 
-		m_animation.IsPlaying() == false )
+	if (m_state == enState_Death &&
+		m_animation.IsPlaying() == false)
 	{
 		m_rStickX = 0.0f;
 		m_rStickY = 0.0f;
-		auto respawn = g_game->GetPlayerRespawn(PlayerNumber,GetRandom(0, 3));
+		auto respawn = g_game->GetPlayerRespawn(PlayerNumber, GetRandom(0, 3));
 		m_position = respawn.PlayerPosition;
 		m_rotation = respawn.PlayerRotation;
 		m_charaCon.SetPosition(m_position);
 		m_state = enState_Idle;
 		m_status.HitPoint = 100;
 		m_status.HealTimer = 0;
-		m_status.Ammo = 30;
+
+		m_m4a1->SetAmmo(30);
+
+		m_mp5->SetAmmo(30);
+
 	}
 	//回転処理
 	Turn(PlayerNumber);
@@ -151,6 +157,22 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	case Player::enState_Walk_Shoot:
 		m_animation.Play(enAnimation_Walk_Shoot, 0.3);
 		break;
+	case Player::enState_Walk_Reload:
+		m_animation.Play(enAnimation_Walk_Reload, 0.3);
+		if (m_animation.IsPlaying() == false)
+		{
+			switch (m_weapon)
+			{
+			case Player::enWeapon_M4A1:
+				m_m4a1->SetAmmo(30);
+				break;
+			case Player::enWeapon_MP5:
+				m_mp5->SetAmmo(30);
+				break;
+			}
+			m_state = enState_Idle;
+		}
+		break;
 	case Player::enState_Run:
 		m_animation.Play(enAnimation_Run, 0.3);
 		break;
@@ -170,7 +192,17 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		m_animation.Play(enAnimation_Crouch_Reload, 0.3);
 		if (m_animation.IsPlaying() == false)
 		{
-			m_status.Ammo = 30;
+			switch (m_weapon)
+			{
+			case Player::enWeapon_M4A1:
+				m_m4a1->SetAmmo(30);
+				break;
+			case Player::enWeapon_MP5:
+				m_mp5->SetAmmo(30);
+				break;
+			}
+			m_state = enState_Crouch_Idle;
+
 		}
 		break;
 	case Player::enState_Crouch_Shoot:
@@ -186,7 +218,17 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		m_animation.Play(enAnimation_Reload, 0.3);
 		if (m_animation.IsPlaying() == false)
 		{
-			m_status.Ammo = 30;
+			switch (m_weapon)
+			{
+			case Player::enWeapon_M4A1:
+				m_m4a1->SetAmmo(30);
+				break;
+			case Player::enWeapon_MP5:
+				m_mp5->SetAmmo(30);
+				break;
+			}
+			m_state = enState_Idle;
+
 		}
 		break;
 	case Player::enState_Shoot:
@@ -197,6 +239,9 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		break;
 	case Player::enState_Death:
 		m_animation.Play(enAnimation_Death, 0.3);
+		break;
+	case Player::enState_Grenade:
+		m_animation.Play(enAnimation_Grenade, 0.3);
 		break;
 	default:
 		m_position = { 0.0f,0.0f,0.0f };
@@ -251,7 +296,9 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			m_state != enState_Jump_Air &&
 			m_state != enState_Jump_Start &&
 			m_state != enState_Jump_Land &&
-			m_state != enState_Reload
+			m_state != enState_Reload && 
+			m_state != enState_Walk_Reload &&
+			m_state != enState_Grenade
 			)
 		{
 			m_state = enState_Idle;
@@ -261,14 +308,16 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		if (m_state == enState_Crouch_Idle ||
 			m_state == enState_Crouch_Walk_Forward ||
 			m_state == enState_Crouch_Walk_Shoot ||
-			m_state == enState_Crouch_Reload ||
 			m_state == enState_Crouch_Shoot)
 		{
 			m_state = enState_Crouch_Walk_Forward;
 		}
 		else if(m_charaCon.IsOnGround() == true 
 			&& m_state != enState_Crouch_Walk_Forward
-			&& m_state != enState_Run)
+			&& m_state != enState_Crouch_Reload
+			&& m_state != enState_Run
+			&& m_state != enState_Walk_Reload
+			&& m_state != enState_Reload)
 		{
 			if (m_lStickY > 0.8)
 			{
@@ -295,10 +344,30 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	if (g_pad[PlayerNumber].IsTrigger(enButtonA) == true
 		&& m_charaCon.IsOnGround() == true
 		) {
-		m_moveSpeed.y += 300.0f;
-		m_state = enState_Jump_Start;	
+		if (m_state != enState_Reload
+			&& m_state != enState_Walk_Reload)
+		{
+			m_moveSpeed.y += 300.0f;
+			m_state = enState_Jump_Start;
+		}
+		else
+		{
+			if (m_state == enState_Crouch_Reload)
+			{
+				m_state = enState_Reload;
+				m_moveSpeed.y += 300.0f;
+			}
+			else
+			{
+				m_moveSpeed.y += 300.0f;
+			}
+		}
 	}
-	if (m_charaCon.IsOnGround() == false)
+	if (m_charaCon.IsOnGround() == false
+		&& m_state != enState_Crouch_Reload
+		&& m_state != enState_Reload
+		&& m_state != enState_Walk_Reload
+		)
 	{
 		m_state = enState_Jump_Air;
 	}
@@ -324,9 +393,22 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			m_state = enState_Crouch_Idle;
 		}
 	}
-	if (g_pad[PlayerNumber].IsTrigger(enButtonX) == true)
+	if (g_pad[PlayerNumber].IsTrigger(enButtonY) == true)
 	{
-		if (m_state == enState_Crouch_Idle)
+		m_weapon = static_cast<EnWeapon>(m_weapon + 1);
+		if (m_weapon == enWeapon_Num)
+		{
+			m_weapon = enWeapon_M4A1;
+		}
+	}
+	if (g_pad[PlayerNumber].IsTrigger(enButtonX) == true
+		/*&& m_status.Ammo != 30*/)
+	{
+		if (m_state == enState_Crouch_Idle ||
+			m_state == enState_Crouch_Walk_Forward ||
+			m_state == enState_Crouch_Walk_Shoot ||
+			m_state == enState_Crouch_Shoot
+			)
 		{
 			m_state = enState_Crouch_Reload;
 		}
@@ -334,14 +416,37 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		{
 			m_state = enState_Reload;
 		}
+		if (m_moveSpeed.x != 0 && m_moveSpeed.y != 0
+			&& m_crouch == false
+			)
+		{
+			m_state = enState_Walk_Reload;
+		}
 	}
-	if (g_pad[PlayerNumber].IsPress(enButtonRB2) == true)
+
+	if (g_pad[PlayerNumber].IsTrigger(enButtonRB1) == true)
+	{
+		m_state = enState_Grenade;
+	}
+
+	if (g_pad[PlayerNumber].IsPress(enButtonRB2) == true
+		&& m_state != enState_Crouch_Reload
+		&& m_state != enState_Reload
+		&& m_state != enState_Walk_Reload
+		)
 	{
 		Shot(PlayerNumber, camera);
-		m_shotCount++;
-		if (m_shotCount == SHOTINTERVAL)
+	}
+	else
+	{
+		switch (m_weapon)
 		{
-			m_shotCount = 0;
+		case Player::enWeapon_M4A1:
+			m_m4a1->SetShootIntervalNow(100.0f);
+			break;
+		case Player::enWeapon_MP5:
+			m_mp5->SetShootIntervalNow(100.0f);
+			break;
 		}
 	}
 	
@@ -434,19 +539,20 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 		else {
 			m_state = enState_Crouch_Walk_Forward;
 		}
-		if (m_shotCount == 0 && m_status.Ammo > 0)
-		{
-			g_game->GetEffect(PlayerNumber).Play(m_handPos, CVector3::One(), m_rotation);
-			if (m_M4A1_Shot.IsPlaying())
-			{
-				m_M4A1_Shot.Stop();
-			}
-			m_M4A1_Shot.Play(false);
-			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
+		//if (m_shotCount == 0 /*&& m_status.Ammo > 0*/)
+		//{
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
-			bullet->SetMoveSpeed(target * SHOTSPEED);
-		}
+			switch (m_weapon)
+			{
+			case Player::enWeapon_M4A1:
+				m_m4a1->Shot(target,PlayerNumber);
+				break;
+			case Player::enWeapon_MP5:
+				m_mp5->Shot(target, PlayerNumber);
+				break;
+			}
+		//}
 	}
 	if (m_state != enState_Crouch_Idle &&
 		m_state != enState_Crouch_Walk_Forward &&
@@ -462,20 +568,19 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 		else {
 			m_state = enState_Walk_Shoot;
 		}
-		if (m_shotCount == 0 && m_status.Ammo > 0)
-		{
-			g_game->GetEffect(PlayerNumber).Play(m_handPos, CVector3::One(), m_rotation);
-
-			if (m_M4A1_Shot.IsPlaying())
-			{
-				m_M4A1_Shot.Stop();
-			}
-			m_M4A1_Shot.Play(false);
-			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber);
+		//if (m_shotCount == 0 /*&& m_status.Ammo > 0*/)
+		//{
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
-			bullet->SetMoveSpeed(target * SHOTSPEED);
-			m_status.Ammo = m_status.Ammo - 1;
-		}
+			switch (m_weapon)
+			{
+			case Player::enWeapon_M4A1:
+				m_m4a1->Shot(target, PlayerNumber);
+				break;
+			case Player::enWeapon_MP5:
+				m_mp5->Shot(target, PlayerNumber);
+				break;
+			}
+		//}
 	}
 }

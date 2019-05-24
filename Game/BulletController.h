@@ -13,20 +13,38 @@ public:
 	{
 		RemoveRigidBoby();
 	}
-	/*!
-		* @brief	初期化。
-		*@param[in]	radius		カプセルコライダーの半径。
-		*@param[in]	height		カプセルコライダーの高さ。
-		*@param[in]	position	初期位置。
-		*/
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="radius">
+	/// カプセルコライダーの半径。 
+	/// </param>
+	/// <param name="height">
+	/// カプセルコライダーの高さ。	
+	/// </param>
+	/// <param name="position">
+	/// 初期位置。	
+	/// </param>
+	/// <param name="tag">
+	/// コライダーの属性	
+	/// </param>
 	void Init(float radius, float height, const CVector3& position,int tag);
-	/*!
-		* @brief	実行。
-		*@param[in]	deltaTime		経過時間。単位は秒。
-		*@param[in, out]	moveSpeed		移動速度。内部で重力加速が計算され、その結果がmoveSpeedに反映されます。
-		*@return 移動後のキャラクターの座標。
-		*/
-	const CVector3& Execute(float deltaTime, CVector3& moveSpeed);
+	/// <summary>
+	///実行。
+	/// </summary>
+	/// <param name="deltaTime">
+	/// 経過時間。単位は秒。
+	/// </param>
+	/// <param name="moveSpeed">
+	/// 移動速度。内部で重力加速が計算され、その結果がmoveSpeedに反映されます。
+	/// </param>
+	/// <param name="attack">
+	/// 攻撃力
+	/// </param>
+	/// <returns>
+	/// 移動後のキャラクターの座標。
+	/// </returns>
+	const CVector3& Execute(float deltaTime, CVector3& moveSpeed, int attack);
 	/*!
 	* @brief	剛体を物理エンジンから削除。。
 	*/

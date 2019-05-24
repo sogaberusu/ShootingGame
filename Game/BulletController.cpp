@@ -10,13 +10,13 @@ BulletController::BulletController()
 }
 
 namespace {
-	//衝突したときに呼ばれる関数オブジェクト(壁用)
+	//衝突したときに呼ばれる関数オブジェクト
 	struct SweepResultWall1 : public btCollisionWorld::ConvexResultCallback
 	{
 		bool isHit = false;						//衝突フラグ。
 		btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
 												//衝突したときに呼ばれるコールバック関数。
-	
+		int attack;								//攻撃力
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
 			int bulletTag = me->getUserIndex();
@@ -54,18 +54,23 @@ namespace {
 				//弾丸が当たったプレイヤーの番号と、弾丸を打ったプレイヤーの番号を求める。
 				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1;
 				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
-				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint -
-					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetStatus().Attack);
+				//弾丸が当たったプレイヤーのHPを減らす
+				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint - attack);
+				//弾が当たったプレイヤーの自然回復までのインターバルを設定する
 				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHealTimer(300);
+				//プレイヤーの撃った弾が敵に当たった時にヒットマーカーを表示する
 				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint > 0)
 				{
 					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetAttackTrue();
 				}
-				
-				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint < 0)
-				{
+		
+				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint <= 0)
+				{	
+					//プレイヤーの撃った弾で敵を倒したときにキルマーカーを表示する
 					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKillTrue();
+					//プレイヤーのHPが0以下になったら0にする
 					g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(0);
+					//攻撃したプレイヤーのキル数を増やす
 					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKills(g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetStatus().Kills + 1);
 				}
 		
@@ -102,7 +107,7 @@ void BulletController::Init(float radius, float height, const CVector3& position
 	g_physics.AddRigidBody(m_rigidBody);
 }
 
-const CVector3& BulletController::Execute(float deltaTime, CVector3& moveSpeed)
+const CVector3& BulletController::Execute(float deltaTime, CVector3& moveSpeed, int attack)
 {
 	//次の移動先となる座標を計算する。
 	CVector3 nextPosition = m_position;
@@ -135,6 +140,7 @@ const CVector3& BulletController::Execute(float deltaTime, CVector3& moveSpeed)
 
 		SweepResultWall1 callback;
 		callback.me = m_rigidBody.GetBody();
+		callback.attack = attack;
 		//衝突検出。
 		g_physics.ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), start, end, callback);
 

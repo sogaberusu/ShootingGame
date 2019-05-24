@@ -1,27 +1,27 @@
 #include "stdafx.h"
-#include "M4A1.h"
+#include "MP5.h"
 #include "Player.h"
 #include "Bullet.h"
 #include "Game.h"
 
-M4A1::M4A1()
+MP5::MP5()
 {
 	//ワンショット再生のSE
-	m_gunshot.Init(L"Assets/sound/M4A1_Shot.wav");
+	m_gunshot.Init(L"Assets/sound/MP5_Shot.wav");
 
-	m_model.Init(L"Assets/modelData/M4A1.cmo");
+	m_model.Init(L"Assets/modelData/MP5.cmo");
 
 	m_model.SetShadowReciever(true);
 }
 
 
-M4A1::~M4A1()
+MP5::~MP5()
 {
 }
-void M4A1::Update()
+void MP5::Update()
 {
 	m_position = m_player->GetHandPos();
-	
+
 	m_rotation = m_player->GetRotation();
 
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
@@ -29,7 +29,7 @@ void M4A1::Update()
 	//シャドウキャスターを登録。
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
 }
-void M4A1::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
+void MP5::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
 {
 	if (m_player->GetDrawFlag() == true || ViewportNumber != PlayerNumber)
 	{
@@ -49,10 +49,11 @@ void M4A1::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
 	}
 }
 
-void M4A1::Shot(CVector3 target,int PlayerNumber)
+void MP5::Shot(CVector3 target, int PlayerNumber)
 {
 	if (m_gunStatus.Ammo > 0)
 	{
+
 		m_shootIntervalNow += 0.1f;
 
 		if (m_shootIntervalNow > m_gunStatus.SHOTINTERVAL)

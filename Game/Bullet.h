@@ -5,7 +5,7 @@ class Bullet
 {
 public:
 	Bullet();
-	Bullet(CVector3 pos,int tag);
+	Bullet(CVector3 pos,int tag,int attack);
 	~Bullet();
 	void Update();
 	void Draw(Camera& camera);
@@ -37,6 +37,7 @@ private:
 	SkinModel m_model;							//モデル。
 	CVector3 m_pos = CVector3::Zero();			//座標。
 	CVector3 m_moveSpeed = CVector3::Zero();	//移動速度。
+	int m_attack;								//攻撃力
 	bool m_isDead = false;
 	BulletController m_bulletController;
 };

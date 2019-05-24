@@ -11,7 +11,7 @@ class BulletManager
 public:
 	BulletManager();
 	~BulletManager();
-	Bullet* NewBullet(int PlayerNumber);
+	Bullet* NewBullet(int PlayerNumber,int Attack);
 	void Update();
 	void Draw(Camera& camera);
 	void SetInstance(Player *player, int PlayerNumber)

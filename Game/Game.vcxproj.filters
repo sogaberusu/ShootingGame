@@ -123,7 +123,6 @@
     <ClCompile Include="Benelli_M4.cpp" />
     <ClCompile Include="M110.cpp" />
     <ClCompile Include="SMAW.cpp" />
-    <ClCompile Include="WeaponManager.cpp" />
     <ClCompile Include="sound\SoundEngine.cpp" />
     <ClCompile Include="sound\SoundSource.cpp" />
     <ClCompile Include="sound\WaveFile.cpp" />
@@ -139,6 +138,7 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="MP5.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -240,7 +240,6 @@
     <ClInclude Include="Benelli_M4.h" />
     <ClInclude Include="M110.h" />
     <ClInclude Include="SMAW.h" />
-    <ClInclude Include="WeaponManager.h" />
     <ClInclude Include="sound\SoundEngine.h" />
     <ClInclude Include="sound\SoundSource.h" />
     <ClInclude Include="sound\WaveFile.h" />
@@ -256,6 +255,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Effect.h" />
+    <ClInclude Include="MP5.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">

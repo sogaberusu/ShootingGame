@@ -17,6 +17,7 @@
 #include "Result.h"
 #include "Effect.h"
 #include "M4A1.h"
+#include "MP5.h"
 //ゲームクラス。
 class Game : public IScene
 {
@@ -101,6 +102,7 @@ private:
 	Timer m_timer;														//残り時間を描画する
 	HUD m_hud[4];														//
 	M4A1 m_m4a1[4];														//fps視点の時のモデル
+	MP5 m_mp5[4];														//fps視点の時のモデル
 	Effect m_effect[4];
 };
 

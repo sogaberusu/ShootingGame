@@ -66,6 +66,8 @@ Game::Game()
 		m_timer.SetPlayer(m_player[i], i);
 		m_effect[i].Init(L"Assets/effect/MuzzleFlash.efk");
 		m_m4a1[i].SetInstance(m_player[i]);
+		m_mp5[i].SetInstance(m_player[i]);
+		m_player[i]->SetWeaponInstance(&m_m4a1[i], &m_mp5[i]);
 	}
 
 	m_gameCamera[0]->InitViewport(640, 360, 0, 0);
@@ -131,7 +133,15 @@ void Game::Update()
 	{
 		m_player[i]->Update(g_camera3D[i],i);
 		m_gameCamera[i]->Update();
-		m_m4a1[i].Update(m_player[i]->GetHandPos());
+		switch (m_player[i]->GetWeapon())
+		{
+		case 0:
+			m_m4a1[i].Update();
+			break;
+		case 1:
+			m_mp5[i].Update();
+			break;
+		}
 		m_hud[i].Update();
 	}
 	m_background->Update();
@@ -162,7 +172,15 @@ void Game::Draw()
 		for (int j = 0; j < 4; j++)
 		{
 			m_player[j]->Draw(g_camera3D[i], i, j);
-			m_m4a1[j].Draw(g_camera3D[i], i, j);
+			switch (m_player[j]->GetWeapon())
+			{
+			case 0:
+				m_m4a1[j].Draw(g_camera3D[i], i, j);
+				break;
+			case 1:
+				m_mp5[j].Draw(g_camera3D[i], i, j);
+				break;
+			}
 		}
 		//”wŒi‚Ì•`‰æ
 		m_background->Draw(g_camera3D[i]);
@@ -174,7 +192,16 @@ void Game::Draw()
 			m_effect[j].Draw(i);
 			
 		}
-		m_hud[i].Draw(i,m_player[i]->GetAmmo(),m_player[i]->GetHitPoint(),m_player[i]->GetAttackFlag(),m_player[i]->GetKillFlag());
+		switch (m_player[i]->GetWeapon())
+		{
+		case 0:
+			m_hud[i].Draw(i,m_m4a1[i].GetAmmo(),m_player[i]->GetHitPoint(),m_player[i]->GetAttackFlag(),m_player[i]->GetKillFlag());
+			break;
+		case 1:
+			m_hud[i].Draw(i, m_mp5[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag());
+			break;
+		}
+		
 		m_player[i]->SetAttackFalse();
 		m_player[i]->SetKillFalse();
 	}

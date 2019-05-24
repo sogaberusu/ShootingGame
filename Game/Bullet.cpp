@@ -7,11 +7,13 @@ Bullet::Bullet()
 {
 }
 
-Bullet::Bullet(CVector3 pos,int tag)
+Bullet::Bullet(CVector3 pos,int tag,int attack)
 {
 	m_model.Init(L"Assets/modelData/Bullet.cmo");
 
 	m_bulletController.Init(5.0f,2.0f, pos, tag);
+
+	m_attack = attack;
 }
 
 Bullet::~Bullet()
@@ -20,7 +22,7 @@ Bullet::~Bullet()
 
 void Bullet::Update()
 {
-	m_pos = m_bulletController.Execute(1.0f / 60.0f, m_moveSpeed);
+	m_pos = m_bulletController.Execute(1.0f / 60.0f, m_moveSpeed,m_attack);
 	//m_pos += m_moveSpeed;
 	//CVector4 posInScreen(m_pos);
 	////ÉJÉÅÉâçsóÒ
