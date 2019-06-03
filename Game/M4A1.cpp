@@ -11,7 +11,7 @@ M4A1::M4A1()
 
 	m_model.Init(L"Assets/modelData/M4A1.cmo");
 
-	m_model.SetShadowReciever(true);
+
 }
 
 
@@ -66,7 +66,7 @@ void M4A1::Shot(CVector3 target,int PlayerNumber)
 			}
 			m_gunshot.Play(false);
 
-			Bullet* bullet = g_game->GetBulletManager().NewBullet(PlayerNumber, m_gunStatus.Attack);
+			Bullet* bullet = g_game->GetBulletManager().NewBullet(m_player->GetHandPos(),PlayerNumber, m_gunStatus.Attack);
 			bullet->SetMoveSpeed(target * 2000);
 			m_gunStatus.Ammo--;
 

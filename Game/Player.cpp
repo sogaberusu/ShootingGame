@@ -3,15 +3,12 @@
 #include "GameCamera.h"
 #include "Game.h"
 #include "Bullet.h"
-#include "sound/SoundEngine.h"
 #include "Physics/CollisionAttr.h"
-
+#include "WeaponAttr.h"
 
 
 Player::Player(int playerNo)
 {
-	//ワンショット再生のSE
-	m_M4A1_Shot.Init(L"Assets/sound/M4A1_Shot.wav");
 	//cmoファイルの読み込み。
 	m_model.Init(L"Assets/modelData/Player_.cmo");
 
@@ -134,6 +131,10 @@ void Player::Update(Camera& camera, int PlayerNumber)
 
 		m_mp5->SetAmmo(30);
 
+		m_benelliM4->SetAmmo(7);
+
+		m_m110->SetAmmo(10);
+
 	}
 	//回転処理
 	Turn(PlayerNumber);
@@ -163,11 +164,17 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		{
 			switch (m_weapon)
 			{
-			case Player::enWeapon_M4A1:
+			case enWeapon_M4A1:
 				m_m4a1->SetAmmo(30);
 				break;
-			case Player::enWeapon_MP5:
+			case enWeapon_MP5:
 				m_mp5->SetAmmo(30);
+				break;
+			case enWeapon_Benelli_M4:
+				m_benelliM4->SetAmmo(7);
+				break;
+			case enWeapon_M110:
+				m_m110->SetAmmo(10);
 				break;
 			}
 			m_state = enState_Idle;
@@ -194,11 +201,17 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		{
 			switch (m_weapon)
 			{
-			case Player::enWeapon_M4A1:
+			case enWeapon_M4A1:
 				m_m4a1->SetAmmo(30);
 				break;
-			case Player::enWeapon_MP5:
+			case enWeapon_MP5:
 				m_mp5->SetAmmo(30);
+				break;
+			case enWeapon_Benelli_M4:
+				m_benelliM4->SetAmmo(7);
+				break;
+			case enWeapon_M110:
+				m_m110->SetAmmo(10);
 				break;
 			}
 			m_state = enState_Crouch_Idle;
@@ -220,11 +233,17 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		{
 			switch (m_weapon)
 			{
-			case Player::enWeapon_M4A1:
+			case enWeapon_M4A1:
 				m_m4a1->SetAmmo(30);
 				break;
-			case Player::enWeapon_MP5:
+			case enWeapon_MP5:
 				m_mp5->SetAmmo(30);
+				break;
+			case enWeapon_Benelli_M4:
+				m_benelliM4->SetAmmo(7);
+				break;
+			case enWeapon_M110:
+				m_m110->SetAmmo(10);
 				break;
 			}
 			m_state = enState_Idle;
@@ -401,8 +420,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			m_weapon = enWeapon_M4A1;
 		}
 	}
-	if (g_pad[PlayerNumber].IsTrigger(enButtonX) == true
-		/*&& m_status.Ammo != 30*/)
+	if (g_pad[PlayerNumber].IsTrigger(enButtonX) == true)
 	{
 		if (m_state == enState_Crouch_Idle ||
 			m_state == enState_Crouch_Walk_Forward ||
@@ -441,11 +459,17 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	{
 		switch (m_weapon)
 		{
-		case Player::enWeapon_M4A1:
+		case enWeapon_M4A1:
 			m_m4a1->SetShootIntervalNow(100.0f);
 			break;
-		case Player::enWeapon_MP5:
+		case enWeapon_MP5:
 			m_mp5->SetShootIntervalNow(100.0f);
+			break;
+		case enWeapon_Benelli_M4:
+			m_benelliM4->SetShootIntervalNow(100.0f);
+			break;
+		case enWeapon_M110:
+			m_m110->SetShootIntervalNow(100.0f);
 			break;
 		}
 	}
@@ -455,12 +479,12 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		m_moveSpeed.Add(m_moveSpeed);
 	}
 
-	if (m_status.HitPoint <= 0)
+	/*if (m_status.HitPoint <= 0)
 	{
 		m_charaCon.GetRigidBody()->GetBody()->setUserIndex(enCollisionAttr_Ground);
 
 		m_state = enState_Death;
-	}
+	}*/
 	if (m_state == enState_Crouch_Idle ||
 		m_state == enState_Crouch_Reload ||
 		m_state == enState_Crouch_Shoot ||
@@ -539,20 +563,23 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 		else {
 			m_state = enState_Crouch_Walk_Forward;
 		}
-		//if (m_shotCount == 0 /*&& m_status.Ammo > 0*/)
-		//{
-			CVector3 target = camera.GetTarget() - camera.GetPosition();
-			target.Normalize();
-			switch (m_weapon)
-			{
-			case Player::enWeapon_M4A1:
-				m_m4a1->Shot(target,PlayerNumber);
-				break;
-			case Player::enWeapon_MP5:
-				m_mp5->Shot(target, PlayerNumber);
-				break;
-			}
-		//}
+		CVector3 target = camera.GetTarget() - camera.GetPosition();
+		target.Normalize();
+		switch (m_weapon)
+		{
+		case enWeapon_M4A1:
+			m_m4a1->Shot(target, PlayerNumber);
+			break;
+		case enWeapon_MP5:
+			m_mp5->Shot(target, PlayerNumber);
+			break;
+		case enWeapon_Benelli_M4:
+			m_benelliM4->Shot(target, PlayerNumber);
+			break;
+		case enWeapon_M110:
+			m_m110->Shot(target, PlayerNumber);
+			break;
+		}
 	}
 	if (m_state != enState_Crouch_Idle &&
 		m_state != enState_Crouch_Walk_Forward &&
@@ -568,19 +595,23 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 		else {
 			m_state = enState_Walk_Shoot;
 		}
-		//if (m_shotCount == 0 /*&& m_status.Ammo > 0*/)
-		//{
+		
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
 			switch (m_weapon)
 			{
-			case Player::enWeapon_M4A1:
+			case enWeapon_M4A1:
 				m_m4a1->Shot(target, PlayerNumber);
 				break;
-			case Player::enWeapon_MP5:
+			case enWeapon_MP5:
 				m_mp5->Shot(target, PlayerNumber);
 				break;
+			case enWeapon_Benelli_M4:
+				m_benelliM4->Shot(target, PlayerNumber);
+				break;
+			case enWeapon_M110:
+				m_m110->Shot(target, PlayerNumber);
+				break;
 			}
-		//}
 	}
 }

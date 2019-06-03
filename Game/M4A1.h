@@ -9,7 +9,7 @@ class M4A1
 	{
 	int Ammo = 30;									//残弾数
 	int Attack = 30;								//攻撃力
-	static constexpr float SHOTINTERVAL = 0.3f;		//連射速度 数値を小さくすると早くなる
+	static constexpr float SHOTINTERVAL = 0.4f;		//連射速度 数値を小さくすると早くなる
 	
 	};
 public:

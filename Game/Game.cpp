@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Title.h"
 #include "Result.h"
+#include "WeaponAttr.h"
 
 
 //グローバルなアクセスポイントをグローバル変数として提供する。
@@ -67,7 +68,9 @@ Game::Game()
 		m_effect[i].Init(L"Assets/effect/MuzzleFlash.efk");
 		m_m4a1[i].SetInstance(m_player[i]);
 		m_mp5[i].SetInstance(m_player[i]);
-		m_player[i]->SetWeaponInstance(&m_m4a1[i], &m_mp5[i]);
+		m_benelliM4[i].SetInstance(m_player[i]);
+		m_m110[i].SetInstance(m_player[i]);
+		m_player[i]->SetWeaponInstance(&m_m4a1[i], &m_mp5[i],&m_benelliM4[i],&m_m110[i]);
 	}
 
 	m_gameCamera[0]->InitViewport(640, 360, 0, 0);
@@ -135,12 +138,17 @@ void Game::Update()
 		m_gameCamera[i]->Update();
 		switch (m_player[i]->GetWeapon())
 		{
-		case 0:
+		case enWeapon_M4A1:
 			m_m4a1[i].Update();
 			break;
-		case 1:
+		case enWeapon_MP5:
 			m_mp5[i].Update();
 			break;
+		case enWeapon_Benelli_M4:
+			m_benelliM4[i].Update();
+			break;
+		case enWeapon_M110:
+			m_m110[i].Update();
 		}
 		m_hud[i].Update();
 	}
@@ -174,11 +182,17 @@ void Game::Draw()
 			m_player[j]->Draw(g_camera3D[i], i, j);
 			switch (m_player[j]->GetWeapon())
 			{
-			case 0:
+			case enWeapon_M4A1:
 				m_m4a1[j].Draw(g_camera3D[i], i, j);
 				break;
-			case 1:
+			case enWeapon_MP5:
 				m_mp5[j].Draw(g_camera3D[i], i, j);
+				break;
+			case enWeapon_Benelli_M4:
+				m_benelliM4[j].Draw(g_camera3D[i], i, j);
+				break;
+			case enWeapon_M110:
+				m_m110[j].Draw(g_camera3D[i], i, j);
 				break;
 			}
 		}
@@ -194,16 +208,29 @@ void Game::Draw()
 		}
 		switch (m_player[i]->GetWeapon())
 		{
-		case 0:
-			m_hud[i].Draw(i,m_m4a1[i].GetAmmo(),m_player[i]->GetHitPoint(),m_player[i]->GetAttackFlag(),m_player[i]->GetKillFlag());
+		case enWeapon_M4A1:
+			m_hud[i].Draw(i,m_m4a1[i].GetAmmo(),m_player[i]->GetHitPoint(),m_player[i]->GetAttackFlag(),m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(),m_player[i]->GetCameraType());
 			break;
-		case 1:
-			m_hud[i].Draw(i, m_mp5[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag());
+		case enWeapon_MP5:
+			m_hud[i].Draw(i, m_mp5[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
 			break;
+		case enWeapon_Benelli_M4:
+			m_hud[i].Draw(i, m_benelliM4[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
+			break;
+		case enWeapon_M110:
+			m_hud[i].Draw(i, m_m110[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
 		}
 		
 		m_player[i]->SetAttackFalse();
 		m_player[i]->SetKillFalse();
+		if (m_player[i]->GetDrawFlag() == false && m_player[i]->GetWeapon() == enWeapon_M110)
+		{
+			g_camera3D[i].SetViewAngle(CMath::DegToRad(10.0f));
+		}
+		else {
+			g_camera3D[i].SetViewAngle(CMath::DegToRad(60.0f));
+
+		}
 	}
 	
 }

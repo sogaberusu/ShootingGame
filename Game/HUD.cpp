@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "HUD.h"
-
+#include "WeaponAttr.h"
 
 HUD::HUD()
 {
@@ -9,6 +9,14 @@ HUD::HUD()
 	ID3D11ShaderResourceView* life = nullptr;
 	ID3D11ShaderResourceView* hitmarker = nullptr;
 	ID3D11ShaderResourceView* killmarker = nullptr;
+	ID3D11ShaderResourceView* shotguntarget = nullptr;
+	ID3D11ShaderResourceView* sniperscope = nullptr;
+	ID3D11ShaderResourceView* assault = nullptr;
+	ID3D11ShaderResourceView* submachinegun = nullptr;
+	ID3D11ShaderResourceView* shotgun = nullptr;
+	ID3D11ShaderResourceView* sniper = nullptr;
+	//ID3D11ShaderResourceView* crosskye= nullptr;
+
 	HRESULT hr = DirectX::CreateDDSTextureFromFileEx(
 		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/Target.dds", 0,
 		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
@@ -44,6 +52,54 @@ HUD::HUD()
 	m_killmarker.Init(killmarker, 64.0, 64.0);
 	m_killmarker.SetTexture(*killmarker);
 
+	hr = DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/ShotgunTarget.dds", 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &shotguntarget);
+	m_shotguntarget.Init(shotguntarget, 96.0, 96.0);
+	m_shotguntarget.SetTexture(*shotguntarget);
+
+	hr = DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/SniperScope.dds", 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &sniperscope);
+	m_scope.Init(sniperscope, 1280.0, 1280.0);
+	m_scope.SetTexture(*sniperscope);
+
+	hr = DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/M4A1.dds", 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &assault);
+	m_m4a1.Init(assault, 256.0, 128.0);
+	m_m4a1.SetTexture(*assault);
+
+	hr = DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/MP5.dds", 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &submachinegun);
+	m_mp5.Init(submachinegun, 256.0, 128.0);
+	m_mp5.SetTexture(*submachinegun);
+
+	hr = DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/Shotgun.dds", 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &shotgun);
+	m_shotgun.Init(shotgun, 256.0, 128.0);
+	m_shotgun.SetTexture(*shotgun);
+
+	hr = DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/Sniper.dds", 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &sniper);
+	m_m110.Init(sniper, 256.0, 128.0);
+	m_m110.SetTexture(*sniper);
+
+	/*hr = DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/CrossKey.dds", 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &crosskye);
+	m_crosskey.Init(crosskye, 128.0, 128.0);
+	m_crosskey.SetTexture(*crosskye);*/
 }
 
 
@@ -63,18 +119,60 @@ void HUD::Update()
 	m_killmarker.Update(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
 	m_xbutton.Update({400.0f,-220.0f,0.0f}, CQuaternion::Identity(), CVector3::One());
 	m_life.Update({ -600.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
+	m_shotguntarget.Update(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
+	m_scope.Update(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
+	m_m4a1.Update({ 410.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
+	m_mp5.Update({ 410.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
+	m_m110.Update({ 410.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
+	m_shotgun.Update({ 410.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
+	//m_crosskey.Update({ -510.0,-230.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
 }
 
-void HUD::Draw(int cameraNo,int Ammo,int hitPoint,bool AttackFlag,bool KillFlag)
+void HUD::Draw(int cameraNo,int Ammo,int hitPoint,bool AttackFlag,bool KillFlag,int weapon,bool cameraflag)
 {
-	//スプライトのDraw
-	if (Ammo < 10)
+	if (weapon == enWeapon_M4A1)
 	{
-		m_xbutton.Draw(cameraNo);
+		//スプライトのDraw
+		if (Ammo < 10)
+		{
+			m_xbutton.Draw(cameraNo);
+		}
+		m_m4a1.Draw(cameraNo);
+		m_crosshair.Draw(cameraNo);
 	}
+	if (weapon == enWeapon_MP5)
+	{
+		//スプライトのDraw
+		if (Ammo < 10)
+		{
+			m_xbutton.Draw(cameraNo);
+		}
+		m_mp5.Draw(cameraNo);
+		m_crosshair.Draw(cameraNo);
 
-	m_crosshair.Draw(cameraNo);
-
+	}
+	if(weapon == enWeapon_Benelli_M4){
+		if (Ammo < 4)
+		{
+			m_xbutton.Draw(cameraNo);
+		}
+		m_shotgun.Draw(cameraNo);
+		m_shotguntarget.Draw(cameraNo);
+	}
+	if (weapon == enWeapon_M110)
+	{
+		if (Ammo < 4)
+		{
+			m_xbutton.Draw(cameraNo);
+		}
+		if (cameraflag == false) {
+			m_crosshair.Draw(cameraNo);
+		}
+		else {
+			m_scope.Draw(cameraNo);
+		}
+		m_m110.Draw(cameraNo);
+	}
 	if (AttackFlag == true)
 	{
 		m_hitmarker.Draw(cameraNo);
@@ -85,21 +183,34 @@ void HUD::Draw(int cameraNo,int Ammo,int hitPoint,bool AttackFlag,bool KillFlag)
 	}
 	m_life.Draw(cameraNo);
 
+	//m_crosskey.Draw(cameraNo);
+
 	//フォントのDraw
 	wchar_t bullet[256],HP[256];
 
-	swprintf(bullet, L"残弾%d", Ammo);
+	swprintf(bullet, L"%d", Ammo);
 	swprintf(HP, L"%d", hitPoint);
 
 	m_bullet.BeginDraw();
 
-	if (Ammo < 10)
+	if (weapon == enWeapon_M4A1 || weapon == enWeapon_MP5)
 	{
-		m_reload.Draw(L"リロード",{ -100.0f, 80.0f }, { 50.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+		//残弾が一定以下になったらリロードしてと表示する
+		if (Ammo < 10)
+		{
+			m_reload.Draw(L"リロード", { -100.0f, 80.0f }, { 50.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+		}
 	}
-	
-	m_bullet.Draw(bullet, { -140.0f,40.0f}, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
-
+	else {
+		//残弾が一定以下になったらリロードしてと表示する
+		if (Ammo < 4)
+		{
+			m_reload.Draw(L"リロード", { -100.0f, 80.0f }, { 50.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+		}
+	}
+	//リロードのボタンを表示する
+	m_bullet.Draw(bullet, { -50.0f,40.0f }, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+	//プレイヤーのHPを表示する
 	m_hp.Draw(HP, { -610.0f,40.0f }, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
 
 	m_bullet.EndDraw();

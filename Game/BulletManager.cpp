@@ -24,9 +24,9 @@ BulletManager::~BulletManager()
 	}
 }
 
-Bullet* BulletManager::NewBullet(int PlayerNumber,int Attack)
+Bullet* BulletManager::NewBullet(CVector3 pos,int PlayerNumber,int Attack)
 {
-	Bullet* newBullet = new Bullet(m_player[PlayerNumber]->GetHandPos(), PlayerNumber,Attack);
+	Bullet* newBullet = new Bullet(pos, PlayerNumber,Attack);
 	m_bullet[PlayerNumber].push_back(newBullet);
 	return newBullet;
 }

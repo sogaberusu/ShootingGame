@@ -16,7 +16,7 @@ public:
 	}
 	void StartRender();
 	void Update();
-	void Draw(int cameraNo,int Ammo,int hitPoint, bool AttackFlag,bool KillFlag);
+	void Draw(int cameraNo,int Ammo,int hitPoint, bool AttackFlag,bool KillFlag,int weapon,bool cameraflag);
 private:
 	float m_width = 0;
 	float m_height = 0;
@@ -27,6 +27,13 @@ private:
 	Sprite m_life;
 	Sprite m_hitmarker;
 	Sprite m_killmarker;
+	Sprite m_shotguntarget;
+	Sprite m_scope;
+	Sprite m_m4a1;
+	Sprite m_m110;
+	Sprite m_shotgun;
+	Sprite m_mp5;
+	//Sprite m_crosskey;
 	
 	Font m_bullet;
 	Font m_reload;

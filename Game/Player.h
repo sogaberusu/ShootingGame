@@ -6,16 +6,14 @@
 #include "MP5.h"
 #include "M110.h"
 #include "SMAW.h"
-#include "sound/SoundEngine.h"
-#include "sound/SoundSource.h"
+#include "Physics/CollisionAttr.h"
+#include "WeaponAttr.h"
 
 class GameCamera;
 struct SPlayerStatus
 {
 	int HitPoint = 100;				//体力
 	int Kills = 0;					//キル数
-	//int Attack = 30;				//攻撃力
-	//int Ammo = 30;					//残弾数
 	int HealTimer = 0;
 };
 class Player
@@ -79,6 +77,12 @@ public:
 	{
 		m_status.HitPoint = hp;
 	}
+	void SetDead()
+	{
+		m_charaCon.GetRigidBody()->GetBody()->setUserIndex(enCollisionAttr_Ground);
+
+		m_state = enState_Death;
+	}
 	void SetKills(int kills)
 	{
 		m_status.Kills = kills;
@@ -106,12 +110,6 @@ private:
 		enType_FPS
 	};
 	void Shot(int PlayerNumber,Camera& camera);
-	enum EnWeapon
-	{
-		enWeapon_M4A1,
-		enWeapon_MP5,
-		enWeapon_Num
-	};
 public:
 	bool GetCameraType()
 	{
@@ -133,10 +131,6 @@ public:
 	{
 		return min + (int)(rand()*(max - min + 1.0) / (1.0 + RAND_MAX));
 	}
-	/*int GetAmmo()
-	{
-		return m_status.Ammo;
-	}*/
 	int GetKills()
 	{
 		return m_status.Kills;
@@ -181,10 +175,12 @@ public:
 	{
 		return m_weapon;
 	}
-	void SetWeaponInstance(M4A1 *m4a1,MP5 *mp5)
+	void SetWeaponInstance(M4A1 *m4a1,MP5 *mp5,Benelli_M4 *benelliM4,M110 *m110)
 	{
 		m_m4a1 = m4a1;
 		m_mp5  = mp5;
+		m_benelliM4 = benelliM4;
+		m_m110 = m110;
 	}
 private:
 	void InitAnimation();								//アニメーションの初期化
@@ -260,7 +256,6 @@ private:
 	CVector3 m_handPos;
 	RigidBody* m_rigidBody;
 	SPlayerStatus m_status;
-	CSoundSource m_M4A1_Shot;				//SE。
 	bool m_crouch = false;					//プレイヤーがしゃがんでいるか
 	int m_shotCount = 0;
 	static const int SHOTINTERVAL = 3;
@@ -270,4 +265,6 @@ private:
 	EnWeapon m_weapon = enWeapon_M4A1;
 	M4A1 *m_m4a1;
 	MP5  *m_mp5;
+	Benelli_M4 *m_benelliM4;
+	M110 *m_m110;
 };

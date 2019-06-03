@@ -18,6 +18,8 @@
 #include "Effect.h"
 #include "M4A1.h"
 #include "MP5.h"
+#include "Benelli_M4.h"
+#include "M110.h"
 //ゲームクラス。
 class Game : public IScene
 {
@@ -103,6 +105,8 @@ private:
 	HUD m_hud[4];														//
 	M4A1 m_m4a1[4];														//fps視点の時のモデル
 	MP5 m_mp5[4];														//fps視点の時のモデル
+	M110 m_m110[4];
+	Benelli_M4 m_benelliM4[4];
 	Effect m_effect[4];
 };
 

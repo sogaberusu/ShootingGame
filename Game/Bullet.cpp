@@ -51,7 +51,13 @@ void Bullet::Update()
 	{
 		m_isDead = true;
 	}
-	
+
+	m_life--;
+	if (m_life <= 0)
+	{
+		m_isDead = true;
+	}
+
 	m_model.UpdateWorldMatrix(m_pos, CQuaternion::Identity(), CVector3::One());
 	
 }

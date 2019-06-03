@@ -256,24 +256,13 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="MP5.h" />
+    <ClInclude Include="WeaponAttr.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\Background.FBX">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\Goblin.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\Minotaur.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\Orc.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\Stone.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\sky.fbx">
@@ -292,7 +281,6 @@
     <MeshContentTask Include="Assets\modelData\Background1.FBX" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\animData\Minotaur_Down.tka" />
     <None Include="Assets\animData\Player_Damage.tka" />
     <None Include="Assets\animData\Player_Death.tka" />
   </ItemGroup>
@@ -304,5 +292,14 @@
     <ImageContentTask Include="Assets\sprite\life.png" />
     <ImageContentTask Include="Assets\sprite\Hitmarker.png" />
     <ImageContentTask Include="Assets\sprite\Killmarker.png" />
+    <ImageContentTask Include="Assets\sprite\ShotgunTarget.png" />
+    <ImageContentTask Include="Assets\sprite\SniperScope.png" />
+    <ImageContentTask Include="Assets\sprite\M4A1.png" />
+    <ImageContentTask Include="Assets\sprite\Sniper.png" />
+    <ImageContentTask Include="Assets\sprite\Shotgun.png" />
+    <ImageContentTask Include="Assets\sprite\MP5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\sprite\CrossKey.png" />
   </ItemGroup>
 </Project>

@@ -17,6 +17,7 @@ namespace {
 		btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
 												//衝突したときに呼ばれるコールバック関数。
 		int attack;								//攻撃力
+		
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
 			int bulletTag = me->getUserIndex();
@@ -65,15 +66,17 @@ namespace {
 				}
 		
 				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint <= 0)
-				{	
+				{
 					//プレイヤーの撃った弾で敵を倒したときにキルマーカーを表示する
 					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKillTrue();
 					//プレイヤーのHPが0以下になったら0にする
 					g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(0);
+					//プレイヤーを死亡状態にする
+					g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetDead();
 					//攻撃したプレイヤーのキル数を増やす
 					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKills(g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetStatus().Kills + 1);
 				}
-		
+
 				isHit = true;
 			}
 			//プレイヤー以外のものに当たった

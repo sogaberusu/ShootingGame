@@ -33,11 +33,16 @@ public:
 	{
 		m_isDead = true;
 	}
+	void SetLife(int life)
+	{
+		m_life = life;
+	}
 private:
 	SkinModel m_model;							//モデル。
 	CVector3 m_pos = CVector3::Zero();			//座標。
 	CVector3 m_moveSpeed = CVector3::Zero();	//移動速度。
 	int m_attack;								//攻撃力
+	int m_life = INT_MAX;						//弾の消滅までの時間
 	bool m_isDead = false;
 	BulletController m_bulletController;
 };
