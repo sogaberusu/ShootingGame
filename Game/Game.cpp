@@ -64,6 +64,7 @@ Game::Game()
 	for (int i = 0; i < 4; i++)
 	{
 		m_bulletManager.SetInstance(m_player[i], i);
+		m_grenadeManager.SetInstance(m_player[i], i);
 		m_timer.SetPlayer(m_player[i], i);
 		m_effect[i].Init(L"Assets/effect/MuzzleFlash.efk");
 		m_m4a1[i].SetInstance(m_player[i]);
@@ -71,6 +72,7 @@ Game::Game()
 		m_benelliM4[i].SetInstance(m_player[i]);
 		m_m110[i].SetInstance(m_player[i]);
 		m_player[i]->SetWeaponInstance(&m_m4a1[i], &m_mp5[i],&m_benelliM4[i],&m_m110[i]);
+		m_hud[i].SetInstance(m_player[i]);
 	}
 
 	m_gameCamera[0]->InitViewport(640, 360, 0, 0);
@@ -150,10 +152,11 @@ void Game::Update()
 		case enWeapon_M110:
 			m_m110[i].Update();
 		}
-		m_hud[i].Update();
+		m_hud[i].Update(i);
 	}
 	m_background->Update();
 	m_bulletManager.Update();
+	m_grenadeManager.Update();
 	//ポストエフェクトの更新。
 	m_postEffect.Update();
 	if (m_restTimer == 0.0f)
@@ -199,6 +202,7 @@ void Game::Draw()
 		//背景の描画
 		m_background->Draw(g_camera3D[i]);
 		m_bulletManager.Draw(g_camera3D[i]);
+		m_grenadeManager.Draw(g_camera3D[i]);
 		m_sky.Draw(g_camera3D[i]);
 		m_timer.Draw();
 		for (int j = 0; j < 4; j++)

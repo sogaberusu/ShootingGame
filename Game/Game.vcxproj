@@ -127,6 +127,8 @@
     <ClCompile Include="graphics\SkinModelEffect.cpp" />
     <ClCompile Include="graphics\SpriteData.cpp" />
     <ClCompile Include="graphics\vertexBuffer.cpp" />
+    <ClCompile Include="Grenade.cpp" />
+    <ClCompile Include="GrenadeManager.cpp" />
     <ClCompile Include="HID\Pad.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="level\Level.cpp" />
@@ -162,6 +164,8 @@
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Grenade.h" />
+    <ClInclude Include="GrenadeManager.h" />
     <ClInclude Include="WeaponAttr.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Benelli_M4.h" />
@@ -230,6 +234,7 @@
     <MeshContentTask Include="Assets\modelData\Background1.FBX" />
     <MeshContentTask Include="Assets\modelData\Benelli M4.FBX" />
     <MeshContentTask Include="Assets\modelData\Bullet.FBX" />
+    <MeshContentTask Include="Assets\modelData\Grenade.FBX" />
     <MeshContentTask Include="Assets\modelData\M110.FBX" />
     <MeshContentTask Include="Assets\modelData\M4A1.FBX" />
     <MeshContentTask Include="Assets\modelData\MP5.FBX" />
@@ -324,6 +329,18 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\CrossKey.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\DamageMarker.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\Grenade.png">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
     </ImageContentTask>

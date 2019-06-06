@@ -139,6 +139,8 @@
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="MP5.cpp" />
+    <ClCompile Include="Grenade.cpp" />
+    <ClCompile Include="GrenadeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -257,6 +259,8 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="MP5.h" />
     <ClInclude Include="WeaponAttr.h" />
+    <ClInclude Include="Grenade.h" />
+    <ClInclude Include="GrenadeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -279,6 +283,7 @@
     <MeshContentTask Include="Assets\modelData\Player_.FBX" />
     <MeshContentTask Include="Assets\modelData\SMAW.FBX" />
     <MeshContentTask Include="Assets\modelData\Background1.FBX" />
+    <MeshContentTask Include="Assets\modelData\Grenade.FBX" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\animData\Player_Damage.tka" />
@@ -298,8 +303,8 @@
     <ImageContentTask Include="Assets\sprite\Sniper.png" />
     <ImageContentTask Include="Assets\sprite\Shotgun.png" />
     <ImageContentTask Include="Assets\sprite\MP5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\sprite\CrossKey.png" />
+    <ImageContentTask Include="Assets\sprite\CrossKey.png" />
+    <ImageContentTask Include="Assets\sprite\DamageMarker.png" />
+    <ImageContentTask Include="Assets\sprite\Grenade.png" />
   </ItemGroup>
 </Project>

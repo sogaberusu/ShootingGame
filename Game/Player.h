@@ -14,7 +14,7 @@ struct SPlayerStatus
 {
 	int HitPoint = 100;				//体力
 	int Kills = 0;					//キル数
-	int HealTimer = 0;
+	int HealTimer = 0;				//自動回復するまでの時間
 };
 class Player
 {
@@ -67,7 +67,7 @@ public:
 	}
 	CVector3 GetHandPos()
 	{
-		return m_handPos;
+		return m_RhandPos;
 	}
 	SPlayerStatus GetStatus()
 	{
@@ -235,7 +235,6 @@ private:
 		enState_Num
 	};
 	SkinModel m_model;									//スキンモデル。
-	SkinModel m_model_debag;							//スキンモデル。
 	Animation m_animation;								//アニメーション。
 	AnimationClip m_animationClips[enAnimation_Num];	//アニメーションクリップ。
 	CVector3 m_position = CVector3::Zero();				//座標
@@ -253,7 +252,8 @@ private:
 	float m_lStickY;									//左スティックのY
 	CVector3 m_cameraDirection;							//カメラの前方向
 	bool m_drawflag = true;
-	CVector3 m_handPos;
+	CVector3 m_RhandPos;
+	CVector3 m_LhandPos;
 	RigidBody* m_rigidBody;
 	SPlayerStatus m_status;
 	bool m_crouch = false;					//プレイヤーがしゃがんでいるか
@@ -267,4 +267,5 @@ private:
 	MP5  *m_mp5;
 	Benelli_M4 *m_benelliM4;
 	M110 *m_m110;
+
 };

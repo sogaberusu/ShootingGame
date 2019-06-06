@@ -21,13 +21,7 @@ namespace {
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
 			int bulletTag = me->getUserIndex();
-			/*if (convexResult.m_hitCollisionObject == me ||
-				convexResult.m_hitCollisionObject->getUserIndex() == bulletTag
-				) {
-				
-				return 0.0f;
-			}
-			isHit = true;*/
+
 			bool isHitPlayer = false;
 			//プレイヤーと弾丸の当たり判定
 			//自分自身の弾丸に当たらないようにタグで判定する
@@ -59,6 +53,9 @@ namespace {
 				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint - attack);
 				//弾が当たったプレイヤーの自然回復までのインターバルを設定する
 				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHealTimer(300);
+				//攻撃してきたプレイヤーの座標をセットする
+				g_game->GetHUD(hitPlayerNo).SetEnemyPosition(g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetPosition());
+				g_game->GetHUD(hitPlayerNo).SetDamageFlag(true);
 				//プレイヤーの撃った弾が敵に当たった時にヒットマーカーを表示する
 				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint > 0)
 				{

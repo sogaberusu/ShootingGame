@@ -10,7 +10,7 @@ class Benelli_M4
 		int Ammo = 7;									//c’e”
 		int Attack = 10;								//UŒ‚—Í
 		static constexpr float SHOTINTERVAL = 1.0f;		//˜AË‘¬“x ”’l‚ğ¬‚³‚­‚·‚é‚Æ‘‚­‚È‚é
-		static const int SCATTER = 15;					//“¯‚É”­Ë‚·‚é’e‚Ì”
+		static const int SCATTER = 10;					//“¯‚É”­Ë‚·‚é’e‚Ì”
 		int BulletLife = 10;							//’e‚ªÁ‚¦‚é‚Ü‚Å‚ÌŠÔ
 
 	};

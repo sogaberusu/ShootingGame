@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "HUD.h"
 #include "WeaponAttr.h"
-
+#include "Player.h"
 HUD::HUD()
 {
 	ID3D11ShaderResourceView* target = nullptr;
@@ -16,6 +16,9 @@ HUD::HUD()
 	ID3D11ShaderResourceView* shotgun = nullptr;
 	ID3D11ShaderResourceView* sniper = nullptr;
 	//ID3D11ShaderResourceView* crosskye= nullptr;
+	ID3D11ShaderResourceView* damage = nullptr;
+	ID3D11ShaderResourceView* grenade = nullptr;
+
 
 	HRESULT hr = DirectX::CreateDDSTextureFromFileEx(
 		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/Target.dds", 0,
@@ -100,6 +103,20 @@ HUD::HUD()
 		false, nullptr, &crosskye);
 	m_crosskey.Init(crosskye, 128.0, 128.0);
 	m_crosskey.SetTexture(*crosskye);*/
+
+	hr = DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/DamageMarker.dds", 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &damage);
+	m_damage.Init(damage, 64.0, 64.0);
+	m_damage.SetTexture(*damage);
+
+	hr = DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/Grenade.dds", 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &grenade);
+	m_handgranate.Init(grenade, 64.0, 64.0);
+	m_handgranate.SetTexture(*grenade);
 }
 
 
@@ -112,7 +129,7 @@ void HUD::StartRender()
 	g_graphicsEngine->SetViewport(m_width, m_height, m_topLeftX, m_topLeftY);
 }
 
-void HUD::Update()
+void HUD::Update(int cameraNo)
 {
 	m_crosshair.Update(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
 	m_hitmarker.Update(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
@@ -126,6 +143,19 @@ void HUD::Update()
 	m_m110.Update({ 410.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
 	m_shotgun.Update({ 410.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
 	//m_crosskey.Update({ -510.0,-230.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
+	if (m_damegeflag == true) {
+		CVector3 spritepos = CVector3::Zero();
+		spritepos = m_enemyPosition - m_player->GetPosition();
+		float vectorX = spritepos.Dot(m_player->GetRight());
+		float vectorZ = spritepos.Dot(m_player->GetForward());
+		spritepos.x = vectorX;
+		spritepos.y = 0.0f;
+		spritepos.z = vectorZ;
+		spritepos.Normalize();
+		CQuaternion rot = CQuaternion::Identity();
+		spritepos *= 200.0f;
+		m_damage.Update({ spritepos.x,spritepos.z,0.0f },rot , CVector3::One());
+	}
 }
 
 void HUD::Draw(int cameraNo,int Ammo,int hitPoint,bool AttackFlag,bool KillFlag,int weapon,bool cameraflag)
@@ -184,7 +214,10 @@ void HUD::Draw(int cameraNo,int Ammo,int hitPoint,bool AttackFlag,bool KillFlag,
 	m_life.Draw(cameraNo);
 
 	//m_crosskey.Draw(cameraNo);
-
+	if (m_damegeflag == true)
+	{
+		m_damage.Draw(cameraNo);
+	}
 	//フォントのDraw
 	wchar_t bullet[256],HP[256];
 
@@ -209,7 +242,7 @@ void HUD::Draw(int cameraNo,int Ammo,int hitPoint,bool AttackFlag,bool KillFlag,
 		}
 	}
 	//リロードのボタンを表示する
-	m_bullet.Draw(bullet, { -50.0f,40.0f }, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+	m_bullet.Draw(bullet, { -50.0f,40.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
 	//プレイヤーのHPを表示する
 	m_hp.Draw(HP, { -610.0f,40.0f }, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
 

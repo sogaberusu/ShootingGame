@@ -20,6 +20,7 @@
 #include "MP5.h"
 #include "Benelli_M4.h"
 #include "M110.h"
+#include "GrenadeManager.h"
 //ゲームクラス。
 class Game : public IScene
 {
@@ -60,6 +61,10 @@ public:
 	{
 		return m_bulletManager;
 	}
+	GrenadeManager&GetGrenadeManager()
+	{
+		return m_grenadeManager;
+	}
 	void SetCameraType(EnCameraType type)
 	{
 		m_cameratype = type;
@@ -83,6 +88,10 @@ public:
 	M4A1 &GetM4A1(int playerNo)
 	{
 		return m_m4a1[playerNo];
+	}
+	HUD &GetHUD(int playerNo)
+	{
+		return m_hud[playerNo];
 	}
 private:
 	Player *m_player[4];												//プレイヤー
@@ -108,6 +117,7 @@ private:
 	M110 m_m110[4];
 	Benelli_M4 m_benelliM4[4];
 	Effect m_effect[4];
+	GrenadeManager m_grenadeManager;
 };
 
 //グローバルなアクセスポイントをグローバル変数として提供する。

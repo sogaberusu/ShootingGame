@@ -6,7 +6,6 @@
 #include "Physics/CollisionAttr.h"
 #include "WeaponAttr.h"
 
-
 Player::Player(int playerNo)
 {
 	//cmoファイルの読み込み。
@@ -268,10 +267,15 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	}
 	Bone* m_righthandBoneMat = m_model.FindBone(L"Bip001 R Hand");
 	CMatrix hand = m_righthandBoneMat->GetWorldMatrix();
-	m_handPos.x = hand.m[3][0];
-	m_handPos.y = hand.m[3][1];
-	m_handPos.z = hand.m[3][2];
-
+	m_RhandPos.x = hand.m[3][0];
+	m_RhandPos.y = hand.m[3][1];
+	m_RhandPos.z = hand.m[3][2];
+	m_righthandBoneMat = m_model.FindBone(L"Bip001 L Hand");
+	hand = m_righthandBoneMat->GetWorldMatrix();
+	m_LhandPos.x = hand.m[3][0];
+	m_LhandPos.y = hand.m[3][1];
+	m_LhandPos.z = hand.m[3][2];
+	
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	m_animation.Update(1.0f / 30.0f);
@@ -445,6 +449,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	if (g_pad[PlayerNumber].IsTrigger(enButtonRB1) == true)
 	{
 		m_state = enState_Grenade;
+		g_game->GetGrenadeManager().NewGrenade(m_LhandPos, PlayerNumber,m_forward);
 	}
 
 	if (g_pad[PlayerNumber].IsPress(enButtonRB2) == true
@@ -479,12 +484,6 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		m_moveSpeed.Add(m_moveSpeed);
 	}
 
-	/*if (m_status.HitPoint <= 0)
-	{
-		m_charaCon.GetRigidBody()->GetBody()->setUserIndex(enCollisionAttr_Ground);
-
-		m_state = enState_Death;
-	}*/
 	if (m_state == enState_Crouch_Idle ||
 		m_state == enState_Crouch_Reload ||
 		m_state == enState_Crouch_Shoot ||
@@ -510,6 +509,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	m_right.y = rotMatrix.m[0][1];
 	m_right.z = rotMatrix.m[0][2];
 	m_right.Normalize();
+
 }
 
 void Player::Turn(int PlayerNumber)
