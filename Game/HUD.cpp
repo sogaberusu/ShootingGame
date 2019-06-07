@@ -217,6 +217,8 @@ void HUD::Draw(int cameraNo,int Ammo,int hitPoint,bool AttackFlag,bool KillFlag,
 	if (m_damegeflag == true)
 	{
 		m_damage.Draw(cameraNo);
+
+		m_damegeflagcount--;
 	}
 	//ƒtƒHƒ“ƒg‚ÌDraw
 	wchar_t bullet[256],HP[256];
@@ -247,4 +249,9 @@ void HUD::Draw(int cameraNo,int Ammo,int hitPoint,bool AttackFlag,bool KillFlag,
 	m_hp.Draw(HP, { -610.0f,40.0f }, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
 
 	m_bullet.EndDraw();
+
+	if (m_damegeflagcount <= 0)
+	{
+		m_damegeflag = false;
+	}
 }

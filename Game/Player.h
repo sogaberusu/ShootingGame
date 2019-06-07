@@ -155,6 +155,10 @@ public:
 	{
 		m_attackflag = false;
 	}
+	void SetAttackCount(int time)
+	{
+		m_attackflagcount = time;
+	}
 	bool GetAttackFlag()
 	{
 		return m_attackflag;
@@ -166,6 +170,10 @@ public:
 	void SetKillFalse()
 	{
 		m_killflag = false;
+	}
+	void SetKillCount(int time)
+	{
+		m_killflagcount = time;
 	}
 	bool GetKillFlag()
 	{
@@ -256,12 +264,14 @@ private:
 	CVector3 m_LhandPos;
 	RigidBody* m_rigidBody;
 	SPlayerStatus m_status;
-	bool m_crouch = false;					//プレイヤーがしゃがんでいるか
+	bool m_crouch = false;								//プレイヤーがしゃがんでいるか
 	int m_shotCount = 0;
 	static const int SHOTINTERVAL = 3;
 	static const int SHOTSPEED = 2000;
 	bool m_attackflag = false;
+	int m_attackflagcount;
 	bool m_killflag = false;
+	int m_killflagcount;
 	EnWeapon m_weapon = enWeapon_M4A1;
 	M4A1 *m_m4a1;
 	MP5  *m_mp5;

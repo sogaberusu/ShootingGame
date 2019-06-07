@@ -319,7 +319,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			m_state != enState_Jump_Air &&
 			m_state != enState_Jump_Start &&
 			m_state != enState_Jump_Land &&
-			m_state != enState_Reload && 
+			m_state != enState_Reload &&
 			m_state != enState_Walk_Reload &&
 			m_state != enState_Grenade
 			)
@@ -327,7 +327,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			m_state = enState_Idle;
 		}
 	}
-	else{
+	else {
 		if (m_state == enState_Crouch_Idle ||
 			m_state == enState_Crouch_Walk_Forward ||
 			m_state == enState_Crouch_Walk_Shoot ||
@@ -335,7 +335,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		{
 			m_state = enState_Crouch_Walk_Forward;
 		}
-		else if(m_charaCon.IsOnGround() == true 
+		else if (m_charaCon.IsOnGround() == true
 			&& m_state != enState_Crouch_Walk_Forward
 			&& m_state != enState_Crouch_Reload
 			&& m_state != enState_Run
@@ -398,7 +398,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	{
 		m_state = enState_Jump_Land;
 	}
-	
+
 	if (g_pad[PlayerNumber].IsTrigger(enButtonB) == true
 		&& m_charaCon.IsOnGround() == true)
 	{
@@ -406,7 +406,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			m_state == enState_Crouch_Walk_Forward ||
 			m_state == enState_Crouch_Walk_Shoot ||
 			m_state == enState_Crouch_Shoot ||
-			m_state == enState_Crouch_Reload 
+			m_state == enState_Crouch_Reload
 			)
 		{
 			m_state = enState_Idle;
@@ -434,7 +434,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		{
 			m_state = enState_Crouch_Reload;
 		}
-		else 
+		else
 		{
 			m_state = enState_Reload;
 		}
@@ -449,7 +449,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	if (g_pad[PlayerNumber].IsTrigger(enButtonRB1) == true)
 	{
 		m_state = enState_Grenade;
-		g_game->GetGrenadeManager().NewGrenade(m_LhandPos, PlayerNumber,m_forward);
+		g_game->GetGrenadeManager().NewGrenade(m_LhandPos, PlayerNumber, m_forward);
 	}
 
 	if (g_pad[PlayerNumber].IsPress(enButtonRB2) == true
@@ -478,7 +478,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			break;
 		}
 	}
-	
+
 	if (m_state == enState_Run)
 	{
 		m_moveSpeed.Add(m_moveSpeed);
@@ -497,7 +497,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		m_crouch = false;
 	}
 
-	
+
 	m_position = m_charaCon.Execute(1.0f / 60.0f, m_moveSpeed);
 
 	CMatrix rotMatrix = m_model.GetRotationMatrix();
@@ -510,6 +510,17 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	m_right.z = rotMatrix.m[0][2];
 	m_right.Normalize();
 
+	m_attackflagcount--;
+	m_killflagcount--;
+
+	if (m_attackflag <= 0)
+	{
+		m_attackflagcount = false;
+	}
+	if (m_killflagcount <= 0)
+	{
+		m_killflagcount = false;
+	}
 }
 
 void Player::Turn(int PlayerNumber)

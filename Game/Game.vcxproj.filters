@@ -282,7 +282,6 @@
     <MeshContentTask Include="Assets\modelData\MP5.FBX" />
     <MeshContentTask Include="Assets\modelData\Player_.FBX" />
     <MeshContentTask Include="Assets\modelData\SMAW.FBX" />
-    <MeshContentTask Include="Assets\modelData\Background1.FBX" />
     <MeshContentTask Include="Assets\modelData\Grenade.FBX" />
   </ItemGroup>
   <ItemGroup>

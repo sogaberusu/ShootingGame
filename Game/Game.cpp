@@ -246,15 +246,7 @@ void Game::DrawShadowMap()
 	//シャドウマップにレンダリング
 	///////////////////////////////////////////////
 	auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
-	//現在のレンダリングターゲットをバックアップしておく。
-	/*ID3D11RenderTargetView* oldRenderTargetView;
-	ID3D11DepthStencilView* oldDepthStencilView;
-	d3dDeviceContext->OMGetRenderTargets(
-		1,
-		&oldRenderTargetView,
-		&oldDepthStencilView
-	);*/
-
+	//元に戻す。
 	d3dDeviceContext->OMGetRenderTargets(
 		1,
 		&m_frameBufferRenderTargetView,
@@ -287,22 +279,9 @@ void Game::DrawShadowMap()
 	//ドロドロ
 	m_copyMainRtToFrameBufferSprite.Draw(0);
 
+	//レンダリングターゲットとデプスステンシルの参照カウンタを下す。
 	m_frameBufferRenderTargetView->Release();
 	m_frameBufferDepthStencilView->Release();
 
-	////元に戻す。
-	//d3dDeviceContext->OMSetRenderTargets(
-	//	1,
-	//	&oldRenderTargetView,
-	//	oldDepthStencilView
-	//);
-
-
 	d3dDeviceContext->RSSetViewports(numViewport, &oldViewports);
-	
-	 
-	 
-	//レンダリングターゲットとデプスステンシルの参照カウンタを下す。
-	/*oldRenderTargetView->Release();
-	oldDepthStencilView->Release();*/
 }

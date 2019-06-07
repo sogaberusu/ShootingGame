@@ -231,7 +231,6 @@
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\Background.FBX" />
-    <MeshContentTask Include="Assets\modelData\Background1.FBX" />
     <MeshContentTask Include="Assets\modelData\Benelli M4.FBX" />
     <MeshContentTask Include="Assets\modelData\Bullet.FBX" />
     <MeshContentTask Include="Assets\modelData\Grenade.FBX" />

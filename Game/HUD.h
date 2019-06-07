@@ -25,6 +25,10 @@ public:
 	{
 		m_damegeflag = damage;
 	}
+	void SetDamageFlagCount(int time)
+	{
+		m_damegeflagcount = time;
+	}
 	void SetInstance(Player *player)
 	{
 		m_player = player;
@@ -54,6 +58,7 @@ private:
 	Font m_hp;
 	CVector3 m_enemyPosition = CVector3::Zero();
 	bool m_damegeflag = false;
+	int m_damegeflagcount;
 	Player *m_player;
 };
 

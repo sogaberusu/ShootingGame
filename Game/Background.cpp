@@ -7,7 +7,6 @@ Background::Background(CVector3 pos, CQuaternion rot)
 	m_model.Init(L"Assets/modelData/Background.cmo");
 
 	m_phyStaticObject.CreateMeshObject(m_model, pos, rot);
-	//m_phyStaticObject.CreateMeshObject(m_model, CVector3::Zero(), CQuaternion::Identity());
 	m_position = pos;
 	m_rotation = rot;
 	//地面をシャドウレシーバーにする。
@@ -22,7 +21,6 @@ Background::~Background()
 void Background::Update()
 {
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
-	//m_model.UpdateWorldMatrix(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
 	//シャドウキャスターを登録。
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
 	

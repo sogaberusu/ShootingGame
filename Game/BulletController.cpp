@@ -56,16 +56,19 @@ namespace {
 				//攻撃してきたプレイヤーの座標をセットする
 				g_game->GetHUD(hitPlayerNo).SetEnemyPosition(g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetPosition());
 				g_game->GetHUD(hitPlayerNo).SetDamageFlag(true);
+				g_game->GetHUD(hitPlayerNo).SetDamageFlagCount(50);
 				//プレイヤーの撃った弾が敵に当たった時にヒットマーカーを表示する
 				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint > 0)
 				{
 					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetAttackTrue();
+					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetAttackCount(50);
 				}
 		
 				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint <= 0)
 				{
 					//プレイヤーの撃った弾で敵を倒したときにキルマーカーを表示する
 					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKillTrue();
+					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKillCount(50);
 					//プレイヤーのHPが0以下になったら0にする
 					g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(0);
 					//プレイヤーを死亡状態にする
