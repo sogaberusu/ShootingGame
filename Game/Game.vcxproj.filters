@@ -128,12 +128,9 @@
     <ClCompile Include="sound\WaveFile.cpp" />
     <ClCompile Include="sound\WaveFileBank.cpp" />
     <ClCompile Include="graphics\Font.cpp" />
-    <ClCompile Include="physics\PhysicsDebugDraw.cpp" />
     <ClCompile Include="graphics\SpriteData.cpp" />
     <ClCompile Include="graphics\vertexBuffer.cpp" />
     <ClCompile Include="graphics\indexBuffer.cpp" />
-    <ClCompile Include="graphics\PostEffect.cpp" />
-    <ClCompile Include="graphics\Bloom.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="HUD.cpp" />
@@ -141,6 +138,7 @@
     <ClCompile Include="MP5.cpp" />
     <ClCompile Include="Grenade.cpp" />
     <ClCompile Include="GrenadeManager.cpp" />
+    <ClCompile Include="GrenadeController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -247,12 +245,9 @@
     <ClInclude Include="sound\WaveFile.h" />
     <ClInclude Include="sound\WaveFileBank.h" />
     <ClInclude Include="graphics\Font.h" />
-    <ClInclude Include="physics\PhysicsDebugDraw.h" />
     <ClInclude Include="graphics\SpriteData.h" />
     <ClInclude Include="graphics\vertexBuffer.h" />
     <ClInclude Include="graphics\indexBuffer.h" />
-    <ClInclude Include="graphics\PostEffect.h" />
-    <ClInclude Include="graphics\Bloom.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="HUD.h" />
@@ -261,6 +256,7 @@
     <ClInclude Include="WeaponAttr.h" />
     <ClInclude Include="Grenade.h" />
     <ClInclude Include="GrenadeManager.h" />
+    <ClInclude Include="GrenadeController.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -273,8 +269,6 @@
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\Player.FBX" />
-    <MeshContentTask Include="Assets\modelData\Player_NoHead.FBX" />
-    <MeshContentTask Include="Assets\modelData\Player_Test.fbx" />
     <MeshContentTask Include="Assets\modelData\Bullet.FBX" />
     <MeshContentTask Include="Assets\modelData\Benelli M4.FBX" />
     <MeshContentTask Include="Assets\modelData\M4A1.FBX" />

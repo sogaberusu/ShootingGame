@@ -42,7 +42,7 @@ void Effect::Init(const wchar_t* filepath)
 
 }
 
-void Effect::Play(CVector3 position, CVector3 scale, CQuaternion rotation)
+void Effect::Play(CVector3 position,CQuaternion rotation, CVector3 scale)
 {
 	//再生中のエフェクトを止める。
 	m_effekseerManager->StopEffect(m_playEffectHandle);

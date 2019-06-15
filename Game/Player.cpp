@@ -116,8 +116,6 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	if (m_state == enState_Death &&
 		m_animation.IsPlaying() == false)
 	{
-		m_rStickX = 0.0f;
-		m_rStickY = 0.0f;
 		auto respawn = g_game->GetPlayerRespawn(PlayerNumber, GetRandom(0, 3));
 		m_position = respawn.PlayerPosition;
 		m_rotation = respawn.PlayerRotation;
@@ -125,6 +123,7 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		m_state = enState_Idle;
 		m_status.HitPoint = 100;
 		m_status.HealTimer = 0;
+		m_status.Grenades = 2;
 
 		m_m4a1->SetAmmo(30);
 
@@ -257,9 +256,19 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		break;
 	case Player::enState_Death:
 		m_animation.Play(enAnimation_Death, 0.3);
+		m_rStickX = 0.0f;
+		m_rStickY = 0.0f;
 		break;
 	case Player::enState_Grenade:
 		m_animation.Play(enAnimation_Grenade, 0.3);
+		if (m_animation.IsPlaying() == false)
+		{
+			CVector3 target = camera.GetTarget() - camera.GetPosition();
+			target.Normalize();
+			g_game->GetGrenadeManager().NewGrenade(m_LhandPos, PlayerNumber, target);
+			m_status.Grenades--;
+			m_state = enState_Idle;
+		}
 		break;
 	default:
 		m_position = { 0.0f,0.0f,0.0f };
@@ -340,7 +349,8 @@ void Player::Move(Camera& camera, int PlayerNumber)
 			&& m_state != enState_Crouch_Reload
 			&& m_state != enState_Run
 			&& m_state != enState_Walk_Reload
-			&& m_state != enState_Reload)
+			&& m_state != enState_Reload 
+			&& m_state != enState_Grenade)
 		{
 			if (m_lStickY > 0.8)
 			{
@@ -446,10 +456,9 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		}
 	}
 
-	if (g_pad[PlayerNumber].IsTrigger(enButtonRB1) == true)
+	if (g_pad[PlayerNumber].IsTrigger(enButtonRB1) == true && m_status.Grenades > 0)
 	{
 		m_state = enState_Grenade;
-		g_game->GetGrenadeManager().NewGrenade(m_LhandPos, PlayerNumber, m_forward);
 	}
 
 	if (g_pad[PlayerNumber].IsPress(enButtonRB2) == true

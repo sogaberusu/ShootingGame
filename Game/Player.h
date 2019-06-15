@@ -15,6 +15,7 @@ struct SPlayerStatus
 	int HitPoint = 100;				//体力
 	int Kills = 0;					//キル数
 	int HealTimer = 0;				//自動回復するまでの時間
+	int Grenades = 2;				//グレネードの所持数
 };
 class Player
 {
@@ -24,6 +25,30 @@ public:
 	~Player();
 	void Update(Camera& camera, int PlayerNumber);
 	void Draw(Camera& camera, int ViewportNumber, int PlayerNumber);
+	enum EnState {
+		enState_Idle,
+		enState_Walk_Forward,
+		enState_Walk_Back,
+		enState_Walk_Right,
+		enState_Walk_Left,
+		enState_Walk_Shoot,
+		enState_Walk_Reload,
+		enState_Run,
+		enState_Jump_Start,
+		enState_Jump_Air,
+		enState_Jump_Land,
+		enState_Crouch_Idle,
+		enState_Crouch_Reload,
+		enState_Crouch_Shoot,
+		enState_Crouch_Walk_Shoot,
+		enState_Crouch_Walk_Forward,
+		enState_Reload,
+		enState_Shoot,
+		enState_Damage,
+		enState_Death,
+		enState_Grenade,
+		enState_Num
+	};
 	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
@@ -103,7 +128,10 @@ public:
 	{
 		m_drawflag = true;
 	}
-	
+	EnState GetState()
+	{
+		return m_state;
+	}
 private:
 	enum EnCameraType {
 		enType_TPS,
@@ -146,6 +174,10 @@ public:
 	int GetHitPoint()
 	{
 		return m_status.HitPoint;
+	}
+	int GetGrenade()
+	{
+		return m_status.Grenades;
 	}
 	void SetAttackTrue()
 	{
@@ -190,6 +222,7 @@ public:
 		m_benelliM4 = benelliM4;
 		m_m110 = m110;
 	}
+	
 private:
 	void InitAnimation();								//アニメーションの初期化
 	void Move(Camera& camera, int PlayerNumber);					//移動処理
@@ -218,30 +251,7 @@ private:
 		enAnimation_Grenade,
 		enAnimation_Num
 	};
-	enum EnState {
-		enState_Idle,
-		enState_Walk_Forward,
-		enState_Walk_Back,
-		enState_Walk_Right,
-		enState_Walk_Left,
-		enState_Walk_Shoot,
-		enState_Walk_Reload,
-		enState_Run,
-		enState_Jump_Start,
-		enState_Jump_Air,
-		enState_Jump_Land,
-		enState_Crouch_Idle,
-		enState_Crouch_Reload,
-		enState_Crouch_Shoot,
-		enState_Crouch_Walk_Shoot,
-		enState_Crouch_Walk_Forward,
-		enState_Reload,
-		enState_Shoot,
-		enState_Damage,
-		enState_Death,
-		enState_Grenade,
-		enState_Num
-	};
+	
 	SkinModel m_model;									//スキンモデル。
 	Animation m_animation;								//アニメーション。
 	AnimationClip m_animationClips[enAnimation_Num];	//アニメーションクリップ。

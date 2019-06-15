@@ -60,18 +60,10 @@ void PhysicsWorld::Init()
 		);
 
 	dynamicWorld->setGravity(btVector3(0, -10, 0));
-	m_debugDraw.Init();
-	dynamicWorld->setDebugDrawer(&m_debugDraw);
 }
 void PhysicsWorld::Update()
 {
 	dynamicWorld->stepSimulation(1.0f/60.0f);
-}
-void PhysicsWorld::DebubDrawWorld()
-{
-	m_debugDraw.BeginDraw();
-	dynamicWorld->debugDrawWorld();
-	m_debugDraw.EndDraw();
 }
 void PhysicsWorld::AddRigidBody(RigidBody& rb)
 {

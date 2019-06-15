@@ -66,7 +66,8 @@ Game::Game()
 		m_bulletManager.SetInstance(m_player[i], i);
 		m_grenadeManager.SetInstance(m_player[i], i);
 		m_timer.SetPlayer(m_player[i], i);
-		m_effect[i].Init(L"Assets/effect/MuzzleFlash.efk");
+		m_muzzleflasheffect[i].Init(L"Assets/effect/MuzzleFlash.efk");
+		m_explosioneffect[i].Init(L"Assets/effect/Explosion.efk");
 		m_m4a1[i].SetInstance(m_player[i]);
 		m_mp5[i].SetInstance(m_player[i]);
 		m_benelliM4[i].SetInstance(m_player[i]);
@@ -157,8 +158,6 @@ void Game::Update()
 	m_background->Update();
 	m_bulletManager.Update();
 	m_grenadeManager.Update();
-	//ポストエフェクトの更新。
-	m_postEffect.Update();
 	if (m_restTimer == 0.0f)
 	{
 		g_currentScene = new Result(m_player[0]->GetKills(),
@@ -207,22 +206,23 @@ void Game::Draw()
 		m_timer.Draw();
 		for (int j = 0; j < 4; j++)
 		{
-			m_effect[j].Draw(i);
-			
+			m_muzzleflasheffect[j].Draw(i);
+
+			m_explosioneffect[j].Draw(i);
 		}
 		switch (m_player[i]->GetWeapon())
 		{
 		case enWeapon_M4A1:
-			m_hud[i].Draw(i,m_m4a1[i].GetAmmo(),m_player[i]->GetHitPoint(),m_player[i]->GetAttackFlag(),m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(),m_player[i]->GetCameraType());
+			m_hud[i].Draw(i, m_m4a1[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetGrenade(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
 			break;
 		case enWeapon_MP5:
-			m_hud[i].Draw(i, m_mp5[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
+			m_hud[i].Draw(i, m_mp5[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetGrenade(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
 			break;
 		case enWeapon_Benelli_M4:
-			m_hud[i].Draw(i, m_benelliM4[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
+			m_hud[i].Draw(i, m_benelliM4[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetGrenade(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
 			break;
 		case enWeapon_M110:
-			m_hud[i].Draw(i, m_m110[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
+			m_hud[i].Draw(i, m_m110[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetGrenade(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
 		}
 		
 		m_player[i]->SetAttackFalse();
@@ -266,10 +266,6 @@ void Game::DrawShadowMap()
 	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	g_mainRenderTarget.ClearRenderTarget(clearColor);
 	
-
-	//ポストエフェクトの描画。
-	m_postEffect.Draw();
-
 	//レンダリングターゲットをフレームバッファに戻す。
 	g_graphicsEngine->ChangeRenderTarget(
 		m_frameBufferRenderTargetView,

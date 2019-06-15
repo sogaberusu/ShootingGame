@@ -20,7 +20,7 @@ public:
 	/// </summary>
 	/// <param name="position">ポジション(CVector3)</param>
 	/// <param name="scale">スケール(CVector3)</param>
-	void Play(CVector3 position, CVector3 scale, CQuaternion rotation);
+	void Play(CVector3 position, CQuaternion rotation, CVector3 scale);
 	/// <summary>
 	/// 描画関数
 	/// </summary>

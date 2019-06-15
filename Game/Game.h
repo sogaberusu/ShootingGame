@@ -11,7 +11,6 @@
 #include "graphics/ShadowMap.h"
 #include "Player.h"
 #include "graphics/Sprite.h"
-#include "graphics/PostEffect.h"
 #include "Timer.h"
 #include "HUD.h"
 #include "Result.h"
@@ -81,9 +80,13 @@ public:
 	{
 		return m_restTimer;
 	}
-	Effect &GetEffect(int playerNo)
+	Effect &GetMuzzleFlasheEffect(int playerNo)
 	{
-		return m_effect[playerNo];
+		return m_muzzleflasheffect[playerNo];
+	}
+	Effect &GetExplosionEffect(int playerNo)
+	{
+		return m_explosioneffect[playerNo];
 	}
 	M4A1 &GetM4A1(int playerNo)
 	{
@@ -105,7 +108,6 @@ private:
 	Sprite m_copyMainRtToFrameBufferSprite;								//メインレンダリングターゲットに描かれた絵をフレームバッファにコピーするためのスプライト。
 	ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー。
 	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー。
-	PostEffect m_postEffect;											//ポストエフェクト。
 	D3D11_VIEWPORT m_frameBufferViewports;								//フレームバッファのビューポート。
 	Level m_level;														//レベル
 	SRespawn m_respawn[4];												//リスポーンの
@@ -116,7 +118,8 @@ private:
 	MP5 m_mp5[4];														//fps視点の時のモデル
 	M110 m_m110[4];
 	Benelli_M4 m_benelliM4[4];
-	Effect m_effect[4];
+	Effect m_muzzleflasheffect[4];
+	Effect m_explosioneffect[4];
 	GrenadeManager m_grenadeManager;
 };
 

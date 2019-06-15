@@ -16,7 +16,7 @@ public:
 	}
 	void StartRender();
 	void Update(int cameraNo);
-	void Draw(int cameraNo,int Ammo,int hitPoint, bool AttackFlag,bool KillFlag,int weapon,bool cameraflag);
+	void Draw(int cameraNo,int Ammo,int hitPoint, int grenades, bool AttackFlag,bool KillFlag,int weapon,bool cameraflag);
 	void SetEnemyPosition(CVector3 enemypos)
 	{
 		m_enemyPosition = enemypos;
@@ -51,14 +51,16 @@ private:
 	Sprite m_mp5;
 	//Sprite m_crosskey;
 	Sprite m_damage;
-	Sprite m_handgranate;
+	Sprite m_handgrenade;
 	
 	Font m_bullet;
 	Font m_reload;
 	Font m_hp;
+	Font m_grenades;
 	CVector3 m_enemyPosition = CVector3::Zero();
 	bool m_damegeflag = false;
 	int m_damegeflagcount;
 	Player *m_player;
+	bool m_grenadeflag = false;
 };
 

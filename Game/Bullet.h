@@ -23,7 +23,7 @@ public:
 	}
 	void SetMoveSpeed(CVector3 speed)
 	{
-		m_moveSpeed += speed;
+		m_moveSpeed = speed;
 	}
 	bool IsDead()
 	{

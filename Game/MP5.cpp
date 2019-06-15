@@ -58,7 +58,7 @@ void MP5::Shot(CVector3 target, int PlayerNumber)
 		if (m_shootIntervalNow > m_gunStatus.SHOTINTERVAL)
 		{
 			//エフェクトを再生
-			g_game->GetEffect(PlayerNumber).Play(m_position, CVector3::One(), m_rotation);
+			g_game->GetMuzzleFlasheEffect(PlayerNumber).Play(m_position, m_rotation, CVector3::One());
 
 			if (m_gunshot.IsPlaying())
 			{

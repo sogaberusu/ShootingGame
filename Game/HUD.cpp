@@ -2,6 +2,8 @@
 #include "HUD.h"
 #include "WeaponAttr.h"
 #include "Player.h"
+#include "Game.h"
+#include "Grenade.h"
 HUD::HUD()
 {
 	ID3D11ShaderResourceView* target = nullptr;
@@ -115,8 +117,8 @@ HUD::HUD()
 		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/Grenade.dds", 0,
 		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
 		false, nullptr, &grenade);
-	m_handgranate.Init(grenade, 64.0, 64.0);
-	m_handgranate.SetTexture(*grenade);
+	m_handgrenade.Init(grenade, 64.0, 64.0);
+	m_handgrenade.SetTexture(*grenade);
 }
 
 
@@ -156,9 +158,10 @@ void HUD::Update(int cameraNo)
 		spritepos *= 200.0f;
 		m_damage.Update({ spritepos.x,spritepos.z,0.0f },rot , CVector3::One());
 	}
+	m_handgrenade.Update({ 150.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
 }
 
-void HUD::Draw(int cameraNo,int Ammo,int hitPoint,bool AttackFlag,bool KillFlag,int weapon,bool cameraflag)
+void HUD::Draw(int cameraNo,int Ammo,int hitPoint,int grenades,bool AttackFlag,bool KillFlag,int weapon,bool cameraflag)
 {
 	if (weapon == enWeapon_M4A1)
 	{
@@ -220,11 +223,15 @@ void HUD::Draw(int cameraNo,int Ammo,int hitPoint,bool AttackFlag,bool KillFlag,
 
 		m_damegeflagcount--;
 	}
+
+	
+	m_handgrenade.Draw(cameraNo);
 	//フォントのDraw
-	wchar_t bullet[256],HP[256];
+	wchar_t bullet[256], HP[256], grenade[256];
 
 	swprintf(bullet, L"%d", Ammo);
 	swprintf(HP, L"%d", hitPoint);
+	swprintf(grenade, L"x%d", grenades);
 
 	m_bullet.BeginDraw();
 
@@ -247,6 +254,8 @@ void HUD::Draw(int cameraNo,int Ammo,int hitPoint,bool AttackFlag,bool KillFlag,
 	m_bullet.Draw(bullet, { -50.0f,40.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
 	//プレイヤーのHPを表示する
 	m_hp.Draw(HP, { -610.0f,40.0f }, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+	//プレイヤーの所持グレネードの数を表示する
+	m_grenades.Draw(grenade, { -230.0f,40.0f }, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
 
 	m_bullet.EndDraw();
 

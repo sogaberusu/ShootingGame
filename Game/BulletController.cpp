@@ -63,7 +63,7 @@ namespace {
 					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetAttackTrue();
 					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetAttackCount(50);
 				}
-		
+				//プレイヤーのHPが0以下なら
 				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint <= 0)
 				{
 					//プレイヤーの撃った弾で敵を倒したときにキルマーカーを表示する
