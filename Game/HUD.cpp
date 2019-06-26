@@ -17,10 +17,8 @@ HUD::HUD()
 	ID3D11ShaderResourceView* submachinegun = nullptr;
 	ID3D11ShaderResourceView* shotgun = nullptr;
 	ID3D11ShaderResourceView* sniper = nullptr;
-	//ID3D11ShaderResourceView* crosskye= nullptr;
 	ID3D11ShaderResourceView* damage = nullptr;
 	ID3D11ShaderResourceView* grenade = nullptr;
-
 
 	HRESULT hr = DirectX::CreateDDSTextureFromFileEx(
 		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/Target.dds", 0,
@@ -99,13 +97,6 @@ HUD::HUD()
 	m_m110.Init(sniper, 256.0, 128.0);
 	m_m110.SetTexture(*sniper);
 
-	/*hr = DirectX::CreateDDSTextureFromFileEx(
-		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/CrossKey.dds", 0,
-		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
-		false, nullptr, &crosskye);
-	m_crosskey.Init(crosskye, 128.0, 128.0);
-	m_crosskey.SetTexture(*crosskye);*/
-
 	hr = DirectX::CreateDDSTextureFromFileEx(
 		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/DamageMarker.dds", 0,
 		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
@@ -117,8 +108,8 @@ HUD::HUD()
 		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/Grenade.dds", 0,
 		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
 		false, nullptr, &grenade);
-	m_handgrenade.Init(grenade, 64.0, 64.0);
-	m_handgrenade.SetTexture(*grenade);
+	m_hudgrenade.Init(grenade, 64.0, 64.0);
+	m_hudgrenade.SetTexture(*grenade);
 }
 
 
@@ -144,12 +135,11 @@ void HUD::Update(int cameraNo)
 	m_mp5.Update({ 410.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
 	m_m110.Update({ 410.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
 	m_shotgun.Update({ 410.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
-	//m_crosskey.Update({ -510.0,-230.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
 	if (m_damegeflag == true) {
 		CVector3 spritepos = CVector3::Zero();
-		spritepos = m_enemyPosition - m_player->GetPosition();
-		float vectorX = spritepos.Dot(m_player->GetRight());
-		float vectorZ = spritepos.Dot(m_player->GetForward());
+		spritepos = m_enemyPosition - m_player[m_playerNo]->GetPosition();
+		float vectorX = spritepos.Dot(m_player[m_playerNo]->GetRight());
+		float vectorZ = spritepos.Dot(m_player[m_playerNo]->GetForward());
 		spritepos.x = vectorX;
 		spritepos.y = 0.0f;
 		spritepos.z = vectorZ;
@@ -158,7 +148,8 @@ void HUD::Update(int cameraNo)
 		spritepos *= 200.0f;
 		m_damage.Update({ spritepos.x,spritepos.z,0.0f },rot , CVector3::One());
 	}
-	m_handgrenade.Update({ 150.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
+	
+	m_hudgrenade.Update({ 150.0,-320.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
 }
 
 void HUD::Draw(int cameraNo,int Ammo,int hitPoint,int grenades,bool AttackFlag,bool KillFlag,int weapon,bool cameraflag)
@@ -216,7 +207,6 @@ void HUD::Draw(int cameraNo,int Ammo,int hitPoint,int grenades,bool AttackFlag,b
 	}
 	m_life.Draw(cameraNo);
 
-	//m_crosskey.Draw(cameraNo);
 	if (m_damegeflag == true)
 	{
 		m_damage.Draw(cameraNo);
@@ -224,40 +214,113 @@ void HUD::Draw(int cameraNo,int Ammo,int hitPoint,int grenades,bool AttackFlag,b
 		m_damegeflagcount--;
 	}
 
-	
-	m_handgrenade.Draw(cameraNo);
+	m_hudgrenade.Draw(cameraNo);
+
 	//フォントのDraw
-	wchar_t bullet[256], HP[256], grenade[256];
+	wchar_t bullet[256], HP[256], grenade[256],
+		P1Kills[256], P2Kills[256], P3Kills[256], P4Kills[256],
+		P1CaptureTime[256],P2CaptureTime[256],P3CaptureTime[256],P4CaptureTime[256];
 
 	swprintf(bullet, L"%d", Ammo);
 	swprintf(HP, L"%d", hitPoint);
 	swprintf(grenade, L"x%d", grenades);
+	swprintf(P1Kills, L"Player1:%d", m_player[0]->GetKills());
+	swprintf(P2Kills, L"Player2:%d", m_player[1]->GetKills());
+	swprintf(P3Kills, L"Player3:%d", m_player[2]->GetKills());
+	swprintf(P4Kills, L"Player4:%d", m_player[3]->GetKills());
+	swprintf(P1CaptureTime, L"Player1:%.2f", m_player[0]->GetCaptureTime());
+	swprintf(P2CaptureTime, L"Player2:%.2f", m_player[1]->GetCaptureTime());
+	swprintf(P3CaptureTime, L"Player3:%.2f", m_player[2]->GetCaptureTime());
+	swprintf(P4CaptureTime, L"Player4:%.2f", m_player[3]->GetCaptureTime());
 
-	m_bullet.BeginDraw();
+
+	m_font.BeginDraw();
 
 	if (weapon == enWeapon_M4A1 || weapon == enWeapon_MP5)
 	{
 		//残弾が一定以下になったらリロードしてと表示する
 		if (Ammo < 10)
 		{
-			m_reload.Draw(L"リロード", { -100.0f, 80.0f }, { 50.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(L"リロード", { -100.0f, 80.0f }, { 50.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
 		}
 	}
 	else {
 		//残弾が一定以下になったらリロードしてと表示する
 		if (Ammo < 4)
 		{
-			m_reload.Draw(L"リロード", { -100.0f, 80.0f }, { 50.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(L"リロード", { -100.0f, 80.0f }, { 50.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
 		}
 	}
 	//リロードのボタンを表示する
-	m_bullet.Draw(bullet, { -50.0f,40.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+	m_font.Draw(bullet, { -50.0f,40.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
 	//プレイヤーのHPを表示する
-	m_hp.Draw(HP, { -610.0f,40.0f }, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+	m_font.Draw(HP, { -610.0f,40.0f }, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
 	//プレイヤーの所持グレネードの数を表示する
-	m_grenades.Draw(grenade, { -230.0f,40.0f }, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+	m_font.Draw(grenade, { -230.0f,40.0f }, { 50.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+	
+	switch (m_gameMode)
+	{
+	case enGame_DM:
+		switch (m_playerNo)
+		{
+		case 0:
+			m_font.Draw(P1Kills, { -630.0f,360.0f }, { 255.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P2Kills, { -500.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P3Kills, { -240.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P4Kills, { -110.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			break;
+		case 1:
+			m_font.Draw(P1Kills, { -630.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P2Kills, { -500.0f,360.0f }, { 255.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P3Kills, { -240.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P4Kills, { -110.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			break;
+		case 2:
+			m_font.Draw(P1Kills, { -630.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P2Kills, { -500.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P3Kills, { -240.0f,360.0f }, { 255.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P4Kills, { -110.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			break;
+		case 3:
+			m_font.Draw(P1Kills, { -630.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P2Kills, { -500.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P3Kills, { -240.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			m_font.Draw(P4Kills, { -110.0f,360.0f }, { 255.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+			break;
+		}
+		break;
+	case enGame_CTF:
+		switch (m_playerNo)
+		{
+		case 0:
+			m_font.Draw(P1CaptureTime, { -610.0f,360.0f }, { 255.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P2CaptureTime, { -480.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P3CaptureTime, { -260.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P4CaptureTime, { -130.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			break;
+		case 1:
+			m_font.Draw(P1CaptureTime, { -610.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P2CaptureTime, { -480.0f,360.0f }, { 255.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P3CaptureTime, { -260.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P4CaptureTime, { -130.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			break;
+		case 2:
+			m_font.Draw(P1CaptureTime, { -610.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P2CaptureTime, { -480.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P3CaptureTime, { -260.0f,360.0f }, { 255.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P4CaptureTime, { -130.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			break;
+		case 3:
+			m_font.Draw(P1CaptureTime, { -610.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P2CaptureTime, { -480.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P3CaptureTime, { -260.0f,360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			m_font.Draw(P4CaptureTime, { -130.0f,360.0f }, { 255.0f,0.0f,0.0f,1.0f }, 0.0f, 0.4f);
+			break;
+		}
+		break;
+	}
 
-	m_bullet.EndDraw();
+	m_font.EndDraw();
 
 	if (m_damegeflagcount <= 0)
 	{

@@ -14,15 +14,30 @@ Timer::~Timer()
 
 void Timer::Draw()
 {
-	float restTime = g_game->GetRestTime();
-
 	wchar_t time[256];
+
+	int in = g_game->GetRestTime();
+	int m, s;
+
+	m = in / 60;
+	in %= 60;
+
+	s = in;
 	
-	swprintf(time, L"c‚èŠÔ %.f•b",restTime);
+	if (s <10)
+	{
+		swprintf(time,L"%d:0%d\n", m, s);
+	}
+	else
+	{
+		swprintf(time, L"%d:%d\n", m, s);
+	}
+	
+	
 
 	m_font->BeginDraw();
 	
-	m_font->Draw(time, { -640.0f, 360.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+	m_font->Draw(time, { -340.0f, 350.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
 
 	m_font->EndDraw();
 }

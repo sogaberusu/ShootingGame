@@ -46,7 +46,8 @@ void GrenadeManager::Update()
 				for (int j = 0; j < 4; j++)
 				{
 					CVector3 distance = (*it)->GetPosition() - m_player[j]->GetPosition();
-					if (distance.Length() < 100 && m_player[j]->GetState() != 19)
+
+					if (distance.Length() < 100 && m_player[j]->GetState() != Player::enState_Death)
 					{
 						m_player[j]->SetHitPoint(m_player[j]->GetHitPoint() - 100);
 
@@ -65,8 +66,9 @@ void GrenadeManager::Update()
 							break;
 						}
 					}
-					if (distance.Length() < 200 && m_player[j]->GetState() != 19)
+					if (distance.Length() < 200 && m_player[j]->GetState() != Player::enState_Death)
 					{
+
 						m_player[j]->SetHitPoint(m_player[j]->GetHitPoint() - 50);
 						//当たったプレイヤーの自然回復までのインターバルを設定する
 						m_player[j]->SetHealTimer(300);

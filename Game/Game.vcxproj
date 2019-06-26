@@ -105,6 +105,8 @@
     <ClCompile Include="BulletController.cpp" />
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="Flag.cpp" />
+    <ClCompile Include="GameSelect.cpp" />
     <ClCompile Include="graphics\Font.cpp" />
     <ClCompile Include="character\CharacterController.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -162,6 +164,8 @@
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Flag.h" />
+    <ClInclude Include="GameSelect.h" />
     <ClInclude Include="Grenade.h" />
     <ClInclude Include="GrenadeController.h" />
     <ClInclude Include="GrenadeManager.h" />
@@ -229,6 +233,7 @@
     <MeshContentTask Include="Assets\modelData\Background.FBX" />
     <MeshContentTask Include="Assets\modelData\Benelli M4.FBX" />
     <MeshContentTask Include="Assets\modelData\Bullet.FBX" />
+    <MeshContentTask Include="Assets\modelData\Flag.FBX" />
     <MeshContentTask Include="Assets\modelData\Grenade.FBX" />
     <MeshContentTask Include="Assets\modelData\M110.FBX" />
     <MeshContentTask Include="Assets\modelData\M4A1.FBX" />
@@ -334,6 +339,24 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\Grenade.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\GameMode.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\Select.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\StartButton.png">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
     </ImageContentTask>

@@ -15,7 +15,8 @@ protected:
 	Shader m_psShader;
 	Shader m_psSkyShader;
 	Shader m_vsShadowMap;			//シャドウマップ生成用の頂点シェーダー。
-	Shader m_psShadowMap;		//シャドウマップ生成用のピクセルシェーダー。
+	Shader m_psShadowMap;			//シャドウマップ生成用のピクセルシェーダー。
+	Shader m_psSilhouette;		//シルエット描画用のピクセルシェーダー。
 	bool isSkining;
 	ID3D11ShaderResourceView* m_albedoTex = nullptr;
 	ID3D11ShaderResourceView* m_skyTex = nullptr;
@@ -23,6 +24,7 @@ protected:
 	int m_renderMode = 0;
 	std::array<ID3D11ShaderResourceView*,4> m_albedoTextureStack = { nullptr };
 	int m_albedoTextureStackPos = 0;
+	ID3D11DepthStencilState* m_silhouettoDepthStepsilState = nullptr;	//シルエット描画用のデプスステンシルステート。
 public:
 	ModelEffect()
 	{
@@ -31,8 +33,13 @@ public:
 		m_psSkyShader.Load("Assets/shader/model.fx", "PSMain_SkyCube", Shader::EnType::PS);
 		//シャドウマップ用のシェーダーをロード。
 		m_psShadowMap.Load("Assets/shader/model.fx", "PSMain_ShadowMap", Shader::EnType::PS);
+		m_psSilhouette.Load("Assets/shader/model.fx", "PSMain_Silhouette", Shader::EnType::PS);
+
 
 		InitSkyTexture();
+
+		//デプスステンシルの初期化。
+		InitSilhouettoDepthStepsilState();
 	}
 	virtual ~ModelEffect()
 	{
@@ -88,6 +95,21 @@ public:
 	{
 		m_albedoTextureStackPos--;
 		SetAlbedoTexture(m_albedoTextureStack[m_albedoTextureStackPos]);
+	}
+	/// <summary>
+	/// シルエット描画用のデプスステンシルステートを初期化する。
+	/// </summary>
+	void InitSilhouettoDepthStepsilState()
+	{
+		//D3Dデバイスを取得。
+		auto pd3d = g_graphicsEngine->GetD3DDevice();
+		//作成する深度ステンシルステートの定義を設定していく。
+		D3D11_DEPTH_STENCIL_DESC desc = { 0 };
+		desc.DepthEnable = true;						   //Zテストが有効。
+		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO; //ZバッファにZ値を描き込まない。
+		desc.DepthFunc = D3D11_COMPARISON_GREATER;		   //Z値が大きければフレームバッファに描き込む。
+
+		pd3d->CreateDepthStencilState(&desc, &m_silhouettoDepthStepsilState);
 	}
 };
 /*!

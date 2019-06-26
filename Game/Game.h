@@ -20,7 +20,15 @@
 #include "Benelli_M4.h"
 #include "M110.h"
 #include "GrenadeManager.h"
+#include "graphics/Font.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
+#include "Flag.h"
 //ゲームクラス。
+enum EnGameType {
+		enGame_DM,
+		enGame_CTF
+	};
 class Game : public IScene
 {
 public:
@@ -28,6 +36,7 @@ public:
 		enCamera_TPS,						//TPS
 		enCamera_FPS						//FPS
 	};
+	
 	struct SRespawn
 	{
 		CVector3 PlayerPosition;			//プレイヤーの座標
@@ -37,7 +46,7 @@ public:
 	/*!
 	* @brief	コンストラクタ。
 	*/
-	Game();
+	Game(int gameMode);
 	/*!
 	* @brief	デストラクタ
 	*/
@@ -96,14 +105,20 @@ public:
 	{
 		return m_hud[playerNo];
 	}
+	void SetPlayerWeapon()
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			m_player[i]->SetWeapon(enWeapon_M4A1);
+		}
+	}
 private:
 	Player *m_player[4];												//プレイヤー
 	GameCamera* m_gameCamera[4];										//ゲームカメラ
 	Background* m_background;											//背景
 	BulletManager m_bulletManager;										//弾
 	EnCameraType m_cameratype = enCamera_FPS;							//カメラの状態
-	bool m_dorwflag;													//プレイヤーを描画するか?
-	//int i = 0;															//
+	bool m_drawflag;													//プレイヤーを描画するか?
 	Sky m_sky;															//空。
 	Sprite m_copyMainRtToFrameBufferSprite;								//メインレンダリングターゲットに描かれた絵をフレームバッファにコピーするためのスプライト。
 	ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー。
@@ -112,8 +127,9 @@ private:
 	Level m_level;														//レベル
 	SRespawn m_respawn[4];												//リスポーンの
 	float m_restTimer = 90.0f;											//ゲームの残り時間。単位：秒。
+	float m_startTimer = 3.0f;											//ゲームの開始時間。単位：秒。
 	Timer m_timer;														//残り時間を描画する
-	HUD m_hud[4];														//
+	HUD m_hud[4];														
 	M4A1 m_m4a1[4];														//fps視点の時のモデル
 	MP5 m_mp5[4];														//fps視点の時のモデル
 	M110 m_m110[4];
@@ -121,6 +137,17 @@ private:
 	Effect m_muzzleflasheffect[4];
 	Effect m_explosioneffect[4];
 	GrenadeManager m_grenadeManager;
+	Font m_font;
+	bool m_weaponflag = true;
+	bool m_endflag = false;
+	bool m_transitionflag = false;
+	bool m_waitflag = true;
+	bool m_endSoundflag = true;
+	CSoundSource m_startSound;
+	CSoundSource m_endSound;
+	Flag m_flag;
+	
+	int m_gameMode;
 };
 
 //グローバルなアクセスポイントをグローバル変数として提供する。

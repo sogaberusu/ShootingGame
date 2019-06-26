@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Title.h"
-#include "Game.h"
+#include "GameSelect.h"
 
 Title::Title()
 {
@@ -42,7 +42,7 @@ void Title::Update()
 	if (newflag == true)
 	{
 		//ゲームシーンを作成して、自分は死ぬ。
-		g_currentScene = new Game;
+		g_currentScene = new GameSelect;
 		delete this;
 	}
 }

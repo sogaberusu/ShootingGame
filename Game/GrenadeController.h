@@ -30,7 +30,6 @@ public:
 	/*!
 		* @brief	実行。
 		*@param[in]	deltaTime		経過時間。単位は秒。
-		*@param[in, out]	moveSpeed		移動速度。内部で重力加速が計算され、その結果がmoveSpeedに反映されます。
 		*@return 移動後のキャラクターの座標。
 		*/
 	const CVector3& Execute(float deltaTime);

@@ -25,7 +25,6 @@ void RenderGame()
 	
 	//現在のシーンの描画。
 	g_currentScene->Draw();
-	//g_physics.DebubDrawWorld();
 
 	//描画終了。
 	g_graphicsEngine->EndRender();
@@ -49,7 +48,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	soundEngine.Init();
 	//タイトルシーンの作成。
 	g_currentScene = new Title;
-	//g_physics.SetDebugDrawMode(btIDebugDraw::DBG_DrawWireframe);
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{

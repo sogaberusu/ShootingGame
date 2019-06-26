@@ -7,16 +7,7 @@ class Background
 public:
 	Background(CVector3 pos,CQuaternion rot);
 	~Background();
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="camera"></param>
 	void Draw(Camera& camera);
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <remarks>
-	/// </remarks>
 	void Update();
 private:
 	SkinModel m_model;

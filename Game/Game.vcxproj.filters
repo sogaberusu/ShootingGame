@@ -139,6 +139,8 @@
     <ClCompile Include="Grenade.cpp" />
     <ClCompile Include="GrenadeManager.cpp" />
     <ClCompile Include="GrenadeController.cpp" />
+    <ClCompile Include="Flag.cpp" />
+    <ClCompile Include="GameSelect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -257,6 +259,8 @@
     <ClInclude Include="Grenade.h" />
     <ClInclude Include="GrenadeManager.h" />
     <ClInclude Include="GrenadeController.h" />
+    <ClInclude Include="Flag.h" />
+    <ClInclude Include="GameSelect.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -277,6 +281,7 @@
     <MeshContentTask Include="Assets\modelData\Player_.FBX" />
     <MeshContentTask Include="Assets\modelData\SMAW.FBX" />
     <MeshContentTask Include="Assets\modelData\Grenade.FBX" />
+    <MeshContentTask Include="Assets\modelData\Flag.FBX" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\animData\Player_Damage.tka" />
@@ -299,5 +304,8 @@
     <ImageContentTask Include="Assets\sprite\CrossKey.png" />
     <ImageContentTask Include="Assets\sprite\DamageMarker.png" />
     <ImageContentTask Include="Assets\sprite\Grenade.png" />
+    <ImageContentTask Include="Assets\sprite\GameMode.png" />
+    <ImageContentTask Include="Assets\sprite\Select.png" />
+    <ImageContentTask Include="Assets\sprite\StartButton.png" />
   </ItemGroup>
 </Project>

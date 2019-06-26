@@ -29,9 +29,17 @@ public:
 	{
 		m_damegeflagcount = time;
 	}
-	void SetInstance(Player *player)
+	void SetInstance(Player *player, int PlayerNumber)
 	{
-		m_player = player;
+		m_player[PlayerNumber] = player;
+	}
+	void SetPlayerNo(int No)
+	{ 
+		m_playerNo = No;
+	}
+	void SetGameMode(int mode)
+	{
+		m_gameMode = mode;
 	}
 private:
 	float m_width = 0;
@@ -49,18 +57,16 @@ private:
 	Sprite m_m110;
 	Sprite m_shotgun;
 	Sprite m_mp5;
-	//Sprite m_crosskey;
 	Sprite m_damage;
-	Sprite m_handgrenade;
-	
-	Font m_bullet;
-	Font m_reload;
-	Font m_hp;
-	Font m_grenades;
+	Sprite m_hudgrenade;
+	Sprite m_dangergrenade;
+	Font m_font;
 	CVector3 m_enemyPosition = CVector3::Zero();
 	bool m_damegeflag = false;
 	int m_damegeflagcount;
-	Player *m_player;
-	bool m_grenadeflag = false;
+	Player *m_player[4];
+	int m_playerNo;
+
+	int m_gameMode;
 };
 

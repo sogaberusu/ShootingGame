@@ -16,6 +16,7 @@ struct SPlayerStatus
 	int Kills = 0;					//キル数
 	int HealTimer = 0;				//自動回復するまでの時間
 	int Grenades = 2;				//グレネードの所持数
+	float CaptureTime = 0.0f;
 };
 class Player
 {
@@ -25,6 +26,7 @@ public:
 	~Player();
 	void Update(Camera& camera, int PlayerNumber);
 	void Draw(Camera& camera, int ViewportNumber, int PlayerNumber);
+	void SilhouetteDrwa(Camera& camera, int ViewportNumber, int PlayerNumber);
 	enum EnState {
 		enState_Idle,
 		enState_Walk_Forward,
@@ -104,9 +106,9 @@ public:
 	}
 	void SetDead()
 	{
-		m_charaCon.GetRigidBody()->GetBody()->setUserIndex(enCollisionAttr_Ground);
-
 		m_state = enState_Death;
+		m_deadflag = true;
+		m_charaCon.GetRigidBody()->GetBody()->setUserIndex(enCollisionAttr_Ground);		
 	}
 	void SetKills(int kills)
 	{
@@ -215,6 +217,10 @@ public:
 	{
 		return m_weapon;
 	}
+	void SetWeapon(EnWeapon weapon)
+	{
+		m_weapon = weapon;
+	}
 	void SetWeaponInstance(M4A1 *m4a1,MP5 *mp5,Benelli_M4 *benelliM4,M110 *m110)
 	{
 		m_m4a1 = m4a1;
@@ -222,7 +228,30 @@ public:
 		m_benelliM4 = benelliM4;
 		m_m110 = m110;
 	}
-	
+	bool GetIsFlag()
+	{
+		return m_isflag;
+	}
+	void SetIsFlag(bool flag)
+	{
+		m_isflag = flag;
+	}
+	float GetCaptureTime()
+	{
+		return m_status.CaptureTime;
+	}
+	CharacterController GetCharaCon()
+	{
+		return m_charaCon;
+	}
+	bool GetDeadFlag()
+	{
+		return m_deadflag;
+	}
+	void SetCaptureTime(float time)
+	{
+		m_status.CaptureTime = time;
+	}
 private:
 	void InitAnimation();								//アニメーションの初期化
 	void Move(Camera& camera, int PlayerNumber);					//移動処理
@@ -287,5 +316,6 @@ private:
 	MP5  *m_mp5;
 	Benelli_M4 *m_benelliM4;
 	M110 *m_m110;
-
+	bool m_isflag = false;
+	bool m_deadflag = false;
 };

@@ -84,6 +84,7 @@ void Player::InitAnimation()
 
 	m_animationClips[enAnimation_Grenade].Load(L"Assets/animData/Player_Grenade.tka");
 	m_animationClips[enAnimation_Grenade].SetLoopFlag(false);
+
 	//アニメーションの初期化。
 	m_animation.Init(
 		m_model,			//アニメーションを流すスキンモデル。
@@ -104,6 +105,7 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		m_charaCon.GetRigidBody()->GetBody()->setUserIndex(PlayerNumber);
 		//移動処理
 		Move(camera, PlayerNumber);
+		//自動回復処理
 		if (m_status.HealTimer > 0)
 		{
 			m_status.HealTimer--;
@@ -112,27 +114,6 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		{
 			m_status.HitPoint++;
 		}
-	}
-	if (m_state == enState_Death &&
-		m_animation.IsPlaying() == false)
-	{
-		auto respawn = g_game->GetPlayerRespawn(PlayerNumber, GetRandom(0, 3));
-		m_position = respawn.PlayerPosition;
-		m_rotation = respawn.PlayerRotation;
-		m_charaCon.SetPosition(m_position);
-		m_state = enState_Idle;
-		m_status.HitPoint = 100;
-		m_status.HealTimer = 0;
-		m_status.Grenades = 2;
-
-		m_m4a1->SetAmmo(30);
-
-		m_mp5->SetAmmo(30);
-
-		m_benelliM4->SetAmmo(7);
-
-		m_m110->SetAmmo(10);
-
 	}
 	//回転処理
 	Turn(PlayerNumber);
@@ -255,6 +236,7 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		m_animation.Play(enAnimation_Damage, 0.3);
 		break;
 	case Player::enState_Death:
+		m_isflag = false;
 		m_animation.Play(enAnimation_Death, 0.3);
 		m_rStickX = 0.0f;
 		m_rStickY = 0.0f;
@@ -273,6 +255,29 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	default:
 		m_position = { 0.0f,0.0f,0.0f };
 		break;
+	}
+	
+	//リスポーン処理
+	if (m_state == enState_Death &&
+		m_animation.IsPlaying() == false)
+	{
+		auto respawn = g_game->GetPlayerRespawn(PlayerNumber, GetRandom(0, 3));
+		m_position = respawn.PlayerPosition;
+		m_rotation = respawn.PlayerRotation;
+		m_charaCon.SetPosition(m_position);
+		m_state = enState_Idle;
+		m_status.HitPoint = 100;
+		m_status.HealTimer = 0;
+		m_status.Grenades = 2;
+		m_m4a1->SetAmmo(30);
+		m_deadflag = false;
+
+		m_mp5->SetAmmo(30);
+
+		m_benelliM4->SetAmmo(7);
+
+		m_m110->SetAmmo(10);
+
 	}
 	Bone* m_righthandBoneMat = m_model.FindBone(L"Bip001 R Hand");
 	CMatrix hand = m_righthandBoneMat->GetWorldMatrix();
@@ -506,6 +511,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 		m_crouch = false;
 	}
 
+	
 
 	m_position = m_charaCon.Execute(1.0f / 60.0f, m_moveSpeed);
 
@@ -530,6 +536,7 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	{
 		m_killflagcount = false;
 	}
+	
 }
 
 void Player::Turn(int PlayerNumber)
@@ -542,7 +549,6 @@ void Player::Turn(int PlayerNumber)
 		qRot.SetRotationDeg(CVector3::AxisY(), m_rStickX* 2.0f);
 		//回転を加算する。
 		m_rotation.Multiply(qRot);
-		//m_rotation.SetRotation(CVector3::AxisY(), atan2f(m_cameraDirection.x, m_cameraDirection.z));
 	}
 	else
 	{
@@ -551,6 +557,20 @@ void Player::Turn(int PlayerNumber)
 		//向きも変える。
 		m_rotation.SetRotation(CVector3::AxisY(), atan2f(m_cameraDirection.x, m_cameraDirection.z));
 
+	}
+}
+void Player::SilhouetteDrwa(Camera& camera, int ViewportNumber, int PlayerNumber)
+{
+	if (m_drawflag == true || ViewportNumber != PlayerNumber)
+	{
+		if (m_isflag == true)
+		{
+			m_model.Draw(
+				camera.GetViewMatrix(),
+				camera.GetProjectionMatrix(),
+				3
+			);
+		}
 	}
 }
 void Player::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
@@ -563,12 +583,11 @@ void Player::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
 			0
 		);
 	}
-	
 }
 
-void Player::Shot(int PlayerNumber,Camera& camera)
+void Player::Shot(int PlayerNumber, Camera& camera)
 {
-	
+
 	if (m_state == enState_Crouch_Idle ||
 		m_state == enState_Crouch_Walk_Forward ||
 		m_state == enState_Crouch_Walk_Shoot ||
@@ -615,23 +634,23 @@ void Player::Shot(int PlayerNumber,Camera& camera)
 		else {
 			m_state = enState_Walk_Shoot;
 		}
-		
-			CVector3 target = camera.GetTarget() - camera.GetPosition();
-			target.Normalize();
-			switch (m_weapon)
-			{
-			case enWeapon_M4A1:
-				m_m4a1->Shot(target, PlayerNumber);
-				break;
-			case enWeapon_MP5:
-				m_mp5->Shot(target, PlayerNumber);
-				break;
-			case enWeapon_Benelli_M4:
-				m_benelliM4->Shot(target, PlayerNumber);
-				break;
-			case enWeapon_M110:
-				m_m110->Shot(target, PlayerNumber);
-				break;
-			}
+
+		CVector3 target = camera.GetTarget() - camera.GetPosition();
+		target.Normalize();
+		switch (m_weapon)
+		{
+		case enWeapon_M4A1:
+			m_m4a1->Shot(target, PlayerNumber);
+			break;
+		case enWeapon_MP5:
+			m_mp5->Shot(target, PlayerNumber);
+			break;
+		case enWeapon_Benelli_M4:
+			m_benelliM4->Shot(target, PlayerNumber);
+			break;
+		case enWeapon_M110:
+			m_m110->Shot(target, PlayerNumber);
+			break;
+		}
 	}
 }

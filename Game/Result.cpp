@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "Result.h"
 #include "Title.h"
+#include "Game.h"
 
-Result::Result(int Player1Kills, int Player2Kills, int Player3Kills, int Player4Kills)
+Result::Result(int gameMode,int Player1Kills, int Player2Kills, int Player3Kills, int Player4Kills,
+	float Player1CaptureTime, float Player2CaptureTime, float Player3CaptureTime, float Player4CaptureTime)
 {
+	m_gameMode = gameMode;
 	HRESULT hr = DirectX::CreateDDSTextureFromFileEx(
 		g_graphicsEngine->GetD3DDevice(), L"Assets/sprite/Result.dds", 0,
 		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
@@ -15,6 +18,10 @@ Result::Result(int Player1Kills, int Player2Kills, int Player3Kills, int Player4
 	m_playerkills[1] = Player2Kills;
 	m_playerkills[2] = Player3Kills;
 	m_playerkills[3] = Player4Kills;
+	m_playerCaptureTime[0] = Player1CaptureTime;
+	m_playerCaptureTime[1] = Player2CaptureTime;
+	m_playerCaptureTime[2] = Player3CaptureTime;
+	m_playerCaptureTime[3] = Player4CaptureTime;
 }
 
 
@@ -52,17 +59,37 @@ void Result::Update()
 void Result::Draw()
 {
 	m_sprite.Draw(0);
+	
+	wchar_t Player1Kills[256], Player2Kills[256], Player3Kills[256], Player4Kills[256],
+		P1CaptureTime[256], P2CaptureTime[256], P3CaptureTime[256], P4CaptureTime[256];
 	swprintf(Player1Kills, L"Player1 %dƒLƒ‹", m_playerkills[0]);
 	swprintf(Player2Kills, L"Player2 %dƒLƒ‹", m_playerkills[1]);
 	swprintf(Player3Kills, L"Player3 %dƒLƒ‹", m_playerkills[2]);
 	swprintf(Player4Kills, L"Player4 %dƒLƒ‹", m_playerkills[3]);
+	swprintf(P1CaptureTime, L"Player1:%.2f•b", m_playerCaptureTime[0]);
+	swprintf(P2CaptureTime, L"Player2:%.2f•b", m_playerCaptureTime[1]);
+	swprintf(P3CaptureTime, L"Player3:%.2f•b", m_playerCaptureTime[2]);
+	swprintf(P4CaptureTime, L"Player4:%.2f•b", m_playerCaptureTime[3]);
 
 	m_font.BeginDraw();
+	switch (m_gameMode)
+	{
+	case enGame_DM:
+		m_font.Draw(Player1Kills, { -100.0f, 200.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+		m_font.Draw(Player2Kills, { -100.0f, 100.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+		m_font.Draw(Player3Kills, { -100.0f, 0.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+		m_font.Draw(Player4Kills, { -100.0f, -100.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+		break;
+	case enGame_CTF:
+		m_font.Draw(P1CaptureTime, { -100.0f, 200.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+		m_font.Draw(P2CaptureTime, { -100.0f, 100.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+		m_font.Draw(P3CaptureTime, { -100.0f, 0.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+		m_font.Draw(P4CaptureTime, { -100.0f, -100.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+		break;
+	}
+	
 
-	m_font.Draw(Player1Kills, { -100.0f, 200.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
-	m_font.Draw(Player2Kills, { -100.0f, 100.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
-	m_font.Draw(Player3Kills, { -100.0f, 0.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
-	m_font.Draw(Player4Kills, { -100.0f, -100.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 1.0f);
+	
 
 	m_font.EndDraw();
 	
