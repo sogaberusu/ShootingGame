@@ -12,7 +12,7 @@
 //グローバルなアクセスポイントをグローバル変数として提供する。
 Game* g_game = nullptr;
 
-Game::Game(int gameMode)
+Game::Game(int gameMode,int mapNo)
 {
 	g_game = this;
 
@@ -20,7 +20,7 @@ Game::Game(int gameMode)
 
 	m_level.Init(L"Assets/level/stage_00.tkl", [&](LevelObjectData& objData) {
 		if (objData.EqualName(L"Background") == true) {
-			m_background = new Background(objData.position, objData.rotation);
+			m_background = new Background(objData.position, objData.rotation, mapNo);
 		}
 		else if (objData.EqualName(L"Player1") == true) {
 			m_player[0] = new Player(0);

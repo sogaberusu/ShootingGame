@@ -282,6 +282,7 @@
     <MeshContentTask Include="Assets\modelData\SMAW.FBX" />
     <MeshContentTask Include="Assets\modelData\Grenade.FBX" />
     <MeshContentTask Include="Assets\modelData\Flag.FBX" />
+    <MeshContentTask Include="Assets\modelData\TestMap.FBX" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\animData\Player_Damage.tka" />
@@ -307,5 +308,10 @@
     <ImageContentTask Include="Assets\sprite\GameMode.png" />
     <ImageContentTask Include="Assets\sprite\Select.png" />
     <ImageContentTask Include="Assets\sprite\StartButton.png" />
+    <ImageContentTask Include="Assets\sprite\3rdCrown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\sprite\1stCrown.png" />
+    <Image Include="Assets\sprite\2ndCrown.png" />
   </ItemGroup>
 </Project>

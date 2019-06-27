@@ -20,6 +20,8 @@ private:
 	Font m_font;
 	CVector2 m_fontDMPos = { -100.0f,100.0f };
 	CVector2 m_fontCTFPos = { 1000.0f,100.0f };
+	CVector2 m_fontContainerPos = { -100.0f,-170.0f };
+	CVector2 m_fontTestMapPos = { 1000.0f,-170.0f };
 	wchar_t m_gameSelect[256];
 	bool m_leftMoveflag = false;
 	bool m_rightMoveflag = false;
@@ -28,6 +30,11 @@ private:
 		enGame_CTF
 	};
 	EnGameType m_gametype = enGame_DM;
+	enum EnMapType {
+		enMap_Container,
+		enMap_Test
+	};
+	EnMapType m_maptype = enMap_Container;
 	CVector4 Black = { 0.0f,0.0f,0.0f,1.0f };
 	CVector4 Red = { 256.0f,0.0f,0.0f,1.0f };
 	CVector4 m_gameTypeFontColor = Black;

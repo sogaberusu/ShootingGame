@@ -14,10 +14,21 @@ public:
 	//ÉhÉçÅ[
 	void Draw();
 private:
-	Sprite m_sprite;
-	ID3D11ShaderResourceView* m_result = nullptr;
+	Sprite m_background;
+	Sprite m_1stCrown[4];
+	Sprite m_2ndCrown[4];
+	Sprite m_3rdCrown[4];
 	Font m_font;
 	int m_playerkills[4];
 	float m_playerCaptureTime[4];
 	int m_gameMode;
+	int m_1stKills;
+	int m_2ndKills;
+	int m_3rdKills;
+	float m_1stTime;
+	float m_2ndTime;
+	float m_3rdTime;
+	bool m_1stCrownDrawFlag[4] = { false,false,false,false };
+	bool m_2ndCrownDrawFlag[4] = { false,false,false,false };
+	bool m_3rdCrownDrawFlag[4] = { false,false,false,false };
 };

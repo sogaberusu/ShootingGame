@@ -46,7 +46,7 @@ public:
 	/*!
 	* @brief	コンストラクタ。
 	*/
-	Game(int gameMode);
+	Game(int gameMode,int mapNo);
 	/*!
 	* @brief	デストラクタ
 	*/

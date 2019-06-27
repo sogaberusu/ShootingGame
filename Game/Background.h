@@ -5,7 +5,7 @@
 class Background
 {
 public:
-	Background(CVector3 pos,CQuaternion rot);
+	Background(CVector3 pos,CQuaternion rot,int mapNo);
 	~Background();
 	void Draw(Camera& camera);
 	void Update();

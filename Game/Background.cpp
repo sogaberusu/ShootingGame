@@ -2,9 +2,16 @@
 #include "Background.h"
 
 
-Background::Background(CVector3 pos, CQuaternion rot)
+Background::Background(CVector3 pos, CQuaternion rot,int mapNo)
 {
-	m_model.Init(L"Assets/modelData/Background.cmo");
+	if (mapNo == 0)
+	{
+		m_model.Init(L"Assets/modelData/Background.cmo");
+	}
+	if (mapNo == 1)
+	{
+		m_model.Init(L"Assets/modelData/TestMap.cmo");
+	}
 
 	m_phyStaticObject.CreateMeshObject(m_model, pos, rot);
 	m_position = pos;
