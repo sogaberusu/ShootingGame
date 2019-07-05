@@ -272,24 +272,23 @@
     <MeshContentTask Include="Assets\modelData\sky.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\Player.FBX" />
     <MeshContentTask Include="Assets\modelData\Bullet.FBX" />
     <MeshContentTask Include="Assets\modelData\Benelli M4.FBX" />
     <MeshContentTask Include="Assets\modelData\M4A1.FBX" />
     <MeshContentTask Include="Assets\modelData\M110.FBX" />
     <MeshContentTask Include="Assets\modelData\MP5.FBX" />
-    <MeshContentTask Include="Assets\modelData\Player_.FBX" />
     <MeshContentTask Include="Assets\modelData\SMAW.FBX" />
     <MeshContentTask Include="Assets\modelData\Grenade.FBX" />
     <MeshContentTask Include="Assets\modelData\Flag.FBX" />
     <MeshContentTask Include="Assets\modelData\TestMap.FBX" />
+    <MeshContentTask Include="Assets\modelData\Player.FBX" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\animData\Player_Damage.tka" />
     <None Include="Assets\animData\Player_Death.tka" />
+    <None Include="Assets\modelData\Player.tks" />
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\Title.png" />
     <ImageContentTask Include="Assets\sprite\Result.png" />
     <ImageContentTask Include="Assets\sprite\Target.png" />
     <ImageContentTask Include="Assets\sprite\Xbutton.png" />
@@ -309,9 +308,11 @@
     <ImageContentTask Include="Assets\sprite\Select.png" />
     <ImageContentTask Include="Assets\sprite\StartButton.png" />
     <ImageContentTask Include="Assets\sprite\3rdCrown.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\sprite\1stCrown.png" />
-    <Image Include="Assets\sprite\2ndCrown.png" />
+    <ImageContentTask Include="Assets\sprite\1stCrown.png" />
+    <ImageContentTask Include="Assets\sprite\2ndCrown.png" />
+    <ImageContentTask Include="Assets\sprite\TestMap.png" />
+    <ImageContentTask Include="Assets\sprite\ContainerMap.png" />
+    <ImageContentTask Include="Assets\sprite\Background.png" />
+    <ImageContentTask Include="Assets\sprite\Title.png" />
   </ItemGroup>
 </Project>

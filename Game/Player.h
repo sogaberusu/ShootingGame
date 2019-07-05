@@ -253,7 +253,7 @@ public:
 		m_status.CaptureTime = time;
 	}
 private:
-	void InitAnimation();								//アニメーションの初期化
+	void InitAnimation();											//アニメーションの初期化
 	void Move(Camera& camera, int PlayerNumber);					//移動処理
 	void Turn(int PlayerNumber);									//回転処理
 	enum EnAnimation {

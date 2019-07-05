@@ -9,7 +9,7 @@
 Player::Player(int playerNo)
 {
 	//cmoファイルの読み込み。
-	m_model.Init(L"Assets/modelData/Player_.cmo");
+	m_model.Init(L"Assets/modelData/Player.cmo");
 
 	m_model.SetShadowReciever(true);
 	InitAnimation();
