@@ -1,6 +1,7 @@
 #pragma once
 #include "graphics/Sprite.h"
 #include "graphics/Font.h"
+#include "Game.h"
 class Player;
 class HUD
 {
@@ -46,9 +47,9 @@ private:
 	float m_height = 0;
 	float m_topLeftX = 0;
 	float m_topLeftY = 0;
-	Sprite m_crosshair;
-	Sprite m_xbutton;
-	Sprite m_life;
+	Sprite m_crosshair;							
+	Sprite m_xbutton;							
+	Sprite m_life;								
 	Sprite m_hitmarker;
 	Sprite m_killmarker;
 	Sprite m_shotguntarget;
@@ -60,13 +61,16 @@ private:
 	Sprite m_damage;
 	Sprite m_hudgrenade;
 	Sprite m_dangergrenade;
-	Font m_font;
-	CVector3 m_enemyPosition = CVector3::Zero();
-	bool m_damegeflag = false;
-	int m_damegeflagcount;
-	Player *m_player[4];
-	int m_playerNo;
-
-	int m_gameMode;
+	Sprite m_eotech;
+	Sprite m_m4a1ironsight;
+	Sprite m_mp5ironsight;
+	Sprite m_benelli_m4ironsight;
+	Font m_font;									//フォント
+	CVector3 m_enemyPosition = CVector3::Zero();	//攻撃してきた敵の座標
+	bool m_damegeflag = false;						//ダメージをくらうと赤く表示する
+	int m_damegeflagcount;							//ダメージを表示する時間
+	Player *m_player[PLAYERS];						//プレイヤーのインスタンス
+	int m_playerNo;									//プレイヤーの番号
+	int m_gameMode;									//現在のゲームモード
 };
 

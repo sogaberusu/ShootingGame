@@ -5,14 +5,14 @@
 
 GameCamera::GameCamera(CVector3 camerapos)
 {	
-	g_camera3D[i].SetPosition(camerapos);
-	g_camera3D[i].SetTarget({ 0.0f, 200.0f, 0.0f });
-	g_camera3D[i].SetNear(1.0f);
-	g_camera3D[i].SetFar(10000.0f);
+	g_camera3D[m_playerNo].SetPosition(camerapos);
+	g_camera3D[m_playerNo].SetTarget({ 0.0f, 200.0f, 0.0f });
+	g_camera3D[m_playerNo].SetNear(1.0f);
+	g_camera3D[m_playerNo].SetFar(10000.0f);
 	//注視点から視点までのベクトルを設定。
-	m_toCameraPos.Set(g_camera3D[i].GetTarget() - g_camera3D[i].GetPosition());
+	m_toCameraPos.Set(g_camera3D[m_playerNo].GetTarget() - g_camera3D[m_playerNo].GetPosition());
 	//視点から注視点までのベクトルを設定。
-	m_toCameraTarget.Set(g_camera3D[i].GetPosition() - g_camera3D[i].GetTarget());
+	m_toCameraTarget.Set(g_camera3D[m_playerNo].GetPosition() - g_camera3D[m_playerNo].GetTarget());
 	
 }
 
@@ -23,8 +23,6 @@ GameCamera::~GameCamera()
 }
 void GameCamera::Update()
 {	
-	
-//	hoge = (m_player->GetPosition() - g_camera3D[i].GetPosition());
 	//パッドの入力を使ってカメラを回す。
 	m_rStickX = m_player->GetRStickX();
 	m_rStickY = m_player->GetRStickY();
@@ -77,9 +75,9 @@ void GameCamera::Update()
 	{
 		m_player->DrawSetFalse();
 		m_player->SetCameraDirection(newFPSTarget);
-		g_camera3D[i].SetTarget(newFPSTarget);
-		g_camera3D[i].SetPosition(playerpos);
-		g_camera3D[i].Update();
+		g_camera3D[m_playerNo].SetTarget(newFPSTarget);
+		g_camera3D[m_playerNo].SetPosition(playerpos);
+		g_camera3D[m_playerNo].Update();
 	}
 ///////////////////////////////////////////////////////////////////////////////////////
 //	TPS視点の計算
@@ -123,9 +121,9 @@ void GameCamera::Update()
 	{
 		m_player->DrawSetTrue();
 		m_player->SetCameraDirection(direction);
-		g_camera3D[i].SetTarget(newTPSTarget);
-		g_camera3D[i].SetPosition(newPosition);
-		g_camera3D[i].Update();
+		g_camera3D[m_playerNo].SetTarget(newTPSTarget);
+		g_camera3D[m_playerNo].SetPosition(newPosition);
+		g_camera3D[m_playerNo].Update();
 	}
 }
 

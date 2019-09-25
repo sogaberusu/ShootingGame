@@ -30,20 +30,12 @@ void MP5::Update()
 }
 void MP5::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
 {
-	if (m_player->GetDrawFlag() == true || ViewportNumber != PlayerNumber)
+	if (m_player->GetCameraType() == Player::EnCameraType::enType_TPS || ViewportNumber != PlayerNumber)
 	{
 		m_model.Draw(
 			camera.GetViewMatrix(),
 			camera.GetProjectionMatrix(),
-			0
-		);
-	}
-	if (m_player->GetDrawFlag() == false || ViewportNumber != PlayerNumber)
-	{
-		m_model.Draw(
-			camera.GetViewMatrix(),
-			camera.GetProjectionMatrix(),
-			0
+			enNormalDraw
 		);
 	}
 }
@@ -65,9 +57,14 @@ void MP5::Shot(CVector3 target, int PlayerNumber)
 				m_gunshot.Stop();
 			}
 			m_gunshot.Play(false);
-
-			Bullet* bullet = g_game->GetBulletManager().NewBullet(m_player->GetHandPos(),PlayerNumber, m_gunStatus.Attack);
-			bullet->SetMoveSpeed(target * 2000);
+			if (m_player->GetCameraType() == Player::EnCameraType::enType_TPS) {
+				Bullet* bullet = g_game->GetBulletManager().NewBullet(m_player->GetHandPos(), PlayerNumber, m_gunStatus.Attack);
+				bullet->SetMoveSpeed(target * 2000);
+			}
+			else {
+				Bullet* bullet = g_game->GetBulletManager().NewBullet(g_camera3D[PlayerNumber].GetPosition(), PlayerNumber, m_gunStatus.Attack);
+				bullet->SetMoveSpeed(target * 2000);
+			}
 			m_gunStatus.Ammo--;
 
 			m_shootIntervalNow = 0.0f;

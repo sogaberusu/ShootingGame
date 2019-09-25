@@ -19,13 +19,8 @@ public:
 	/// アップデート
 	/// </summary>
 	void Update();
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="ViewportNumber"></param>
-	/// <param name="PlayerNumber"></param>
-	void Draw(Camera& camera, int ViewportNumber, int PlayerNumber);
+	
+	void Draw(Camera& camera,int ViewportNumber, int PlayerNumber);
 	void Shot(CVector3 target, int PlayerNumber);
 	void SetInstance(Player *player)
 	{
@@ -33,16 +28,11 @@ public:
 	}
 	int GetAmmo()
 	{
-		
 		return m_gunStatus.Ammo;
 	}
 	void SetAmmo(int ammo)
 	{
 		m_gunStatus.Ammo = ammo;
-	}
-	SGunStatus GetGunStatus()
-	{
-		return m_gunStatus;
 	}
 	void SetShootIntervalNow(float interval)
 	{
@@ -54,7 +44,7 @@ private:
 	CVector3 m_position = CVector3::Zero();				//座標
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転
 	CSoundSource m_gunshot;								//SE
-	SGunStatus m_gunStatus;
-	float m_shootIntervalNow = 0.0f;
+	SGunStatus m_gunStatus;								//銃のステイタス
+	float m_shootIntervalNow = 0.0f;					//弾を発射するタイミング
 };
 

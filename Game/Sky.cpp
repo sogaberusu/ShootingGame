@@ -19,6 +19,6 @@ void Sky::Draw(Camera& camera)
 	m_skinModel.Draw(
 		camera.GetViewMatrix(),
 		camera.GetProjectionMatrix(),
-		1
+		enSkyDraw
 	);
 }

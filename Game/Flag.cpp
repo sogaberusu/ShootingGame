@@ -2,16 +2,16 @@
 #include "Flag.h"
 #include "Physics/CollisionAttr.h"
 
-
 Flag::Flag()
 {
 	m_model.Init(L"Assets/modelData/Flag.cmo");
 
 	//初期化
-	for (int PlayerNumber = 0; PlayerNumber < 4; PlayerNumber++)
+	for (int PlayerNumber = 0; PlayerNumber < PLAYERS; PlayerNumber++)
 	{
 		m_player[PlayerNumber] = nullptr;
 	}
+
 }
 
 
@@ -21,13 +21,16 @@ Flag::~Flag()
 
 void Flag::Update()
 {
+	
+
 	//シャドウキャスターを登録。
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
 
-		for (int PlayerNumber = 0; PlayerNumber < 4; PlayerNumber++)
+		for (int PlayerNumber = 0; PlayerNumber < PLAYERS; PlayerNumber++)
 		{
 			if (m_player[PlayerNumber]->GetIsFlag() == false )
 			{
+				//距離判定
 				CVector3 pos;
 				pos = m_position - m_player[PlayerNumber]->GetPosition();
 				float len = pos.Length();
@@ -57,12 +60,12 @@ void Flag::Draw(Camera& camera)
 	m_model.Draw(
 		camera.GetViewMatrix(),
 		camera.GetProjectionMatrix(),
-		3
+		enSilhouetteDraw
 	);
-
+	
 	m_model.Draw(
 		camera.GetViewMatrix(),
 		camera.GetProjectionMatrix(),
-		0
+		enNormalDraw
 	);
 }

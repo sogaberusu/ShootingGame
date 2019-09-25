@@ -26,7 +26,23 @@ namespace {
 				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_Bullet ||
 				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_Bullet ||
 				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_Bullet ||
-				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_Bullet
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_Bullet ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_Head ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_Head ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_Head ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_Head ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_Body ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_Body ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_Body ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_Body ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_LeftLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_LeftLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_LeftLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_LeftLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_RightLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_RightLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_RightLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_RightLeg 
 				) {
 				//自分に衝突した。or キャラクタ属性のコリジョンと衝突した。
 				return 0.0f;
@@ -72,7 +88,23 @@ namespace {
 				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_Bullet ||
 				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_Bullet ||
 				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_Bullet ||
-				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_Bullet 
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_Bullet ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_Head ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_Head ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_Head ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_Head ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_Body ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_Body ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_Body ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_Body ||	
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_LeftLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_LeftLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_LeftLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_LeftLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_RightLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_RightLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_RightLeg ||
+				convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_RightLeg
 				){
 				//自分に衝突した。or 地面に衝突した。
 				return 0.0f;
@@ -122,8 +154,7 @@ void CharacterController::Init(float radius, float height, const CVector3& posit
 	btTransform& trans = m_rigidBody.GetBody()->getWorldTransform();
 	//剛体の位置を更新。
 	trans.setOrigin(btVector3(position.x, position.y, position.z));
-	//@todo 未対応。trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
-	//m_rigidBody.GetBody()->setUserIndex(enCollisionAttr_Character);
+	
 	m_rigidBody.GetBody()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 	g_physics.AddRigidBody(m_rigidBody);
 }
@@ -294,7 +325,6 @@ const CVector3& CharacterController::Execute(float deltaTime, CVector3& moveSpee
 	btTransform& trans = btBody->getWorldTransform();
 	//剛体の位置を更新。
 	trans.setOrigin(btVector3(m_position.x, m_position.y, m_position.z));
-	//@todo 未対応。 trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
 	return m_position;
 }
 /*!

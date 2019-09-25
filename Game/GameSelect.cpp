@@ -55,7 +55,7 @@ void GameSelect::Update()
 	}
 	
 	m_startButton.Update(CVector3{ -300.0f,-300.0f,0.0f }, CQuaternion::Identity(), CVector3::One());
-	for (int PlayerNo = 0; PlayerNo < 4; PlayerNo++)
+	for (int PlayerNo = 0; PlayerNo < PLAYERS; PlayerNo++)
 	{
 		if (g_pad[PlayerNo].IsTrigger(enButtonRight) == true) {
 			if (m_gametype == enGame_DM && m_state == enState_GameType)

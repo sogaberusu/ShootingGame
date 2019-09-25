@@ -2,15 +2,15 @@
 #include "BulletManager.h"
 #include "Physics/CollisionAttr.h"
 #include "Bullet.h"
-
+#include "Game.h"
 
 
 BulletManager::BulletManager()
 {
 	//èâä˙âª
-	for (int i = 0; i < 4; i++)
+	for (int PlayerNo = 0; PlayerNo < PLAYERS; PlayerNo++)
 	{
-		m_player[i] = nullptr;
+		m_player[PlayerNo] = nullptr;
 	}
 }
 
@@ -18,9 +18,9 @@ BulletManager::BulletManager()
 BulletManager::~BulletManager()
 {
 	//âï˙
-	for (int i = 0; i < 4; i++)
+	for (int PlayerNo = 0; PlayerNo < PLAYERS; PlayerNo++)
 	{
-		for (auto& Bullet : m_bullet[i]) {
+		for (auto& Bullet : m_bullet[PlayerNo]) {
 			delete Bullet;
 		}
 	}
@@ -35,17 +35,17 @@ Bullet* BulletManager::NewBullet(CVector3 pos,int PlayerNumber,int Attack)
 
 void BulletManager::Update()
 {
-	for (int i = 0; i < 4; i++)
+	for (int PlayerNo = 0; PlayerNo < PLAYERS; PlayerNo++)
 	{
-		for (auto& Bullet : m_bullet[i]) {
+		for (auto& Bullet : m_bullet[PlayerNo]) {
 			Bullet->Update();
 		}
 
-		auto it = m_bullet[i].begin();
-		while (it != m_bullet[i].end()) {
+		auto it = m_bullet[PlayerNo].begin();
+		while (it != m_bullet[PlayerNo].end()) {
 			if ((*it)->IsDead() == true) {
 				delete *it;
-				it = m_bullet[i].erase(it);
+				it = m_bullet[PlayerNo].erase(it);
 			}
 			else {
 				it++;
@@ -56,9 +56,9 @@ void BulletManager::Update()
 
 void BulletManager::Draw(Camera& camera)
 {
-	for (int i = 0; i < 4; i++)
+	for (int PlayerNo = 0; PlayerNo < PLAYERS; PlayerNo++)
 	{
-		for (auto& Bullet : m_bullet[i]) {
+		for (auto& Bullet : m_bullet[PlayerNo]) {
 			Bullet->Draw(camera);
 		}
 	}

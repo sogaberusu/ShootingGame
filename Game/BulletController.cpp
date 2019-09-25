@@ -3,6 +3,7 @@
 #include "Physics/CollisionAttr.h"
 #include "Bullet.h"
 #include "Game.h"
+#include "HUD.h"
 
 
 BulletController::BulletController()
@@ -17,67 +18,158 @@ namespace {
 		btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
 												//衝突したときに呼ばれるコールバック関数。
 		int attack;								//攻撃力
-		
+		float headPower = 2.0f;					//頭に当たった時の倍率
+		float bodyPower = 1.0f;					//体に当たった時の倍率
+		float legPower = 0.7f;					//足に当たった時の倍率
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
 			int bulletTag = me->getUserIndex();
-
 			bool isHitPlayer = false;
 			//プレイヤーと弾丸の当たり判定
 			//自分自身の弾丸に当たらないようにタグで判定する
-			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1 &&
-				bulletTag != enCollisionAttr_Player1_Bullet)
+			//プレイヤー1の頭に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_Head &&
+				bulletTag != enCollisionAttr_Player1_Bullet && 
+				isHit == false)
 			{
-				isHitPlayer = true;
-			}
-			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2 &&
-				bulletTag != enCollisionAttr_Player2_Bullet)
-			{
-				isHitPlayer = true;
-			}
-			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3 &&
-				bulletTag != enCollisionAttr_Player3_Bullet)
-			{
-				isHitPlayer = true;
-			}
-			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4 &&
-				bulletTag != enCollisionAttr_Player4_Bullet)
-			{
-				isHitPlayer = true;
-			}
-			if (isHitPlayer) {
-				//弾丸が当たったプレイヤーの番号と、弾丸を打ったプレイヤーの番号を求める。
-				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1;
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_Head;
 				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
-				//弾丸が当たったプレイヤーのHPを減らす
-				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint - attack);
-				//弾が当たったプレイヤーの自然回復までのインターバルを設定する
-				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHealTimer(300);
-				//攻撃してきたプレイヤーの座標をセットする
-				g_game->GetHUD(hitPlayerNo).SetEnemyPosition(g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetPosition());
-				g_game->GetHUD(hitPlayerNo).SetDamageFlag(true);
-				g_game->GetHUD(hitPlayerNo).SetDamageFlagCount(50);
-				//プレイヤーの撃った弾が敵に当たった時にヒットマーカーを表示する
-				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint > 0)
-				{
-					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetAttackTrue();
-					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetAttackCount(50);
-				}
-				//プレイヤーのHPが0以下なら
-				if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint <= 0)
-				{
-					//プレイヤーの撃った弾で敵を倒したときにキルマーカーを表示する
-					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKillTrue();
-					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKillCount(50);
-					//プレイヤーのHPが0以下になったら0にする
-					g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(0);
-					//プレイヤーを死亡状態にする
-					g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetDead();
-					//攻撃したプレイヤーのキル数を増やす
-					g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKills(g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetStatus().Kills + 1);
-				}
-
-				isHit = true;
+				Hit(hitPlayerNo,attackPlayerNo,attack, headPower);
+			}
+			//プレイヤー2の頭に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_Head &&
+				bulletTag != enCollisionAttr_Player2_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_Head;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, headPower);
+			}
+			//プレイヤー3の頭に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_Head &&
+				bulletTag != enCollisionAttr_Player3_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_Head;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, headPower);
+			}
+			//プレイヤー4の頭に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_Head &&
+				bulletTag != enCollisionAttr_Player4_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_Head;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, headPower);
+			}
+			//プレイヤー1の胴体に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_Body &&
+				bulletTag != enCollisionAttr_Player1_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_Body;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, bodyPower);
+			}
+			//プレイヤー2の胴体に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_Body &&
+				bulletTag != enCollisionAttr_Player2_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_Body;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, bodyPower);
+			}
+			//プレイヤー3の胴体に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_Body &&
+				bulletTag != enCollisionAttr_Player3_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_Body;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, bodyPower);
+			}
+			//プレイヤー4の胴体に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_Body &&
+				bulletTag != enCollisionAttr_Player4_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_Body;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, bodyPower);
+			}
+			//プレイヤー1の左足に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_LeftLeg &&
+				bulletTag != enCollisionAttr_Player1_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_LeftLeg;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, legPower);
+			}
+			//プレイヤー2の左足に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_LeftLeg &&
+				bulletTag != enCollisionAttr_Player2_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_LeftLeg;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, legPower);
+			}
+			//プレイヤー3の左足に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_LeftLeg &&
+				bulletTag != enCollisionAttr_Player3_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_LeftLeg;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, legPower);
+			}
+			//プレイヤー4の左足に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_LeftLeg &&
+				bulletTag != enCollisionAttr_Player4_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_LeftLeg;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, legPower);
+			}
+			//プレイヤー1の右足に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player1_RightLeg &&
+				bulletTag != enCollisionAttr_Player1_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_RightLeg;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, legPower);
+			}
+			//プレイヤー2の右足に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player2_RightLeg &&
+				bulletTag != enCollisionAttr_Player2_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_RightLeg;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, legPower);
+			}
+			//プレイヤー3の右足に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player3_RightLeg &&
+				bulletTag != enCollisionAttr_Player3_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_RightLeg;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, legPower);
+			}
+			//プレイヤー4の右足に当たった
+			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Player4_RightLeg &&
+				bulletTag != enCollisionAttr_Player4_Bullet &&
+				isHit == false)
+			{
+				int hitPlayerNo = convexResult.m_hitCollisionObject->getUserIndex() - enCollisionAttr_Player1_RightLeg;
+				int attackPlayerNo = bulletTag - enCollisionAttr_Player1_Bullet;
+				Hit(hitPlayerNo, attackPlayerNo, attack, legPower);
 			}
 			//プレイヤー以外のものに当たった
 			if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Default)
@@ -85,6 +177,38 @@ namespace {
 				isHit = true;
 			}
 			return 0.0f;
+		}
+		void Hit(int hitPlayerNo, int attackPlayerNo, int attack,float power)
+		{
+			//弾丸が当たったプレイヤーのHPを減らす
+			g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint - attack * power);
+			//弾が当たったプレイヤーの自然回復までのインターバルを設定する
+			g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHealTimer(300);
+			//攻撃してきたプレイヤーの座標をセットする
+			g_game->GetHUD(hitPlayerNo).SetEnemyPosition(g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetPosition());
+			g_game->GetHUD(hitPlayerNo).SetDamageFlag(true);
+			g_game->GetHUD(hitPlayerNo).SetDamageFlagCount(50);
+			//プレイヤーの撃った弾が敵に当たった時にヒットマーカーを表示する
+			if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint > 0)
+			{
+				g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetAttackTrue();
+				g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetAttackCount(50);
+			}
+			//プレイヤーのHPが0以下なら
+			if (g_game->GetBulletManager().GetPlayer(hitPlayerNo)->GetStatus().HitPoint <= 0)
+			{
+				//プレイヤーの撃った弾で敵を倒したときにキルマーカーを表示する
+				g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKillTrue();
+				g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKillCount(50);
+				//プレイヤーのHPが0以下になったら0にする
+				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetHitPoint(0);
+				//プレイヤーを死亡状態にする
+				g_game->GetBulletManager().GetPlayer(hitPlayerNo)->SetDead();
+				//攻撃したプレイヤーのキル数を増やす
+				g_game->GetBulletManager().GetPlayer(attackPlayerNo)->SetKills(g_game->GetBulletManager().GetPlayer(attackPlayerNo)->GetStatus().Kills + 1);
+			}
+
+			isHit = true;
 		}
 	};
 }

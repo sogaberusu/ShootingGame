@@ -31,20 +31,12 @@ void Benelli_M4::Update()
 }
 void Benelli_M4::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
 {
-	if (m_player->GetDrawFlag() == true || ViewportNumber != PlayerNumber)
+	if (m_player->GetCameraType() == Player::EnCameraType::enType_TPS || ViewportNumber != PlayerNumber)
 	{
 		m_model.Draw(
 			camera.GetViewMatrix(),
 			camera.GetProjectionMatrix(),
-			0
-		);
-	}
-	if (m_player->GetDrawFlag() == false || ViewportNumber != PlayerNumber)
-	{
-		m_model.Draw(
-			camera.GetViewMatrix(),
-			camera.GetProjectionMatrix(),
-			0
+			enNormalDraw
 		);
 	}
 }
@@ -70,13 +62,22 @@ void Benelli_M4::Shot(CVector3 target, int PlayerNumber)
 
 			for (int i = 0; i < m_gunStatus.SCATTER; i++)
 			{
-				
-				Bullet* bullet = g_game->GetBulletManager().NewBullet(m_player->GetHandPos(),PlayerNumber, m_gunStatus.Attack);
-				target.x += GetRandom();
-				target.y += GetRandom();
-				target.z += GetRandom();
-				bullet->SetMoveSpeed(target * 2000);
-				bullet->SetLife(m_gunStatus.BulletLife);
+				if (m_player->GetCameraType() == Player::EnCameraType::enType_TPS) {
+					Bullet* bullet = g_game->GetBulletManager().NewBullet(m_player->GetHandPos(), PlayerNumber, m_gunStatus.Attack);
+					target.x += GetRandom();
+					target.y += GetRandom();
+					target.z += GetRandom();
+					bullet->SetMoveSpeed(target * 2000);
+					bullet->SetLife(m_gunStatus.BulletLife);
+				}
+				else {
+					Bullet* bullet = g_game->GetBulletManager().NewBullet(g_camera3D[PlayerNumber].GetPosition(), PlayerNumber, m_gunStatus.Attack);
+					target.x += GetRandom();
+					target.y += GetRandom();
+					target.z += GetRandom();
+					bullet->SetMoveSpeed(target * 2000);
+					bullet->SetLife(m_gunStatus.BulletLife);
+				}
 			}
 			m_gunStatus.Ammo--;
 

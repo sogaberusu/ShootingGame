@@ -6,7 +6,7 @@
 GrenadeManager::GrenadeManager()
 {
 	//初期化
-	for (int PlayerNumber = 0; PlayerNumber < 4; PlayerNumber++)
+	for (int PlayerNumber = 0; PlayerNumber < PLAYERS; PlayerNumber++)
 	{
 		m_player[PlayerNumber] = nullptr;
 	}
@@ -17,7 +17,7 @@ GrenadeManager::GrenadeManager()
 GrenadeManager::~GrenadeManager()
 {
 	//解放
-	for (int PlayerNumber = 0; PlayerNumber < 4; PlayerNumber++)
+	for (int PlayerNumber = 0; PlayerNumber < PLAYERS; PlayerNumber++)
 	{
 		for (auto& Grenade : m_grenade[PlayerNumber]) {
 			delete Grenade;
@@ -34,57 +34,57 @@ Grenade*GrenadeManager::NewGrenade(CVector3 pos, int PlayerNumber,CVector3 targe
 
 void GrenadeManager::Update()
 {
-	for (int i = 0; i < 4; i++)
+	for (int PlayerNumber = 0; PlayerNumber < PLAYERS; PlayerNumber++)
 	{
-		for (auto& Grenade : m_grenade[i]) {
-			Grenade->Update(i);
+		for (auto& Grenade : m_grenade[PlayerNumber]) {
+			Grenade->Update(PlayerNumber);
 		}
 
-		auto it = m_grenade[i].begin();
-		while (it != m_grenade[i].end()) {
+		auto it = m_grenade[PlayerNumber].begin();
+		while (it != m_grenade[PlayerNumber].end()) {
 			if ((*it)->IsDead() == true) {
-				for (int j = 0; j < 4; j++)
+				for (int People = 0; People < PLAYERS; People++)
 				{
-					CVector3 distance = (*it)->GetPosition() - m_player[j]->GetPosition();
+					CVector3 distance = (*it)->GetPosition() - m_player[People]->GetPosition();
 
-					if (distance.Length() < 100 && m_player[j]->GetState() != Player::enState_Death)
+					if (distance.Length() < 100 && m_player[People]->GetState() != Player::enState_Death)
 					{
-						m_player[j]->SetHitPoint(m_player[j]->GetHitPoint() - 100);
+						m_player[People]->SetHitPoint(m_player[People]->GetHitPoint() - 100);
 
-						if (m_player[j]->GetHitPoint() <= 0)
+						if (m_player[People]->GetHitPoint() <= 0)
 						{
 							//自分の投げたグレネードではないなら
-							if (j != (*it)->GetThrowPlayer())
+							if (People != (*it)->GetThrowPlayer())
 							{
 								//攻撃したプレイヤーのキル数を増やす
 								m_player[(*it)->GetThrowPlayer()]->SetKills(m_player[(*it)->GetThrowPlayer()]->GetStatus().Kills + 1);
 							}
 							//プレイヤーのHPが0以下になったら0にする
-							m_player[j]->SetHitPoint(0);
+							m_player[People]->SetHitPoint(0);
 							//プレイヤーを死亡状態にする
-							m_player[j]->SetDead();
+							m_player[People]->SetDead();
 							break;
 						}
 					}
-					if (distance.Length() < 200 && m_player[j]->GetState() != Player::enState_Death)
+					if (distance.Length() < 200 && m_player[People]->GetState() != Player::enState_Death)
 					{
 
-						m_player[j]->SetHitPoint(m_player[j]->GetHitPoint() - 50);
+						m_player[People]->SetHitPoint(m_player[People]->GetHitPoint() - 50);
 						//当たったプレイヤーの自然回復までのインターバルを設定する
-						m_player[j]->SetHealTimer(300);
+						m_player[People]->SetHealTimer(300);
 
-						if (m_player[j]->GetHitPoint() <= 0)
+						if (m_player[People]->GetHitPoint() <= 0)
 						{
 							//自分の投げたグレネードではないなら
-							if (j != (*it)->GetThrowPlayer())
+							if (People != (*it)->GetThrowPlayer())
 							{
 								//攻撃したプレイヤーのキル数を増やす
 								m_player[(*it)->GetThrowPlayer()]->SetKills(m_player[(*it)->GetThrowPlayer()]->GetStatus().Kills + 1);
 							}
 							//プレイヤーのHPが0以下になったら0にする
-							m_player[j]->SetHitPoint(0);
+							m_player[People]->SetHitPoint(0);
 							//プレイヤーを死亡状態にする
-							m_player[j]->SetDead();
+							m_player[People]->SetDead();
 							break;
 						}
 					}
@@ -95,7 +95,7 @@ void GrenadeManager::Update()
 				}
 				m_explosion.Play(false);
 				delete *it;
-				it = m_grenade[i].erase(it);
+				it = m_grenade[PlayerNumber].erase(it);
 			}
 			else {
 				it++;
@@ -106,7 +106,7 @@ void GrenadeManager::Update()
 
 void GrenadeManager::Draw(Camera& camera)
 {
-	for (int PlayerNumber = 0; PlayerNumber < 4; PlayerNumber++)
+	for (int PlayerNumber = 0; PlayerNumber < PLAYERS; PlayerNumber++)
 	{
 		for (auto& Grenade : m_grenade[PlayerNumber]) {
 			Grenade->Draw(camera);

@@ -49,6 +49,7 @@ public:
 	* @brief	剛体を物理エンジンから削除。。
 	*/
 	void RemoveRigidBoby();
+	//弾が消えているかを返す
 	bool GetIsDead()
 	{
 		return m_isDead;
@@ -59,6 +60,5 @@ private:
 	float				m_radius = 0.0f;				//コライダーの半径
 	float				m_height = 0.0f;				//コライダーの高さ
 	RigidBody			m_rigidBody;					//剛体。
-	bool m_isDead = false;
-	
+	bool m_isDead = false;								//弾を消すかのフラグtrueで消える
 };

@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
-
+#include "Game.h"
 class Grenade;
 class GrenadeManager
 {
@@ -21,8 +21,7 @@ public:
 		return m_player[PlayerNumber];
 	}
 private:
-	std::vector<Grenade*> m_grenade[4];					//グレネードの可変長配列。
-	Player *m_player[4];								//プレイヤーのインスタンス
-	bool m_spriteDrawflag = false;
-	CSoundSource m_explosion;							//SE
+	std::vector<Grenade*> m_grenade[PLAYERS];			//グレネードの可変長配列。
+	Player *m_player[PLAYERS];							//プレイヤーのインスタンス
+	CSoundSource m_explosion;							//グレネード爆発のSE
 };

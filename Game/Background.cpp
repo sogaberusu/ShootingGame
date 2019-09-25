@@ -4,11 +4,13 @@
 
 Background::Background(CVector3 pos, CQuaternion rot,int mapNo)
 {
-	if (mapNo == 0)
+	//コンテナマップをロード
+	if (mapNo == enContainer)
 	{
 		m_model.Init(L"Assets/modelData/Background.cmo");
 	}
-	if (mapNo == 1)
+	//テストマップをロード
+	if (mapNo == enTestMap)
 	{
 		m_model.Init(L"Assets/modelData/TestMap.cmo");
 	}
@@ -27,13 +29,14 @@ Background::~Background()
 
 void Background::Update()
 {
+	//更新
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
 	//シャドウキャスターを登録。
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
-	
 }
 
 void Background::Draw(Camera& camera)
 {
-	m_model.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(),0);
+	//描画
+	m_model.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(),enNormalDraw);
 }

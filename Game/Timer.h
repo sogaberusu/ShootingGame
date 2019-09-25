@@ -1,8 +1,7 @@
 #pragma once
 #include "graphics/Font.h"
 #include "Player.h"
-class Game;
-
+#include "Game.h"
 /// <summary>
 /// Timer
 /// </summary>
@@ -34,5 +33,6 @@ public:
 	};
 private:
 	Font* m_font = nullptr;	//フォント。
-	Player * m_player[4];
+	Player * m_player[PLAYERS];
+	CVector4 m_timerColorGray{0.0f,0.0f,0.0f,1.0f};
 };

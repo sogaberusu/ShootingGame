@@ -30,14 +30,14 @@ void M110::Update()
 }
 void M110::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
 {
-	if (m_player->GetDrawFlag() == true || ViewportNumber != PlayerNumber)
+	if (m_player->GetCameraType() == Player::EnCameraType::enType_TPS || ViewportNumber != PlayerNumber)
 	{
 		m_model.Draw(
 			camera.GetViewMatrix(),
 			camera.GetProjectionMatrix(),
-			0
+			enNormalDraw
 		);
-	}	
+	}
 }
 
 void M110::Shot(CVector3 target, int PlayerNumber)
@@ -56,9 +56,9 @@ void M110::Shot(CVector3 target, int PlayerNumber)
 				m_gunshot.Stop();
 			}
 			m_gunshot.Play(false);
-			if (m_player->GetCameraType() == false) {
+			if (m_player->GetCameraType() == Player::EnCameraType::enType_TPS) {
 				Bullet* bullet = g_game->GetBulletManager().NewBullet(m_player->GetHandPos(), PlayerNumber, m_gunStatus.Attack);
-				bullet->SetMoveSpeed(target * 2000);
+				bullet->SetMoveSpeed(target * 5000);
 			}
 			else {
 				Bullet* bullet = g_game->GetBulletManager().NewBullet(g_camera3D[PlayerNumber].GetPosition(), PlayerNumber, m_gunStatus.Attack);

@@ -141,6 +141,7 @@
     <ClCompile Include="GrenadeController.cpp" />
     <ClCompile Include="Flag.cpp" />
     <ClCompile Include="GameSelect.cpp" />
+    <ClCompile Include="physics\PhysicsDebugDraw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -261,6 +262,7 @@
     <ClInclude Include="GrenadeController.h" />
     <ClInclude Include="Flag.h" />
     <ClInclude Include="GameSelect.h" />
+    <ClInclude Include="physics\PhysicsDebugDraw.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -282,6 +284,7 @@
     <MeshContentTask Include="Assets\modelData\Flag.FBX" />
     <MeshContentTask Include="Assets\modelData\TestMap.FBX" />
     <MeshContentTask Include="Assets\modelData\Player.FBX" />
+    <MeshContentTask Include="Assets\modelData\M16.FBX" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\animData\Player_Damage.tka" />
@@ -314,5 +317,10 @@
     <ImageContentTask Include="Assets\sprite\ContainerMap.png" />
     <ImageContentTask Include="Assets\sprite\Background.png" />
     <ImageContentTask Include="Assets\sprite\Title.png" />
+    <ImageContentTask Include="Assets\sprite\Sight.png" />
+    <ImageContentTask Include="Assets\sprite\Eotech.png" />
+    <ImageContentTask Include="Assets\sprite\MP5IronSight.png" />
+    <ImageContentTask Include="Assets\sprite\Benelli_M4IronSight.png" />
+    <ImageContentTask Include="Assets\sprite\M4A1IronSight.png" />
   </ItemGroup>
 </Project>

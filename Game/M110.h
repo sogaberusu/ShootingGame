@@ -19,12 +19,6 @@ public:
 	/// アップデート
 	/// </summary>
 	void Update();
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="ViewportNumber"></param>
-	/// <param name="PlayerNumber"></param>
 	void Draw(Camera& camera, int ViewportNumber, int PlayerNumber);
 	void Shot(CVector3 target, int PlayerNumber);
 	void SetInstance(Player *player)
@@ -40,10 +34,7 @@ public:
 	{
 		m_gunStatus.Ammo = ammo;
 	}
-	SGunStatus GetGunStatus()
-	{
-		return m_gunStatus;
-	}
+
 	void SetShootIntervalNow(float interval)
 	{
 		m_shootIntervalNow = interval;

@@ -37,7 +37,7 @@ void Timer::Draw()
 
 	m_font->BeginDraw();
 	
-	m_font->Draw(time, { -340.0f, 350.0f }, { 0.0f,0.0f,0.0f,1.0f }, 0.0f, 0.5f);
+	m_font->Draw(time, { -340.0f, 350.0f }, m_timerColorGray, 0.0f, 0.5f);
 
 	m_font->EndDraw();
 }

@@ -5,18 +5,23 @@
 #include "Bullet.h"
 #include "Physics/CollisionAttr.h"
 #include "WeaponAttr.h"
+#include "GrenadeManager.h"
 
 Player::Player(int playerNo)
 {
 	//cmoファイルの読み込み。
 	m_model.Init(L"Assets/modelData/Player.cmo");
-
 	m_model.SetShadowReciever(true);
 	InitAnimation();
 
-	m_charaCon.Init(20.0f, 150.0f, m_position);
+	m_charaCon.Init(20.0f, 50.0f, m_position);
 
 	m_charaCon.GetRigidBody()->GetBody()->setUserIndex(playerNo);
+
+	CreateHeadCollider(playerNo);
+	CreateBodyCollider(playerNo);
+	CreateLeftLegCollider(playerNo);
+	CreateRightLegCollider(playerNo);
 }
 
 void Player::InitAnimation()
@@ -96,6 +101,10 @@ void Player::InitAnimation()
 
 Player::~Player()
 {
+	for (int RigidBody = 0; RigidBody < enPart_Num; RigidBody++)
+	{
+		g_physics.RemoveRigidBody(m_rigidBody[RigidBody]);
+	}
 }
 
 void Player::Update(Camera& camera, int PlayerNumber)
@@ -103,6 +112,10 @@ void Player::Update(Camera& camera, int PlayerNumber)
 	if (m_state != enState_Death)
 	{
 		m_charaCon.GetRigidBody()->GetBody()->setUserIndex(PlayerNumber);
+		m_rigidBody[enPart_Head].GetBody()->setUserIndex(enCollisionAttr_Player1_Head + PlayerNumber);
+		m_rigidBody[enPart_Body].GetBody()->setUserIndex(enCollisionAttr_Player1_Body + PlayerNumber);
+		m_rigidBody[enPart_LeftLeg].GetBody()->setUserIndex(enCollisionAttr_Player1_LeftLeg + PlayerNumber);
+		m_rigidBody[enPart_RightLeg].GetBody()->setUserIndex(enCollisionAttr_Player1_RightLeg + PlayerNumber);
 		//移動処理
 		Move(camera, PlayerNumber);
 		//自動回復処理
@@ -139,8 +152,10 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		break;
 	case Player::enState_Walk_Reload:
 		m_animation.Play(enAnimation_Walk_Reload, 0.3);
+		
 		if (m_animation.IsPlaying() == false)
 		{
+			
 			switch (m_weapon)
 			{
 			case enWeapon_M4A1:
@@ -247,7 +262,7 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		{
 			CVector3 target = camera.GetTarget() - camera.GetPosition();
 			target.Normalize();
-			g_game->GetGrenadeManager().NewGrenade(m_LhandPos, PlayerNumber, target);
+			g_game->GetGrenadeManager().NewGrenade(m_lHandPos, PlayerNumber, target);
 			m_status.Grenades--;
 			m_state = enState_Idle;
 		}
@@ -279,24 +294,90 @@ void Player::Update(Camera& camera, int PlayerNumber)
 		m_m110->SetAmmo(10);
 
 	}
-	Bone* m_righthandBoneMat = m_model.FindBone(L"Bip001 R Hand");
-	CMatrix hand = m_righthandBoneMat->GetWorldMatrix();
-	m_RhandPos.x = hand.m[3][0];
-	m_RhandPos.y = hand.m[3][1];
-	m_RhandPos.z = hand.m[3][2];
-	m_righthandBoneMat = m_model.FindBone(L"Bip001 L Hand");
-	hand = m_righthandBoneMat->GetWorldMatrix();
-	m_LhandPos.x = hand.m[3][0];
-	m_LhandPos.y = hand.m[3][1];
-	m_LhandPos.z = hand.m[3][2];
+	if (m_drawflag == false && m_weapon == enWeapon_M110)
+	{
+		g_camera3D[PlayerNumber].SetViewAngle(CMath::DegToRad(10.0f));
+	}
+	else {
+		g_camera3D[PlayerNumber].SetViewAngle(CMath::DegToRad(60.0f));
+	}
+	Bone* righthandBoneMat = m_model.FindBone(L"Bip001 R Hand");
+	CMatrix hand = righthandBoneMat->GetWorldMatrix();
+	m_rHandPos.x = hand.m[3][0];
+	m_rHandPos.y = hand.m[3][1];
+	m_rHandPos.z = hand.m[3][2];
+
+	Bone* lefthandBoneMat = m_model.FindBone(L"Bip001 L Hand");
+	hand = lefthandBoneMat->GetWorldMatrix();
+	m_lHandPos.x = hand.m[3][0];
+	m_lHandPos.y = hand.m[3][1];
+	m_lHandPos.z = hand.m[3][2];
+
+	Bone* HeadBoneMat = m_model.FindBone(L"Bip001 Head");
+	CMatrix Head = HeadBoneMat->GetWorldMatrix();
+	CVector3 HeadPos;
+	HeadPos.x = Head.m[3][0];
+	HeadPos.y = Head.m[3][1];
+	HeadPos.z = Head.m[3][2];
+	//頭のコライダーの位置を少し上にあげる
+	HeadPos.y += 5.0f;
+
+	Bone* BodyBoneMat = m_model.FindBone(L"Bip001 Spine1");
+	CMatrix Body = BodyBoneMat->GetWorldMatrix();
+	CVector3 BodyPos;
+	BodyPos.x = Body.m[3][0];
+	BodyPos.y = Body.m[3][1];
+	BodyPos.z = Body.m[3][2];
+
+	Bone* LeftLegBoneMat = m_model.FindBone(L"Bip001 L Calf");
+	CMatrix LeftLeg = LeftLegBoneMat->GetWorldMatrix();
+	CVector3 LeftLegPos;
+	LeftLegPos.x = LeftLeg.m[3][0];
+	LeftLegPos.y = LeftLeg.m[3][1];
+	LeftLegPos.z = LeftLeg.m[3][2];
 	
+	Bone* RightLegBoneMat = m_model.FindBone(L"Bip001 R Calf");
+	CMatrix RightLeg = RightLegBoneMat->GetWorldMatrix();
+	CVector3 RightLegPos;
+	RightLegPos.x = RightLeg.m[3][0];
+	RightLegPos.y = RightLeg.m[3][1];
+	RightLegPos.z = RightLeg.m[3][2];
+
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	m_animation.Update(1.0f / 30.0f);
+
+	//剛体を動かす。
+	btRigidBody* btBody[enPart_Num];
+	btBody[enPart_Head] = m_rigidBody[enPart_Head].GetBody();
+	btBody[enPart_Head]->setActivationState(DISABLE_DEACTIVATION);
+	btTransform& transhead = btBody[enPart_Head]->getWorldTransform();
+	//剛体の位置を更新。
+	transhead.setOrigin(btVector3(HeadPos.x, HeadPos.y , HeadPos.z));
+
+	//剛体を動かす。
+	btBody[enPart_Body] = m_rigidBody[enPart_Body].GetBody();
+	btBody[enPart_Body]->setActivationState(DISABLE_DEACTIVATION);
+	btTransform& transbody = btBody[enPart_Body]->getWorldTransform();
+	//剛体の位置を更新。
+	transbody.setOrigin(btVector3(BodyPos.x, BodyPos.y, BodyPos.z));
+
+	//剛体を動かす。
+	btBody[enPart_LeftLeg] = m_rigidBody[enPart_LeftLeg].GetBody();
+	btBody[enPart_LeftLeg]->setActivationState(DISABLE_DEACTIVATION);
+	btTransform& transleftleg = btBody[enPart_LeftLeg]->getWorldTransform();
+	//剛体の位置を更新。
+	transleftleg.setOrigin(btVector3(LeftLegPos.x, LeftLegPos.y, LeftLegPos.z));
+
+	//剛体を動かす。
+	btBody[enPart_RightLeg] = m_rigidBody[enPart_RightLeg].GetBody();
+	btBody[enPart_RightLeg]->setActivationState(DISABLE_DEACTIVATION);
+	btTransform& transrightleg = btBody[enPart_RightLeg]->getWorldTransform();
+	//剛体の位置を更新。
+	transrightleg.setOrigin(btVector3(RightLegPos.x, RightLegPos.y, RightLegPos.z));
+
 	//シャドウキャスターを登録。
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
-
-	
 }
 void Player::Move(Camera& camera, int PlayerNumber)
 {
@@ -413,7 +494,6 @@ void Player::Move(Camera& camera, int PlayerNumber)
 	{
 		m_state = enState_Jump_Land;
 	}
-
 	if (g_pad[PlayerNumber].IsTrigger(enButtonB) == true
 		&& m_charaCon.IsOnGround() == true)
 	{
@@ -568,7 +648,7 @@ void Player::SilhouetteDrwa(Camera& camera, int ViewportNumber, int PlayerNumber
 			m_model.Draw(
 				camera.GetViewMatrix(),
 				camera.GetProjectionMatrix(),
-				3
+				enSilhouetteDraw
 			);
 		}
 	}
@@ -580,7 +660,7 @@ void Player::Draw(Camera& camera, int ViewportNumber, int PlayerNumber)
 		m_model.Draw(
 			camera.GetViewMatrix(),
 			camera.GetProjectionMatrix(),
-			0
+			enNormalDraw
 		);
 	}
 }
@@ -602,23 +682,6 @@ void Player::Shot(int PlayerNumber, Camera& camera)
 		else {
 			m_state = enState_Crouch_Walk_Forward;
 		}
-		CVector3 target = camera.GetTarget() - camera.GetPosition();
-		target.Normalize();
-		switch (m_weapon)
-		{
-		case enWeapon_M4A1:
-			m_m4a1->Shot(target, PlayerNumber);
-			break;
-		case enWeapon_MP5:
-			m_mp5->Shot(target, PlayerNumber);
-			break;
-		case enWeapon_Benelli_M4:
-			m_benelliM4->Shot(target, PlayerNumber);
-			break;
-		case enWeapon_M110:
-			m_m110->Shot(target, PlayerNumber);
-			break;
-		}
 	}
 	if (m_state != enState_Crouch_Idle &&
 		m_state != enState_Crouch_Walk_Forward &&
@@ -634,23 +697,122 @@ void Player::Shot(int PlayerNumber, Camera& camera)
 		else {
 			m_state = enState_Walk_Shoot;
 		}
-
-		CVector3 target = camera.GetTarget() - camera.GetPosition();
-		target.Normalize();
-		switch (m_weapon)
-		{
-		case enWeapon_M4A1:
-			m_m4a1->Shot(target, PlayerNumber);
-			break;
-		case enWeapon_MP5:
-			m_mp5->Shot(target, PlayerNumber);
-			break;
-		case enWeapon_Benelli_M4:
-			m_benelliM4->Shot(target, PlayerNumber);
-			break;
-		case enWeapon_M110:
-			m_m110->Shot(target, PlayerNumber);
-			break;
-		}
 	}
+	CVector3 target = camera.GetTarget() - camera.GetPosition();
+	target.Normalize();
+	switch (m_weapon)
+	{
+	case enWeapon_M4A1:
+		m_m4a1->Shot(target,PlayerNumber);
+		break;
+	case enWeapon_MP5:
+		m_mp5->Shot(target, PlayerNumber);
+		break;
+	case enWeapon_Benelli_M4:
+		m_benelliM4->Shot(target, PlayerNumber);
+		break;
+	case enWeapon_M110:
+		m_m110->Shot(target, PlayerNumber);
+		break;
+	}
+}
+
+void Player::CreateHeadCollider(int playerNo)
+{
+	Bone* HeadBoneMat = m_model.FindBone(L"Bip001 Head");
+	CMatrix Head = HeadBoneMat->GetWorldMatrix();
+	CVector3 HeadPos;
+	HeadPos.x = Head.m[3][0];
+	HeadPos.y = Head.m[3][1];
+	HeadPos.z = Head.m[3][2];
+
+	//コリジョン作成。
+	m_headCollider.Create(10.0f, 0.0f);
+
+	//剛体を初期化。
+	RigidBodyInfo rbInfo;
+	rbInfo.collider = &m_headCollider;
+	rbInfo.mass = 0.0f;
+	m_rigidBody[enPart_Head].Create(rbInfo);
+	btTransform& trans = m_rigidBody[enPart_Head].GetBody()->getWorldTransform();
+	//剛体の位置を更新。
+	trans.setOrigin(btVector3(HeadPos.x, HeadPos.y, HeadPos.z));
+	m_rigidBody[enPart_Head].GetBody()->setUserIndex(enCollisionAttr_Player1_Head + playerNo);
+	m_rigidBody[enPart_Head].GetBody()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+	g_physics.AddRigidBody(m_rigidBody[enPart_Head]);
+}
+
+void Player::CreateBodyCollider(int playerNo)
+{
+	Bone* BodyBoneMat = m_model.FindBone(L"Bip001 Spine1");
+	CMatrix Body = BodyBoneMat->GetWorldMatrix();
+	CVector3 BodyPos;
+	BodyPos.x = Body.m[3][0];
+	BodyPos.y = Body.m[3][1];
+	BodyPos.z = Body.m[3][2];
+
+	//コリジョン作成。
+	m_bodyCollider.Create(15.0f, 15.0f);
+
+	//剛体を初期化。
+	RigidBodyInfo rbInfo;
+	rbInfo.collider = &m_bodyCollider;
+	rbInfo.mass = 0.0f;
+	m_rigidBody[enPart_Body].Create(rbInfo);
+	btTransform& trans = m_rigidBody[enPart_Body].GetBody()->getWorldTransform();
+	//剛体の位置を更新。
+	trans.setOrigin(btVector3(BodyPos.x, BodyPos.y, BodyPos.z));
+	m_rigidBody[enPart_Body].GetBody()->setUserIndex(enCollisionAttr_Player1_Body + playerNo);
+	m_rigidBody[enPart_Body].GetBody()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+	g_physics.AddRigidBody(m_rigidBody[enPart_Body]);
+}
+
+void Player::CreateLeftLegCollider(int playerNo)
+{
+	Bone* LeftLegBoneMat = m_model.FindBone(L"Bip001 L Calf");
+	CMatrix LeftLeg = LeftLegBoneMat->GetWorldMatrix();
+	CVector3 LeftLegPos;
+	LeftLegPos.x = LeftLeg.m[3][0];
+	LeftLegPos.y = LeftLeg.m[3][1];
+	LeftLegPos.z = LeftLeg.m[3][2];
+
+	//コリジョン作成。
+	m_leftlegCollider.Create(10.0f, 25.0f);
+
+	//剛体を初期化。
+	RigidBodyInfo rbInfo;
+	rbInfo.collider = &m_leftlegCollider;
+	rbInfo.mass = 0.0f;
+	m_rigidBody[enPart_LeftLeg].Create(rbInfo);
+	btTransform& trans = m_rigidBody[enPart_LeftLeg].GetBody()->getWorldTransform();
+	//剛体の位置を更新。
+	trans.setOrigin(btVector3(LeftLegPos.x, LeftLegPos.y, LeftLegPos.z));
+	m_rigidBody[enPart_LeftLeg].GetBody()->setUserIndex(enCollisionAttr_Player1_LeftLeg + playerNo);
+	m_rigidBody[enPart_LeftLeg].GetBody()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+	g_physics.AddRigidBody(m_rigidBody[enPart_LeftLeg]);
+}
+
+void Player::CreateRightLegCollider(int playerNo)
+{
+	Bone* RightLegBoneMat = m_model.FindBone(L"Bip001 R Calf");
+	CMatrix RightLeg = RightLegBoneMat->GetWorldMatrix();
+	CVector3 RightLegPos;
+	RightLegPos.x = RightLeg.m[3][0];
+	RightLegPos.y = RightLeg.m[3][1];
+	RightLegPos.z = RightLeg.m[3][2];
+
+	//コリジョン作成。
+	m_rightlegCollider.Create(10.0f, 25.0f);
+
+	//剛体を初期化。
+	RigidBodyInfo rbInfo;
+	rbInfo.collider = &m_rightlegCollider;
+	rbInfo.mass = 0.0f;
+	m_rigidBody[enPart_RightLeg].Create(rbInfo);
+	btTransform& trans = m_rigidBody[enPart_RightLeg].GetBody()->getWorldTransform();
+	//剛体の位置を更新。
+	trans.setOrigin(btVector3(RightLegPos.x, RightLegPos.y, RightLegPos.z));
+	m_rigidBody[enPart_RightLeg].GetBody()->setUserIndex(enCollisionAttr_Player1_RightLeg + playerNo);
+	m_rigidBody[enPart_RightLeg].GetBody()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+	g_physics.AddRigidBody(m_rigidBody[enPart_RightLeg]);
 }

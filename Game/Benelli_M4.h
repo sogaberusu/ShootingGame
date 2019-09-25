@@ -21,35 +21,32 @@ public:
 	/// アップデート
 	/// </summary>
 	void Update();
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="ViewportNumber"></param>
-	/// <param name="PlayerNumber"></param>
+	//描画
 	void Draw(Camera& camera, int ViewportNumber, int PlayerNumber);
+	//弾の発射
 	void Shot(CVector3 target, int PlayerNumber);
+	//プレイヤーのインスタンスをもらう
 	void SetInstance(Player *player)
 	{
 		m_player = player;
 	}
+	//残弾数をもらう
 	int GetAmmo()
 	{
 
 		return m_gunStatus.Ammo;
 	}
+	//リロードでつかう
 	void SetAmmo(int ammo)
 	{
 		m_gunStatus.Ammo = ammo;
 	}
-	SGunStatus GetGunStatus()
-	{
-		return m_gunStatus;
-	}
+	//弾を撃つタイミング
 	void SetShootIntervalNow(float interval)
 	{
 		m_shootIntervalNow = interval;
 	}
+	//ショットガンの弾をばらけさせるのに使う
 	float GetRandom()
 	{
 		while (true)
@@ -68,6 +65,6 @@ private:
 	CVector3 m_position = CVector3::Zero();				//座標
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転
 	CSoundSource m_gunshot;								//SE
-	SGunStatus m_gunStatus;
-	float m_shootIntervalNow = 0.0f;
+	SGunStatus m_gunStatus;                             //銃のステータス
+	float m_shootIntervalNow = 0.0f;                    //弾を撃つ
 };

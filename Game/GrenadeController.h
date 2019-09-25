@@ -1,5 +1,5 @@
 /*!
-* @brief	キャラクタコントローラー。
+* @brief	グレネードコントローラー。
 */
 
 #pragma once
@@ -9,7 +9,7 @@
 
 
 /*!
-* @brief	キャラクタコントローラー。
+* @brief	グレネードコントローラー。
 */
 class GrenadeController {
 public:
@@ -30,7 +30,7 @@ public:
 	/*!
 		* @brief	実行。
 		*@param[in]	deltaTime		経過時間。単位は秒。
-		*@return 移動後のキャラクターの座標。
+		*@return 移動後のグレネードの座標。
 		*/
 	const CVector3& Execute(float deltaTime);
 	/*!
@@ -68,8 +68,8 @@ public:
 private:
 	CVector3 			m_position = CVector3::Zero();	//座標。
 	CapsuleCollider		m_collider;						//コライダー。
-	float				m_radius = 0.0f;
-	float				m_height = 0.0f;
+	float				m_radius = 0.0f;				//剛体の半径
+	float				m_height = 0.0f;				//剛体の高さ
 	RigidBody			m_rigidBody;					//剛体。
-	CVector3			m_moveSpeed = CVector3::Zero();
+	CVector3			m_moveSpeed = CVector3::Zero(); //速度
 };

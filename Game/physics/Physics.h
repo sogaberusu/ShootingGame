@@ -1,4 +1,5 @@
 #pragma once
+#include"PhysicsDebugDraw.h"
 class RigidBody;
 class CharacterController;
 class PhysicsStaticObject;
@@ -9,6 +10,7 @@ class PhysicsWorld
 	btBroadphaseInterface*					overlappingPairCache = nullptr;	//!<ブロードフェーズ。衝突判定の枝切り。
 	btSequentialImpulseConstraintSolver*	constraintSolver = nullptr;		//!<コンストレイントソルバー。拘束条件の解決処理。
 	btDiscreteDynamicsWorld*				dynamicWorld = nullptr;			//!<ワールド。
+	PhysicsDebugDraw						m_debugDraw;					//!<デバック用ポリゴン線表示用クラス
 public:
 	~PhysicsWorld();
 	void Init();
@@ -29,6 +31,11 @@ public:
 	/*!
 	* @brief	剛体を破棄。
 	*/
+	void SetDebugDrawMode(int debugMode)
+	{
+		//ワイヤーフレーム描画のみ。
+		m_debugDraw.setDebugMode(debugMode);
+	}
 	void RemoveRigidBody(RigidBody& rb);
 	void ConvexSweepTest(
 		const btConvexShape* castShape,

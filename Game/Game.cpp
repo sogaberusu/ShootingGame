@@ -7,7 +7,11 @@
 #include "Title.h"
 #include "Result.h"
 #include "WeaponAttr.h"
-
+#include "Flag.h"
+#include "Timer.h"
+#include "GrenadeManager.h"
+#include "BulletManager.h"
+#include "HUD.h"
 
 //グローバルなアクセスポイントをグローバル変数として提供する。
 Game* g_game = nullptr;
@@ -17,86 +21,113 @@ Game::Game(int gameMode,int mapNo)
 	g_game = this;
 
 	m_gameMode = gameMode;
-
+	m_flag = new Flag();
+	m_timer = new Timer();
+	m_grenadeManager = new GrenadeManager();
+	m_bulletManager = new BulletManager();
 	m_level.Init(L"Assets/level/stage_00.tkl", [&](LevelObjectData& objData) {
 		if (objData.EqualName(L"Background") == true) {
 			m_background = new Background(objData.position, objData.rotation, mapNo);
 		}
 		else if (objData.EqualName(L"Player1") == true) {
-			m_player[0] = new Player(0);
-			m_player[0]->SetPosition(objData.position);
-			m_player[0]->SetRotation(objData.rotation);
-			m_gameCamera[0] = new GameCamera({ -150.0f, 150.0f, 0.0f });
-			m_respawn[0].PlayerPosition = objData.position;
-			m_respawn[0].PlayerRotation = objData.rotation;
-			m_respawn[0].CameraPosition = CVector3(-150.0f, 150.0f, 0.0f);
+			m_player[enPlayer1] = new Player(enPlayer1);
+			m_player[enPlayer1]->SetPosition(objData.position);
+			m_player[enPlayer1]->SetRotation(objData.rotation);
+			m_gameCamera[enPlayer1] = new GameCamera({ -150.0f, 150.0f, 0.0f });
+			m_respawn[enPlayer1].PlayerPosition = objData.position;
+			m_respawn[enPlayer1].PlayerRotation = objData.rotation;
+			m_respawn[enPlayer1].CameraPosition = CVector3(-150.0f, 150.0f, 0.0f);
 		}
 		else if (objData.EqualName(L"Player2") == true) {
-			m_player[1] = new Player(1);
-			m_player[1]->SetPosition(objData.position);
-			m_player[1]->SetRotation(objData.rotation);
-			m_gameCamera[1] = new GameCamera({ 0.0f, 150.0f, 150.0f });
-			m_respawn[1].PlayerPosition = objData.position;
-			m_respawn[1].PlayerRotation = objData.rotation;
-			m_respawn[1].CameraPosition = CVector3(0.0f, 150.0f, 150.0f);
+			m_player[enPlayer2] = new Player(enPlayer2);
+			m_player[enPlayer2]->SetPosition(objData.position);
+			m_player[enPlayer2]->SetRotation(objData.rotation);
+			m_gameCamera[enPlayer2] = new GameCamera({ 150.0f, 150.0f, 0.0f });
+			m_respawn[enPlayer2].PlayerPosition = objData.position;
+			m_respawn[enPlayer2].PlayerRotation = objData.rotation;
+			m_respawn[enPlayer2].CameraPosition = CVector3(150.0f, 150.0f, 0.0f);
 		}
 		else if (objData.EqualName(L"Player3") == true) {
-			m_player[2] = new Player(2);
-			m_player[2]->SetPosition(objData.position);
-			m_player[2]->SetRotation(objData.rotation);
-			m_gameCamera[2] = new GameCamera({ 0.0f, 150.0f, -150.0f });
-			m_respawn[2].PlayerPosition = objData.position;
-			m_respawn[2].PlayerRotation = objData.rotation;
-			m_respawn[2].CameraPosition = CVector3(0.0f, 150.0f, -150.0f);
+			if (PLAYERS >= enPlayer4)
+			{
+				m_player[enPlayer3] = new Player(enPlayer3);
+				m_player[enPlayer3]->SetPosition(objData.position);
+				m_player[enPlayer3]->SetRotation(objData.rotation);
+				m_gameCamera[enPlayer3] = new GameCamera({ 0.0f, 150.0f, -150.0f });
+			}
+				m_respawn[enPlayer3].PlayerPosition = objData.position;
+				m_respawn[enPlayer3].PlayerRotation = objData.rotation;
+				m_respawn[enPlayer3].CameraPosition = CVector3(0.0f, 150.0f, -150.0f);
 		}
 		else if (objData.EqualName(L"Player4") == true) {
-			m_player[3] = new Player(3);
-			m_player[3]->SetPosition(objData.position);
-			m_player[3]->SetRotation(objData.rotation);
-			m_gameCamera[3] = new GameCamera({ 150.0f, 150.0f, 0.0f });
-			m_respawn[3].PlayerPosition = objData.position;
-			m_respawn[3].PlayerRotation = objData.rotation;
-			m_respawn[3].CameraPosition = CVector3(150.0f, 150.0f, 0.0f);
+			if (PLAYERS >= enPlayerNum)
+			{
+				m_player[enPlayer4] = new Player(enPlayer4);
+				m_player[enPlayer4]->SetPosition(objData.position);
+				m_player[enPlayer4]->SetRotation(objData.rotation);
+				m_gameCamera[enPlayer4] = new GameCamera({ 0.0f, 150.0f, 150.0f });
+			}
+				m_respawn[enPlayer4].PlayerPosition = objData.position;
+				m_respawn[enPlayer4].PlayerRotation = objData.rotation;
+				m_respawn[enPlayer4].CameraPosition = CVector3(0.0f, 150.0f, 150.0f);
 		}
 		return true;
 	});
 	
-	for (int i = 0; i < 4; i++)
+	for (int PlayerNo = 0; PlayerNo < PLAYERS; PlayerNo++)
 	{
-		m_bulletManager.SetInstance(m_player[i], i);
-		m_grenadeManager.SetInstance(m_player[i], i);
-		m_flag.SetInstance(m_player[i], i);
-		m_timer.SetPlayer(m_player[i], i);
-		m_muzzleflasheffect[i].Init(L"Assets/effect/MuzzleFlash.efk");
-		m_explosioneffect[i].Init(L"Assets/effect/Explosion.efk");
-		m_m4a1[i].SetInstance(m_player[i]);
-		m_mp5[i].SetInstance(m_player[i]);
-		m_benelliM4[i].SetInstance(m_player[i]);
-		m_m110[i].SetInstance(m_player[i]);
-		m_player[i]->SetWeaponInstance(&m_m4a1[i], &m_mp5[i],&m_benelliM4[i],&m_m110[i]);
-		for (int j = 0; j < 4; j++)
+		m_hud[PlayerNo] = new HUD();
+		m_bulletManager->SetInstance(m_player[PlayerNo], PlayerNo);
+		m_grenadeManager->SetInstance(m_player[PlayerNo], PlayerNo);
+		m_flag->SetInstance(m_player[PlayerNo], PlayerNo);
+		m_timer->SetPlayer(m_player[PlayerNo], PlayerNo);
+		m_muzzleflasheffect[PlayerNo].Init(L"Assets/effect/MuzzleFlash.efk");
+		m_explosioneffect[PlayerNo].Init(L"Assets/effect/Explosion.efk");
+		m_m4a1[PlayerNo].SetInstance(m_player[PlayerNo]);
+		m_mp5[PlayerNo].SetInstance(m_player[PlayerNo]);
+		m_benelliM4[PlayerNo].SetInstance(m_player[PlayerNo]);
+		m_m110[PlayerNo].SetInstance(m_player[PlayerNo]);
+		m_player[PlayerNo]->SetWeaponInstance(&m_m4a1[PlayerNo], &m_mp5[PlayerNo],&m_benelliM4[PlayerNo],&m_m110[PlayerNo]);
+		for (int People = 0; People < PLAYERS; People++)
 		{
-			m_hud[i].SetInstance(m_player[j], j);
+			m_hud[PlayerNo]->SetInstance(m_player[People], People);
 		}
-		m_hud[i].SetPlayerNo(i);
-		m_hud[i].SetGameMode(gameMode);
+		m_hud[PlayerNo]->SetPlayerNo(PlayerNo);
+		m_hud[PlayerNo]->SetGameMode(gameMode);
 	}
 
-	m_gameCamera[0]->InitViewport(640, 360, 0, 0);
-	m_gameCamera[0]->SetPlayer(m_player[0]);
-	m_gameCamera[0]->Seti(0);
+	if (PLAYERS != enPlayer3)
+	{
+		m_gameCamera[enPlayer1]->InitViewport(640, 360, 0, 0);
+		m_gameCamera[enPlayer1]->SetPlayer(m_player[enPlayer1]);
+		m_gameCamera[enPlayer1]->SetPlayerNo(enPlayer1);
 
-	m_gameCamera[1]->InitViewport(640, 360, 640, 0);
-	m_gameCamera[1]->SetPlayer(m_player[1]);
-	m_gameCamera[1]->Seti(1);
+		m_gameCamera[enPlayer2]->InitViewport(640, 360, 640, 0);
+		m_gameCamera[enPlayer2]->SetPlayer(m_player[enPlayer2]);
+		m_gameCamera[enPlayer2]->SetPlayerNo(enPlayer2);
+	}
+	else
+	{
+		m_gameCamera[enPlayer1]->InitViewport(640, 720, 0, 0);
+		m_gameCamera[enPlayer1]->SetPlayer(m_player[enPlayer1]);
+		m_gameCamera[enPlayer1]->SetPlayerNo(enPlayer1);
 
-	m_gameCamera[2]->InitViewport(640, 360, 0, 360);
-	m_gameCamera[2]->SetPlayer(m_player[2]);
-	m_gameCamera[2]->Seti(2);
-	
-	m_gameCamera[3]->InitViewport(640, 360, 640, 360);
-	m_gameCamera[3]->SetPlayer(m_player[3]);
-	m_gameCamera[3]->Seti(3);
+		m_gameCamera[enPlayer2]->InitViewport(640, 720, 640, 0);
+		m_gameCamera[enPlayer2]->SetPlayer(m_player[enPlayer2]);
+		m_gameCamera[enPlayer2]->SetPlayerNo(enPlayer2);
+	}
+	if (PLAYERS >= enPlayer4)
+	{
+		m_gameCamera[enPlayer3]->InitViewport(640, 360, 0, 360);
+		m_gameCamera[enPlayer3]->SetPlayer(m_player[enPlayer3]);
+		m_gameCamera[enPlayer3]->SetPlayerNo(enPlayer3);
+	}
+	if (PLAYERS >= enPlayerNum)
+	{
+		m_gameCamera[enPlayer4]->InitViewport(640, 360, 640, 360);
+		m_gameCamera[enPlayer4]->SetPlayer(m_player[enPlayer4]);
+		m_gameCamera[enPlayer4]->SetPlayerNo(enPlayer4);
+	}
 
 	//メインとなるレンダリングターゲットを作成する。
 	g_mainRenderTarget.Create(
@@ -117,9 +148,9 @@ Game::Game(int gameMode,int mapNo)
 	m_endSound.Init(L"Assets/sound/End.wav");
 	Update();
 	m_waitflag = false;
-	for (int i = 0; i < 4; i++)
+	for (int PlayerNo = 0; PlayerNo < PLAYERS; PlayerNo++)
 	{
-		m_player[i]->SetWeapon(enWeapon_Num);
+		m_player[PlayerNo]->SetWeapon(enWeapon_Num);
 	}
 }
 
@@ -135,12 +166,14 @@ Game::~Game()
 	if (m_frameBufferDepthStencilView != nullptr) {
 		m_frameBufferDepthStencilView->Release();
 	}
-	for (int i = 0; i < 4; i++)
+	for (int PlayerNo = 0; PlayerNo < PLAYERS; PlayerNo++)
 	{
-		delete m_player[i];
-		delete m_gameCamera[i];
+		delete m_player[PlayerNo];
+		delete m_gameCamera[PlayerNo];
+		delete m_hud[PlayerNo];
 	}
 	delete m_background;
+	delete m_flag;
 }
 
 void Game::Update()
@@ -151,34 +184,43 @@ void Game::Update()
 
 		m_restTimer = max(0.0f, m_restTimer - 1.0f / 30.0f);
 
-		//プレイヤーの更新。
-		for (int i = 0; i < 4; i++)
+		
+		for (int PlayerNo = 0; PlayerNo < PLAYERS; PlayerNo++)
 		{
-			m_player[i]->Update(g_camera3D[i], i);
-			m_gameCamera[i]->Update();
-			switch (m_player[i]->GetWeapon())
+			//プレイヤーの更新。
+			m_player[PlayerNo]->Update(g_camera3D[PlayerNo], PlayerNo);
+			//ゲームカメラの更新
+			m_gameCamera[PlayerNo]->Update();
+			//銃の更新
+			switch (m_player[PlayerNo]->GetWeapon())
 			{
 			case enWeapon_M4A1:
-				m_m4a1[i].Update();
+				m_m4a1[PlayerNo].Update();
 				break;
 			case enWeapon_MP5:
-				m_mp5[i].Update();
+				m_mp5[PlayerNo].Update();
 				break;
 			case enWeapon_Benelli_M4:
-				m_benelliM4[i].Update();
+				m_benelliM4[PlayerNo].Update();
 				break;
 			case enWeapon_M110:
-				m_m110[i].Update();
+				m_m110[PlayerNo].Update();
 			}
-			m_hud[i].Update(i);
+			//hudの更新
+			m_hud[PlayerNo]->Update(PlayerNo);
 		}
-		m_bulletManager.Update();
-		m_grenadeManager.Update();
+		//bulletmanagerの更新
+		m_bulletManager->Update();
+		//grenademanagerの更新
+		m_grenadeManager->Update();
+		//現在のゲームモードがキャプチャーザフラッグなら
 		if (m_gameMode == enGame_CTF)
 		{
-			m_flag.Update();
+			//フラッグの更新
+			m_flag->Update();
 		}
 	}
+	//マップの更新
 	m_background->Update();
 
 	if (m_restTimer == 0.0f)
@@ -187,14 +229,42 @@ void Game::Update()
 
 		if (m_transitionflag == true)
 		{
-			g_currentScene = new Result(m_gameMode,m_player[0]->GetKills(),
-				m_player[1]->GetKills(),
-				m_player[2]->GetKills(),
-				m_player[3]->GetKills(),
-				m_player[0]->GetStatus().CaptureTime,
-				m_player[1]->GetStatus().CaptureTime, 
-				m_player[2]->GetStatus().CaptureTime,
-				m_player[3]->GetStatus().CaptureTime);
+			//プレイヤーの数が2人なら
+			if (PLAYERS == enPlayer3)
+			{
+				g_currentScene = new Result(
+					m_gameMode,
+					m_player[enPlayer1]->GetKills(),
+					m_player[enPlayer2]->GetKills(),
+					m_player[enPlayer1]->GetStatus().CaptureTime,
+					m_player[enPlayer2]->GetStatus().CaptureTime);
+			}
+			//プレイヤーの数が3人なら
+			if (PLAYERS == enPlayer4)
+			{
+				g_currentScene = new Result(
+					m_gameMode,
+					m_player[enPlayer1]->GetKills(),
+					m_player[enPlayer2]->GetKills(),
+					m_player[enPlayer3]->GetKills(),
+					m_player[enPlayer1]->GetStatus().CaptureTime,
+					m_player[enPlayer2]->GetStatus().CaptureTime,
+					m_player[enPlayer3]->GetStatus().CaptureTime);
+			}
+			//プレイヤーの数が4人なら
+			if (PLAYERS == enPlayerNum)
+			{
+				g_currentScene = new Result(
+					m_gameMode,
+					m_player[enPlayer1]->GetKills(),
+					m_player[enPlayer2]->GetKills(),
+					m_player[enPlayer3]->GetKills(),
+					m_player[enPlayer4]->GetKills(),
+					m_player[enPlayer1]->GetStatus().CaptureTime,
+					m_player[enPlayer2]->GetStatus().CaptureTime,
+					m_player[enPlayer3]->GetStatus().CaptureTime,
+					m_player[enPlayer4]->GetStatus().CaptureTime);
+			}
 			delete this;
 		}
 	}
@@ -214,50 +284,73 @@ void Game::Draw()
 	deviceContext->PSSetShaderResources(3, 1, &smSRV);
 	auto rtSRV = g_mainRenderTarget.GetRenderTargetSRV();
 	deviceContext->PSSetShaderResources(0, 1, &rtSRV);
-	for (int i = 0; i < 4; i++) {
-		m_gameCamera[i]->StartRender();
+	for (int PlayerNo = 0; PlayerNo < PLAYERS; PlayerNo++) {
+		m_gameCamera[PlayerNo]->StartRender();
 		if (m_waitflag == true)
 		{
-			for (int j = 0; j < 4; j++)
+			for (int People = 0; People < PLAYERS; People++)
 			{	
-				switch (m_player[j]->GetWeapon())
+				switch (m_player[People]->GetWeapon())
 				{
 				case enWeapon_M4A1:
-					m_m4a1[j].Draw(g_camera3D[i], i, j);
+					m_m4a1[People].Draw(g_camera3D[PlayerNo], PlayerNo, People);
 					break;
 				case enWeapon_MP5:
-					m_mp5[j].Draw(g_camera3D[i], i, j);
+					m_mp5[People].Draw(g_camera3D[PlayerNo], PlayerNo, People);
 					break;
 				case enWeapon_Benelli_M4:
-					m_benelliM4[j].Draw(g_camera3D[i], i, j);
+					m_benelliM4[People].Draw(g_camera3D[PlayerNo], PlayerNo, People);
 					break;
 				case enWeapon_M110:
-					m_m110[j].Draw(g_camera3D[i], i, j);
+					m_m110[People].Draw(g_camera3D[PlayerNo], PlayerNo, People);
 					break;
 				}
 			}
 		}
 		//背景の描画
-		m_background->Draw(g_camera3D[i]);
-		m_bulletManager.Draw(g_camera3D[i]);
-		m_grenadeManager.Draw(g_camera3D[i]);
-		m_sky.Draw(g_camera3D[i]);
+		m_background->Draw(g_camera3D[PlayerNo]);
+		//弾の描画
+		m_bulletManager->Draw(g_camera3D[PlayerNo]);
+		//グレネードの描画
+		m_grenadeManager->Draw(g_camera3D[PlayerNo]);
+		//空の描画
+		m_sky.Draw(g_camera3D[PlayerNo]);
 		if (m_waitflag == true)
 		{
-			for (int j = 0;j < 4;j++)
+			for (int People = 0;People < PLAYERS;People++)
 			{
+				//現在のゲームモードがキャプチャーザフラッグなら
 				if (m_gameMode == enGame_CTF)
 				{
-					m_player[j]->SilhouetteDrwa(g_camera3D[i], i, j);
+					//旗を確保しているプレイヤーのシルエットを描画する
+					m_player[People]->SilhouetteDrwa(g_camera3D[PlayerNo], PlayerNo, People);
 				}
-				m_player[j]->Draw(g_camera3D[i], i, j);
+				//プレイヤーの描画
+				m_player[People]->Draw(g_camera3D[PlayerNo], PlayerNo, People);
 			}
+			//現在のゲームモードがキャプチャーザフラッグなら
 			if (m_gameMode == enGame_CTF)
 			{
-				m_flag.Draw(g_camera3D[i]);
+				//フラッグの描画
+				m_flag->Draw(g_camera3D[PlayerNo]);
 			}
 		}
-		for (int j = 0; j < 4; j++)
+		//プレイヤーの装備している武器を取得し装備している武器の画像を表示する
+		switch (m_player[PlayerNo]->GetWeapon())
+		{
+		case enWeapon_M4A1:
+			m_hud[PlayerNo]->Draw(PlayerNo, m_m4a1[PlayerNo].GetAmmo(), m_player[PlayerNo]->GetHitPoint(), m_player[PlayerNo]->GetGrenade(), m_player[PlayerNo]->GetAttackFlag(), m_player[PlayerNo]->GetKillFlag(), m_player[PlayerNo]->GetWeapon(), m_player[PlayerNo]->GetCameraType());
+			break;
+		case enWeapon_MP5:
+			m_hud[PlayerNo]->Draw(PlayerNo, m_mp5[PlayerNo].GetAmmo(), m_player[PlayerNo]->GetHitPoint(), m_player[PlayerNo]->GetGrenade(), m_player[PlayerNo]->GetAttackFlag(), m_player[PlayerNo]->GetKillFlag(), m_player[PlayerNo]->GetWeapon(), m_player[PlayerNo]->GetCameraType());
+			break;
+		case enWeapon_Benelli_M4:
+			m_hud[PlayerNo]->Draw(PlayerNo, m_benelliM4[PlayerNo].GetAmmo(), m_player[PlayerNo]->GetHitPoint(), m_player[PlayerNo]->GetGrenade(), m_player[PlayerNo]->GetAttackFlag(), m_player[PlayerNo]->GetKillFlag(), m_player[PlayerNo]->GetWeapon(), m_player[PlayerNo]->GetCameraType());
+			break;
+		case enWeapon_M110:
+			m_hud[PlayerNo]->Draw(PlayerNo, m_m110[PlayerNo].GetAmmo(), m_player[PlayerNo]->GetHitPoint(), m_player[PlayerNo]->GetGrenade(), m_player[PlayerNo]->GetAttackFlag(), m_player[PlayerNo]->GetKillFlag(), m_player[PlayerNo]->GetWeapon(), m_player[PlayerNo]->GetCameraType());
+		}
+		for (int People = 0; People < PLAYERS; People++)
 		{
 			if (m_waitflag == false)
 			{
@@ -265,22 +358,55 @@ void Game::Draw()
 
 				if (m_gameMode == enGame_DM)
 				{
-					m_font.Draw(L"デスマッチ", { -400.0f,250.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+					//プレイヤーが二人だけではないなら
+					if (PLAYERS != enPlayer3)
+					{
+						m_font.Draw(L"デスマッチ", { -400.0f,250.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+					}
+					else
+					{
+						//プレイヤーが二人だけの時はフォントの出す位置を変更
+						m_font.Draw(L"デスマッチ", { -400.0f,0.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+					}
 				}
 				if (m_gameMode == enGame_CTF)
 				{
-					m_font.Draw(L"キャプチャーザフラッグ", { -550.0f,250.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+					//プレイヤーが二人だけではないなら
+					if (PLAYERS != enPlayer3)
+					{
+						m_font.Draw(L"キャプチャーザフラッグ", { -550.0f,250.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+					}
+					else
+					{
+						//プレイヤーが二人だけの時はフォントの出す位置を変更
+						m_font.Draw(L"キャプチャーザフラッグ", { -550.0f,0.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+					}
 				}
-				m_font.Draw(time, { -320.0f,200.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
-
+				//プレイヤーが二人だけではないなら
+				if (PLAYERS != enPlayer3)
+				{
+					m_font.Draw(time, { -320.0f,200.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+				}
+				else
+				{
+					//プレイヤーが二人だけの時はフォントの出す位置を変更
+					m_font.Draw(time, { -320.0f,-50.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+				}
 				m_font.EndDraw();
 			}
 			if (m_endflag == true)
 			{
 				m_font.BeginDraw();
-
-				m_font.Draw(L"終了", { -360.0f,200.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
-				
+				//プレイヤーが二人だけではないなら
+				if (PLAYERS != enPlayer3)
+				{
+					m_font.Draw(L"終了", { -360.0f,200.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+				}
+				else
+				{
+					//プレイヤーが二人だけの時はフォントの出す位置を変更
+					m_font.Draw(L"終了", { -360.0f,0.0f }, { 560.0f,50.0f,50.0f,1.0f }, 0.0f, 1.0f);
+				}
 				if (m_endSoundflag == true)
 				{
 					m_endSound.Play(false);
@@ -293,38 +419,22 @@ void Game::Draw()
 
 				m_font.EndDraw();
 			}
-			m_muzzleflasheffect[j].Draw(i);
-
-			m_explosioneffect[j].Draw(i);
-		}
-		switch (m_player[i]->GetWeapon())
-		{
-		case enWeapon_M4A1:
-			m_hud[i].Draw(i, m_m4a1[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetGrenade(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
-			break;
-		case enWeapon_MP5:
-			m_hud[i].Draw(i, m_mp5[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetGrenade(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
-			break;
-		case enWeapon_Benelli_M4:
-			m_hud[i].Draw(i, m_benelliM4[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetGrenade(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
-			break;
-		case enWeapon_M110:
-			m_hud[i].Draw(i, m_m110[i].GetAmmo(), m_player[i]->GetHitPoint(), m_player[i]->GetGrenade(), m_player[i]->GetAttackFlag(), m_player[i]->GetKillFlag(), m_player[i]->GetWeapon(), m_player[i]->GetCameraType());
+			if (m_player[PlayerNo]->GetCameraType() == Player::EnCameraType::enType_TPS || PlayerNo != People)
+			{
+				//銃の先から出るエフェクトを描画
+				m_muzzleflasheffect[People].Draw(PlayerNo);
+			}
+			//グレネードの爆発のエフェクトを描画
+			m_explosioneffect[People].Draw(PlayerNo);
 		}
 		if (m_waitflag == true)
 		{
-			m_timer.Draw();
+			//ゲームの残り時間を描画
+			m_timer->Draw();
 		}
-		m_player[i]->SetAttackFalse();
-		m_player[i]->SetKillFalse();
-		if (m_player[i]->GetDrawFlag() == false && m_player[i]->GetWeapon() == enWeapon_M110)
-		{
-			g_camera3D[i].SetViewAngle(CMath::DegToRad(10.0f));
-		}
-		else {
-			g_camera3D[i].SetViewAngle(CMath::DegToRad(60.0f));
-
-		}
+		m_player[PlayerNo]->SetAttackFalse();
+		m_player[PlayerNo]->SetKillFalse();
+		
 	}
 	if (m_startTimer <= 0.0f)
 	{

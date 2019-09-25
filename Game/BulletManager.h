@@ -3,7 +3,7 @@
 #include "Physics/CapsuleCollider.h"
 #include "Physics/RigidBody.h"
 #include "Player.h"
-
+#include "Game.h"
 class Bullet;
 
 class BulletManager
@@ -23,7 +23,7 @@ public:
 		return m_player[PlayerNumber];
 	}
 private:
-	std::vector<Bullet*> m_bullet[4];					//弾丸の可変長配列。
-	Player *m_player[4];								//プレイヤーのインスタンス
+	std::vector<Bullet*> m_bullet[PLAYERS];					//弾丸の可変長配列。
+	Player *m_player[PLAYERS];								//プレイヤーのインスタンス
 };
 

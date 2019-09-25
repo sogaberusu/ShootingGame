@@ -9,30 +9,37 @@ public:
 	~Bullet();
 	void Update();
 	void Draw(Camera& camera);
+	//’e‚ÉÀ•W‚ğİ’è‚·‚é
 	void SetPosition(CVector3 pos)
 	{
 		m_pos = pos;
 	}
+	//’e‚ÌÀ•W‚ğ•Ô‚·
 	CVector3 GetPosition()
 	{
 		return m_pos;
 	}
+	//’e‚Ì‘¬“x‚ğ•Ô‚·
 	CVector3 GetMoveSpeed()
 	{
 		return m_moveSpeed;
 	}
+	//’e‚Ì‘¬“x‚ğİ’è‚·‚é
 	void SetMoveSpeed(CVector3 speed)
 	{
 		m_moveSpeed = speed;
 	}
+	//’e‚ªÁ‚¦‚Ä‚¢‚é‚©Á‚¦‚Ä‚¢‚È‚¢‚©‚ğ•Ô‚·
 	bool IsDead()
 	{
 		return m_isDead;
 	}
+	//’e‚ğÁ‚·
 	void SetBulletDead()
 	{
 		m_isDead = true;
 	}
+	//’e‚ª©‘RÁ–Å‚·‚é‚Ü‚Å‚ÌŠÔ‚ğİ’è‚·‚é
 	void SetLife(int life)
 	{
 		m_life = life;
@@ -43,6 +50,6 @@ private:
 	CVector3 m_moveSpeed = CVector3::Zero();	//ˆÚ“®‘¬“xB
 	int m_attack;								//UŒ‚—Í
 	int m_life = INT_MAX;						//’e‚ÌÁ–Å‚Ü‚Å‚ÌŠÔ
-	bool m_isDead = false;
-	BulletController m_bulletController;
+	bool m_isDead = false;                      //’e‚ğÁ‚·ƒtƒ‰ƒO
+	BulletController m_bulletController;        //’e‚Ì“–‚½‚è”»’è‚ğ‚Æ‚é
 };

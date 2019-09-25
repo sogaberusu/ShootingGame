@@ -141,6 +141,7 @@
     <ClCompile Include="math\Matrix.cpp" />
     <ClCompile Include="math\Vector.cpp" />
     <ClCompile Include="MP5.cpp" />
+    <ClCompile Include="physics\PhysicsDebugDraw.cpp" />
     <ClCompile Include="physics\MeshCollider.cpp" />
     <ClCompile Include="physics\Physics.cpp" />
     <ClCompile Include="physics\RigidBody.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Grenade.h" />
     <ClInclude Include="GrenadeController.h" />
     <ClInclude Include="GrenadeManager.h" />
+    <ClInclude Include="physics\PhysicsDebugDraw.h" />
     <ClInclude Include="WeaponAttr.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Benelli_M4.h" />
@@ -236,6 +238,7 @@
     <MeshContentTask Include="Assets\modelData\Flag.FBX" />
     <MeshContentTask Include="Assets\modelData\Grenade.FBX" />
     <MeshContentTask Include="Assets\modelData\M110.FBX" />
+    <MeshContentTask Include="Assets\modelData\M16.FBX" />
     <MeshContentTask Include="Assets\modelData\M4A1.FBX" />
     <MeshContentTask Include="Assets\modelData\MP5.FBX" />
     <MeshContentTask Include="Assets\modelData\Player.FBX" />
@@ -253,7 +256,10 @@
     <None Include="Assets\modelData\Player.tks" />
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\Result.png" />
+    <ImageContentTask Include="Assets\sprite\Result.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\Target.png">
@@ -391,6 +397,36 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\Title.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\Sight.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\Eotech.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\M4A1IronSight.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\MP5IronSight.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\Benelli_M4IronSight.png">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\sprite\%(Filename).dds</ContentOutput>
     </ImageContentTask>

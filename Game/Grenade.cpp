@@ -36,5 +36,5 @@ void Grenade::Update(int PlayerNumber)
 
 void Grenade::Draw(Camera& camera)
 {
-	m_model.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), 0);
+	m_model.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), enNormalDraw);
 }

@@ -21,9 +21,9 @@ public:
 		m_topLeftX = TopLeftX;
 		m_topLeftY = TopLeftY;
 	}
-	void Seti(int a)
+	void SetPlayerNo(int No)
 	{
-		i = a;
+		m_playerNo = No;
 	}
 	void StartRender();
 	void EndRender();
@@ -32,9 +32,9 @@ public:
 		g_camera3D[cameraNo].SetPosition(position);
 		g_camera3D[cameraNo].SetTarget({ 0.0f, 200.0f, 0.0f });
 		////注視点から視点までのベクトルを設定。
-		m_toCameraPos.Set(g_camera3D[i].GetTarget() - g_camera3D[i].GetPosition());
+		m_toCameraPos.Set(g_camera3D[m_playerNo].GetTarget() - g_camera3D[m_playerNo].GetPosition());
 		////視点から注視点までのベクトルを設定。
-		m_toCameraTarget.Set(g_camera3D[i].GetPosition() - g_camera3D[i].GetTarget());
+		m_toCameraTarget.Set(g_camera3D[m_playerNo].GetPosition() - g_camera3D[m_playerNo].GetTarget());
 	}
 private:	
 	Player *m_player = nullptr;						//プレイヤー
@@ -49,10 +49,10 @@ private:
 	float m_lStickX;								//左スティックのX
 	float m_lStickY;								//左スティックのY
 
-	float m_width = 0;
-	float m_height = 0;
-	float m_topLeftX = 0;
-	float m_topLeftY = 0;
+	float m_width = 0;								//ビューポートの幅
+	float m_height = 0;								//ビューポートの高さ
+	float m_topLeftX = 0;							//ビューポートxの始点
+	float m_topLeftY = 0;							//ビューポートyの始点
 
-	int i = 0;
+	int m_playerNo = 0;								//プレイヤーの番号
 };
